@@ -1,0 +1,5 @@
+
+- Requirement is the first step in developing a useful visualization
+- Domain specific application often require especially designed visualization system
+- Visual analytic environment can drive the discovery process
+- Need to define a more standardized data format and access scheme
