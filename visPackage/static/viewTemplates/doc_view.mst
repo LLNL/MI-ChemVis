@@ -1,2 +1,27 @@
-<div id="{{id}}container" style="display:block;width:100%; height:100%">
+<div id="{{id}}container" style="display:block;width:100%; height:100%; padding:20px">
+    <div id="{{id}}title" style="font-weight: bold;">
+    Title:
+    </div>
+
+    <br>
+
+    <div id="{{id}}authors" style="font-size=14px">
+    Authors:
+    </div>
+
+    <br>
+
+    <div id="{{id}}abstract" style="background-color: lightgrey; font-size=12px; padding:10px; border-radius: 15px;">
+    abstract
+    </div>
+
+    <br>
+
+    <label>Morphology:</label>
+    <div id="{{id}}morphology" style="font-size=14px;font-weight:bold;">
+    </div>
+
+    <br>
+    
+    <p><a id="{{id}}link" href="">Paper Link</a></p>
 </div>

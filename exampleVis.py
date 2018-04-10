@@ -1,13 +1,13 @@
 from visPackage import *
-
 # load the papers
-
 
 #visualization components
 visLayout = {
-    "column":[{"row":["Summary", "Sentence", "Pipeline"]},
-            {"row":["AttentionGraph", "AttentionMatrix", "Prediction"]}]
+    "row":[{"column":["Filter", "Graph"]},
+            {"column":["Document"]}]
     }
 
 #setup interface
-modelVis = visModule(visLayout)
+vis = chemVisModule(visLayout)
+
+vis.startServer()

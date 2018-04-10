@@ -4,24 +4,16 @@ var socket = io('http://' + document.domain + ':' + location.port + namespace);
 // var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
 
 var panelMetaInfo = {
-    'Prediction': ['prediction_view', 'predictionComponent'],
-    'AttentionMatrix': ['attention_view', 'attentionMatrixComponent'],
-    'Sentence': ['sentence_view', 'sentenceComponent'],
-    "AttentionGraph": ['template_view',
-        'attentionGraphComponent'
-    ],
-    'Summary': ['evaluation_view', 'evaluationComponent'],
-    'Pipeline': ['pipeline_view', 'pipelineComponent']
+    'Filter': ['filter_view', 'filterComponent'],
+    'Graph': ['template_view', 'graphComponent'],
+    'Document': ['doc_view', 'documentComponent']
 };
 
 //for lookup component class on-the-fly
 var objectMap = {
-    predictionComponent: predictionComponent,
-    attentionMatrixComponent: attentionMatrixComponent,
-    attentionGraphComponent: attentionGraphComponent,
-    sentenceComponent: sentenceComponent,
-    evaluationComponent: evaluationComponent,
-    pipelineComponent: pipelineComponent
+    filterComponent: filterComponent,
+    graphComponent: graphComponent,
+    documentComponent: documentComponent
 };
 
 //////////////////////create layout ///////////////////////
