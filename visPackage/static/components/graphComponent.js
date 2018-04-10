@@ -1,13 +1,19 @@
 class graphComponent extends baseComponent {
     constructor(uuid) {
         super(uuid);
-        this.subscribeDatabyNames(["paperList"]);
+        this.subscribeDatabyNames(["paperList", "filter"]);
     }
 
     parseDataUpdate(msg) {
         super.parseDataUpdate(msg);
         switch (msg['name']) {
             case "paperList":
+                console.log("paperList updated");
+                this.draw();
+                break;
+            case "filter":
+                this.filter = this.data["filter"];
+                console.log("filter updated", this.filter);
                 this.draw();
                 break;
         }
@@ -25,6 +31,12 @@ class graphComponent extends baseComponent {
                 .attr("transform", "translate(" + this.margin.left + "," +
                     this.margin.top + ")");
 
+
+            this.slider = new sliderPlot(this.svg, [25, 5], [50, 15],
+                "edge filter", [0, 10], 2, ".1f");
+            this.slider.bindUpdateCallback(this.redraw.bind(this));
+
+            console.log("init slider");
             // this.svgSave = new svgExporter(this.svgContainer, [this.width -
             //     10, 10
             // ]);
@@ -36,22 +48,99 @@ class graphComponent extends baseComponent {
             this.svg.selectAll(
                 ".link, .node").remove();
 
-            this.svgSave.updatePos([this.width - 10, 10])
-            this.svgSave.draw();
+            // this.svgSave.updatePos([this.width - 10, 10])
+            // this.svgSave.draw();
+        }
+    }
+
+    paperDist(p1, p2) {
+        let dist = 0.0;
+        for (let key in this.filter) {
+            if (this.filter.hasOwnProperty(key))
+                if (this.filter[key]) {
+                    if (Array.isArray(p1[key]) && Array.isArray(p2[key])) {
+                        for (let i = 0; i < p1[key].length; i++)
+                            for (let j = 0; j < p2[key].length; j++) {
+                                if (p1[key][i] === p2[key][j])
+                                    dist += 1.0;
+                            }
+                    } else {
+                        if (p1[key] === p2[key])
+                            dist += 1.0;
+                    }
+                }
+        }
+        return dist;
+    }
+
+    threshold() {
+        let count = 0;
+        for (let key in this.filter) {
+            if (this.filter.hasOwnProperty(key)) {
+                if (this.filter[key])
+                    count += 1.0;
+            }
+        }
+        return count - 1.0;
+
+    }
+
+    generateGraph(papers, threshold) {
+        this.slider.setValue(this.threshold() * 0.5);
+        this.nodes = d3.range(papers.length).map(Object);
+        let edgeList = [];
+        for (var i = 0; i < papers.length; i++)
+            for (var j = 0; j < papers.length; j++)
+                if (i > j) {
+                    let dist = this.paperDist(papers[i], papers[j]);
+                    if (threshold) {
+                        if (dist > threshold)
+                            edgeList.push([i, j]);
+                    } else {
+                        if (dist > this.slider.value)
+                            edgeList.push([i, j]);
+                    }
+                }
+
+        this.links = edgeList.map(function(edge) {
+            return {
+                source: edge[0],
+                target: edge[1]
+            }
+        });
+
+    }
+
+    redraw(threshold) {
+        if (this.data["filter"] && this.data["paperList"]) {
+            this.generateGraph(this.data["paperList"], threshold);
+            // console.log("link size:", this.links.length);
+            this.simulation(this.nodes, this.links, -20);
         }
     }
 
     draw() {
         this.initSvg();
-        let n = this.data["paperList"].length;
-        this.randomGraph(n, 2 * n, -20);
+
+        if (this.data["filter"] && this.data["paperList"]) {
+
+            // let n = this.data["paperList"].length;
+            // this.randomGraph(n, 2 * n, -20);
+            let papers = this.data["paperList"];
+            if (papers) {
+                this.generateGraph(papers);
+                console.log("link size:", this.links.length);
+                this.simulation(this.nodes, this.links, -30);
+            }
+        }
+    }
+
+    resize() {
+        this.draw();
     }
 
 
     randomGraph(n, m, charge) { //creates a random graph on n nodes and m links
-        let svg = this.svg;
-        let width = this.width;
-        let height = this.height;
 
         function randomChoose(s, k) { // returns a random k element subset of s
             var a = [],
@@ -84,7 +173,14 @@ class graphComponent extends baseComponent {
             }
         });
 
-        // console.log(nodes, links);
+        this.simulation(nodes, links, charge);
+
+    }
+
+    simulation(nodes, links, charge) {
+        let svg = this.svg;
+        let width = this.width;
+        let height = this.height;
 
         var simulation = d3.forceSimulation(nodes)
             .force('charge', d3.forceManyBody().strength(charge))
@@ -93,29 +189,11 @@ class graphComponent extends baseComponent {
             .force('collision', d3.forceCollide().radius(10))
             .on('tick', tick.bind(this));
 
-        // var svgLinks = svg.selectAll(".link").data(links)
-        //     .enter().append("line")
-        //     .attr("class", "link");
-        //
-        // var svgNodes = svg.selectAll(".node").data(nodes)
-        //     .enter().append("circle")
-        //     .attr("class", "node")
-        //     .attr("r", 3)
-        //     .style("fill", "white");
-
-        // svgNodes.transition().duration(800)
-        //     .attr("r", function(d) {
-        //         return 3;
-        //     })
-        //     .style("fill", function(d) {
-        //         // return colors(d.weight)
-        //         return "grey";
-        //     });
-        //
-        // svgLinks.transition().duration(800)
-        //     .style("stroke-width", 3);
         this.svg.append("g").attr("class", "links");
         this.svg.append("g").attr("class", "nodes");
+
+        ////////// draw graph ///////////
+        let radius = 8;
 
         function tick() {
             // console.log("update");
@@ -152,13 +230,21 @@ class graphComponent extends baseComponent {
             v.enter()
                 .append('circle')
                 .merge(v)
-                .attr('cx', function(d) {
-                    return d.x
+                .attr("cx", function(d) {
+                    return d.x = Math.max(radius, Math.min(width -
+                        radius, d.x));
                 })
-                .attr('cy', function(d) {
-                    return d.y
+                .attr("cy", function(d) {
+                    return d.y = Math.max(radius, Math.min(height -
+                        radius, d.y));
                 })
-                .attr("r", 8)
+                // .attr('cx', function(d) {
+                //     return d.x
+                // })
+                // .attr('cy', function(d) {
+                //     return d.y
+                // })
+                .attr("r", radius)
                 .style("fill", "grey")
                 .style("stroke", "white")
                 .style("stroke-width", 2)

@@ -33,6 +33,9 @@ class documentComponent extends baseComponent {
             d3.select(this.div + "morphology")
                 .html(paper.morphology);
 
+            d3.select(this.div + "material")
+                .html(paper.material);
+
             d3.select(this.div + "link")
                 .attr("href", paper.url);
         }

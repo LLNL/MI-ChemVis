@@ -1,6 +1,6 @@
 <div id="{{id}}container" style="padding: 40px;">
 
-
-
+<div id='{{id}}' class="content">
+</div>
 
 </div>

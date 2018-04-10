@@ -11,6 +11,11 @@ class sliderPlot {
         this.draw();
     }
 
+    setValue(value) {
+        this.value = value;
+        // this.draw();
+    }
+
     mapValToWidth() {
         return (this.value - this.range[0]) /
             (this.range[1] - this.range[0]) *
@@ -35,7 +40,7 @@ class sliderPlot {
                 let coord = d3.mouse(this);
                 that.value = that.range[0] + coord[0] / that.size[0] *
                     (that.range[1] - that.range[0]);
-                // console.log(that.value);
+                console.log(that.value, that.mapValToWidth());
                 that.bar.attr("width", that.mapValToWidth());
                 let val = d3.format(that.format)(that.value);
                 that.value = Number(val);

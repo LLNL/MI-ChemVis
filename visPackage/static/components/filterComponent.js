@@ -7,15 +7,18 @@ class filterComponent extends baseComponent {
         });
 
         this.filterState = {
-            "chemical": true,
             "morphology": true,
-            "solvents": false,
-            "method": true,
             "material": true,
+
+            "solvents": false,
+            "surfactants": true,
+
+            "method": true,
             "composition": true
         };
 
         this.setupUI();
+        this.updateFilter();
     }
 
     draw() {
@@ -23,26 +26,36 @@ class filterComponent extends baseComponent {
     }
 
     setupUI() {
-        this.container = d3.select(this.div + "container");
+        this.container = d3.select(this.div);
         for (let key in this.filterState) {
-            this.filterState.hasOwnProperty(key);
-            let control = this.container.append("div")
-                .attr("class", "custom-control custom-checkbox");
-            control.append("input")
-                .attr("type", "checkbox")
-                .attr("class", "custom-control-input")
-                .attr("id", this.uuid + key)
-                .property('checked', this.filterState[key])
-                .on("click", this.updateFilter.bind(this));
-            control.append("label")
-                .attr("class", "custom-control-label")
-                .attr("for", this.uuid + key)
-                .html(key);
+            if (this.filterState.hasOwnProperty(key)) {
+                let control = this.container.append("div")
+                    .attr("class", "custom-control custom-checkbox");
+                control.append("input")
+                    .attr("type", "checkbox")
+                    .attr("class", "custom-control-input")
+                    .attr("id", this.uuid + key)
+                    .property('checked', this.filterState[key])
+                    .on("click", this.updateFilter.bind(this));
+                control.append("label")
+                    .attr("class", "custom-control-label")
+                    .attr("for", this.uuid + key)
+                    .html(key);
+            }
         }
 
     }
 
     updateFilter() {
+
+        for (let key in this.filterState) {
+            if (this.filterState.hasOwnProperty(key)) {
+                this.filterState[key] = this.container.select(this.div +
+                    key).property('checked');
+            }
+        }
+
+        this.setData("filter", this.filterState);
 
     }
 
@@ -52,7 +65,6 @@ class filterComponent extends baseComponent {
         switch (msg['name']) {
             case "paperList":
                 let papers = this.data["paperList"];
-                this.generateGraph(papers);
                 this.draw();
 
                 // let flat_sme_papers = this.flatten_normal_data(papers, true);
@@ -62,10 +74,6 @@ class filterComponent extends baseComponent {
             default:
 
         }
-
-    }
-
-    generateGraph(papers) {
 
     }
 
