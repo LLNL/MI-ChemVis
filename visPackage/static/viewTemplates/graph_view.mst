@@ -1,4 +1,5 @@
 <div id="{{id}}container" style="display:block;width:100%; height:100%">
+<input type="text" value="material,morphology,chemical" data-role="tagsinput">
 <div id='{{id}}' class="content">
 </div>
 </div>

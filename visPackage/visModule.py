@@ -78,7 +78,8 @@ class chemVisModule(visModule):
         return {
             'template_view': app.send_static_file('viewTemplates/template_view.mst'),
             'doc_view': app.send_static_file('viewTemplates/doc_view.mst'),
-            'filter_view': app.send_static_file('viewTemplates/filter_view.mst')
+            'filter_view': app.send_static_file('viewTemplates/filter_view.mst'),
+            'graph_view': app.send_static_file('viewTemplates/graph_view.mst')
         }.get(name)
 
     def loadData(self, filename):

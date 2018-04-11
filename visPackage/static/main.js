@@ -5,7 +5,7 @@ var socket = io('http://' + document.domain + ':' + location.port + namespace);
 
 var panelMetaInfo = {
     'Filter': ['filter_view', 'filterComponent'],
-    'Graph': ['template_view', 'graphComponent'],
+    'Graph': ['graph_view', 'graphComponent'],
     'Document': ['doc_view', 'documentComponent']
 };
 
