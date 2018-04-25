@@ -8,10 +8,41 @@ class aggregator(object):
 
     #### category ####
     def aggregateByKeys(self, selection, keys):
-        items = [self.paperList[i] for i in selection]
+
+        items = [(paper, i) for i, paper in enumerate(self.paperList)]
+        #### if the list is not empty
+        if selection:
+            items = [items[i] for i in selection]
+        print selection, keys
+
         for key in keys:
-            items = [it[key] for it in items]
-        return items
+            newItems = []
+            for item in items:
+                if isinstance(item[0], list):
+                    for it in item[0]:
+                        if key in it:
+                            newItems.append( (it[key], item[1]) )
+                else:
+                    if key in item[0]:
+                        newItems.append( (item[0][key], item[1]) )
+
+            items = newItems
+
+        # print items
+        # itSet = {el:0 for el in items}
+        keyCount = {}
+        for it in items:
+            if it[0] not in keyCount:
+                keyCount[it[0]] = set([it[1]])
+            else:
+                keyCount[it[0]].add(it[1])
+        for key in keyCount:
+            keyCount[key] = list(keyCount[key])
+        keyCount.pop(None, None)
+        print "keyCount:", keyCount.keys()
+        return keyCount
+
+
 
     def distByIndex(indexPairs, keys):
         dist = []

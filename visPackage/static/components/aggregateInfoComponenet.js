@@ -21,7 +21,10 @@ class aggregateInfoComponenet extends baseComponent {
         menu.append("a")
             .attr("class", "dropdown-item")
             .on("click", d => {
-                this.handleAggregateInfo("chemicals");
+                this.callFunc("aggregateByKeys", {
+                    selection: [],
+                    keys: ["chemicals", "mf"]
+                });
             })
             .html("chemicals");
     }
@@ -34,7 +37,7 @@ class aggregateInfoComponenet extends baseComponent {
                 this.draw();
                 break;
             case "selection":
-                this.filter = this.data["selection"];
+                this.selection = this.data["selection"];
                 // console.log("filter updated", this.filter);
                 this.draw();
                 break;
@@ -47,12 +50,12 @@ class aggregateInfoComponenet extends baseComponent {
 
     parseFunctionReturn(msg) {
         super.parseFunctionReturn(msg);
-
-        switch (msg['name']) {
+        console.log(msg);
+        switch (msg['func']) {
             case "aggregateByKeys":
                 this.handleAggregateInfo(msg['data']);
+                break;
         }
-
     }
 
     initSvg() {
@@ -65,12 +68,15 @@ class aggregateInfoComponenet extends baseComponent {
                 .attr("width", this.width)
                 .attr("height", this.height);
 
-            this.barChart = new barChart(this.svg, [0, 0], [this.width,
-                this.height * 0.5
+            this.barChart = new barChart(this.svg, [0, 20], [this.width,
+                this.height * 0.45
             ]);
+            this.barChart.setSelectionCallback(this.setHighlight.bind(
+                this));
+
             this.scatter = new simpleScatterPlot(this.svg, [0, this.height *
-                0.5
-            ], [this.width, this.height * 0.5]);
+                0.55
+            ], [this.width, this.height * 0.40]);
 
         } else {
             this.svgContainer
@@ -81,17 +87,29 @@ class aggregateInfoComponenet extends baseComponent {
                 .attr("width", this.width)
                 .attr("height", this.height - controlHeight);
 
-            this.barChart.update([0, 0], [this.width,
-                this.height * 0.5
+            this.barChart.update([0, 20], [this.width,
+                this.height * 0.45
             ]);
             this.scatter.update([0, this.height *
                 0.5
-            ], [this.width, this.height * 0.5]);
+            ], [this.width, this.height * 0.45]);
         }
     }
 
+    setHighlight(list) {
+        console.log(list);
+        this.setData("highlight", list);
+    }
+
     handleAggregateInfo(data) {
-        console.log(data);
+        // console.log(data);
+        this.barChart.setData(data['data']['aggregation']);
+        this.scatter.setData([
+            [0, 1],
+            [4, 6],
+            [1, 1],
+            [0, 5]
+        ], ["axisX", "axisY"]);
 
     }
 

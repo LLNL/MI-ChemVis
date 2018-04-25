@@ -35,6 +35,7 @@ class graphComponent extends baseComponent {
                 break;
             case "highlight":
                 this.highlight = this.data["highlight"];
+                this.updateHighlight(this.highlight)
                 break;
         }
     }
@@ -96,7 +97,6 @@ class graphComponent extends baseComponent {
                 .attr("transform", "translate(" + this.margin.left + "," +
                     this.margin.top + ")");
 
-
             this.slider = new sliderPlot(this.svg, [25, 5], [50, 15],
                 "edge filter", [0, 10], 2, ".1f");
             this.slider.bindUpdateCallback(this.redraw.bind(this));
@@ -133,7 +133,7 @@ class graphComponent extends baseComponent {
                 return d;
         })
 
-        console.log(labels);
+        // console.log(labels);
         let labelSet = new Set(labels);
         let labelMap = {};
         let i = 0;
@@ -147,7 +147,7 @@ class graphComponent extends baseComponent {
         });
         let labelIndex = labels.map(d => labelMap[d]);
 
-        console.log(labelIndex);
+        // console.log(labelIndex);
         let colorScale = d3.scaleOrdinal(d3["schemeSet3"]);
         let nodeColor = labelIndex.map(d => {
             if (d >= 0) {
@@ -168,12 +168,16 @@ class graphComponent extends baseComponent {
 
     updateHighlight(indices) {
         let indexSet = new Set(indices);
+        console.log(indexSet.size);
         this.svg
-            .select('.nodes')
+            .selectAll('.graphNode')
             .each(function(d, i) {
+                console.log(d, i);
                 if (indexSet.size > 0) {
                     if (!indexSet.has(i)) {
                         d3.select(this).attr("opacity", 0.2);
+                    } else {
+                        d3.select(this).attr("opacity", 1.0);
                     }
                 } else {
                     d3.select(this).attr("opacity", 1.0);

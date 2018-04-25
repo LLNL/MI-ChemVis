@@ -10,7 +10,9 @@ class simpleScatterPlot {
 
     draw() {
         if (this.data) {
-            var data = this.data.map(this.accessor);
+            var data = this.data;
+            if (this.accessor)
+                data = this.data.map(this.accessor);
             this.svg.selectAll("*").remove();
             var xScale = d3.scaleLinear()
                 .range([this.pos[0], this.pos[0] + this.size[0]]);
