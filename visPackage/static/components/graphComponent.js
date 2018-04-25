@@ -1,8 +1,9 @@
 class graphComponent extends baseComponent {
     constructor(uuid) {
         super(uuid);
-        this.subscribeDatabyNames(["paperList"]);
-        /////// edge filter ///////
+        this.subscribeDatabyNames(["paperList", "selection", "highlight"]);
+
+        /////// edge filter options ///////
         this.filterState = {
             "morphology": true,
             "material": true,
@@ -13,8 +14,10 @@ class graphComponent extends baseComponent {
             "method": true,
             "composition": true
         };
-        this.setupUI();
+        this.controlHeight = 90;
+        this.marginWidth = 10;
 
+        this.setupUI();
     }
 
     parseDataUpdate(msg) {
@@ -25,8 +28,8 @@ class graphComponent extends baseComponent {
                 this.draw();
                 break;
             case "selection":
-                this.filter = this.data["filter"];
-                console.log("filter updated", this.filter);
+                this.selection = this.data["selection"];
+                // console.log("filter updated", this.filter);
                 this.draw();
                 break;
             case "highlight":
@@ -35,20 +38,7 @@ class graphComponent extends baseComponent {
         }
     }
 
-    updateFilter() {
-        for (let key in this.filterState) {
-            if (this.filterState.hasOwnProperty(key)) {
-                this.filterState[key] = this.container.select(this.div +
-                    key).property('checked');
-            }
-        }
-
-        this.setData("filter", this.filterState);
-
-    }
-
     setupUI() {
-
         this.filterList = d3.select(this.div + "filter");
         for (let key in this.filterState) {
             if (this.filterState.hasOwnProperty(key)) {
@@ -62,38 +52,40 @@ class graphComponent extends baseComponent {
                     .attr("type", "checkbox")
                     .attr("id", this.uuid + key)
                     .attr("class", "custom-control-input")
+                    .property('checked', this.filterState[key])
                     .on("click", this.updateFilter.bind(this));
                 li.append("label")
                     .attr("class", "custom-control-label")
                     .attr("for", this.uuid + key)
                     .text(key + "\t");
-                // <td>&nbsp;</td>
-                // this.filterList.append('td').html("nbsp;");
             }
         }
-
-        // <li style="display:inline-block">
-        //   <input class="any" id="any" name="any" type="checkbox">
-        //   <label id="any" for="any">Any</label>
-        // </li>
-
-        // for (let key in this.filterState) {
-        //     if (this.filterState.hasOwnProperty(key)) {
-        //         let control = this.container.append("div")
-        //             .attr("class", "custom-control custom-checkbox");
-        //         control.append("input")
-        //             .attr("type", "checkbox")
-        //             .attr("class", "custom-control-input")
-        //             .attr("id", this.uuid + key)
-        //             .property('checked', this.filterState[key])
-        //             .on("click", this.updateFilter.bind(this));
-        //         control.append("label")
-        //             .attr("class", "custom-control-label")
-        //             .attr("for", this.uuid + key)
-        //             .html(key);
-        //     }
-        // }
-
+        // <div class="btn-group">
+        //   <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        //     Small button
+        //   </button>
+        //   <div class="dropdown-menu">
+        //     ...
+        //   </div>
+        // </div>
+        let dropdown = this.filterList.append("div")
+            .attr("class", "btn-group");
+        dropdown.append("button")
+            .attr("class", "btn btn-secondary btn-sm dropdown-toggle")
+            .attr("type", "button")
+            .attr("data-toggle", "dropdown")
+            .attr("aria-haspopup", "true")
+            .html("color-by");
+        let menu = dropdown.append("div")
+            .attr("class", "dropdown-menu");
+        for (let key in this.filterState) {
+            if (this.filterState.hasOwnProperty(key)) {
+                menu.append("a")
+                    .attr("class", "dropdown-item")
+                    .on("click", this.updateColor.bind(this))
+                    .html(key);
+            }
+        }
     }
 
     initSvg() {
@@ -113,7 +105,7 @@ class graphComponent extends baseComponent {
                 "edge filter", [0, 10], 2, ".1f");
             this.slider.bindUpdateCallback(this.redraw.bind(this));
 
-            console.log("init slider");
+            // console.log("init slider");
             // this.svgSave = new svgExporter(this.svgContainer, [this.width -
             //     10, 10
             // ]);
@@ -130,11 +122,62 @@ class graphComponent extends baseComponent {
         }
     }
 
+    updateColor() {
+
+    }
+
+    updateFilter() {
+        for (let key in this.filterState) {
+            if (this.filterState.hasOwnProperty(key)) {
+                this.filterState[key] = this.filterList.select(this.div +
+                    key).property('checked');
+            }
+        }
+        // console.log(this.filterState);
+        this.draw();
+        // this.setData("filter", this.filterState);
+    }
+
+
+    updateHighlight(indices) {
+
+    }
+
+
+    redraw(threshold) {
+        if (this.data["paperList"]) {
+            this.generateGraph(this.data["paperList"], threshold);
+            // console.log("link size:", this.links.length);
+            this.simulation(this.nodes, this.links, -20);
+        }
+    }
+
+    draw() {
+        this.initSvg();
+
+        if (this.data["paperList"]) {
+
+            // let n = this.data["paperList"].length;
+            // this.randomGraph(n, 2 * n, -20);
+            let papers = this.data["paperList"];
+            if (papers) {
+                this.generateGraph(papers, this.threshold());
+                console.log("link size:", this.links.length);
+                this.simulation(this.nodes, this.links, -20);
+            }
+        }
+    }
+
+    resize() {
+        this.draw();
+    }
+
     paperDist(p1, p2) {
+        // console.log(p1, p2)
         let dist = 0.0;
-        for (let key in this.filter) {
-            if (this.filter.hasOwnProperty(key))
-                if (this.filter[key]) {
+        for (let key in this.filterState) {
+            if (this.filterState.hasOwnProperty(key))
+                if (this.filterState[key]) {
                     if (Array.isArray(p1[key]) && Array.isArray(p2[key])) {
                         for (let i = 0; i < p1[key].length; i++)
                             for (let j = 0; j < p2[key].length; j++) {
@@ -152,9 +195,9 @@ class graphComponent extends baseComponent {
 
     threshold() {
         let count = 0;
-        for (let key in this.filter) {
-            if (this.filter.hasOwnProperty(key)) {
-                if (this.filter[key])
+        for (let key in this.filterState) {
+            if (this.filterState.hasOwnProperty(key)) {
+                if (this.filterState[key])
                     count += 1.0;
             }
         }
@@ -163,6 +206,8 @@ class graphComponent extends baseComponent {
     }
 
     generateGraph(papers, threshold) {
+        // let threshold = 0.0;
+        console.log("threshold:", threshold);
         this.slider.setValue(this.threshold() * 0.5);
         this.nodes = d3.range(papers.length).map(Object);
         let edgeList = [];
@@ -170,107 +215,46 @@ class graphComponent extends baseComponent {
             for (var j = 0; j < papers.length; j++)
                 if (i > j) {
                     let dist = this.paperDist(papers[i], papers[j]);
+                    // console.log(dist);
+                    // if (dist > threshold)
+                    //     edgeList.push([i, j, dist]);
                     if (threshold) {
                         if (dist > threshold)
-                            edgeList.push([i, j]);
+                            edgeList.push([i, j, dist]);
                     } else {
                         if (dist > this.slider.value)
-                            edgeList.push([i, j]);
+                            edgeList.push([i, j, dist]);
                     }
                 }
 
         this.links = edgeList.map(function(edge) {
             return {
                 source: edge[0],
-                target: edge[1]
+                target: edge[1],
+                distance: edge[2]
             }
         });
-
-    }
-
-    redraw(threshold) {
-        if (this.data["filter"] && this.data["paperList"]) {
-            this.generateGraph(this.data["paperList"], threshold);
-            // console.log("link size:", this.links.length);
-            this.simulation(this.nodes, this.links, -20);
-        }
-    }
-
-    draw() {
-        this.initSvg();
-
-        if (this.data["filter"] && this.data["paperList"]) {
-
-            // let n = this.data["paperList"].length;
-            // this.randomGraph(n, 2 * n, -20);
-            let papers = this.data["paperList"];
-            if (papers) {
-                this.generateGraph(papers);
-                console.log("link size:", this.links.length);
-                this.simulation(this.nodes, this.links, -30);
-            }
-        }
-    }
-
-    resize() {
-        this.draw();
-    }
-
-
-    randomGraph(n, m, charge) { //creates a random graph on n nodes and m links
-
-        function randomChoose(s, k) { // returns a random k element subset of s
-            var a = [],
-                i = -1,
-                j;
-            while (++i < k) {
-                j = Math.floor(Math.random() * s.length);
-                a.push(s.splice(j, 1)[0]);
-            };
-            return a;
-        }
-
-        function unorderedPairs(s) { // returns the list of all unordered pairs from s
-            var i = -1,
-                a = [],
-                j;
-            while (++i < s.length) {
-                j = i;
-                while (++j < s.length) a.push([s[i], s[j]])
-            };
-            return a;
-        }
-
-        var nodes = d3.range(n).map(Object);
-        var list = randomChoose(unorderedPairs(d3.range(n)), m);
-        var links = list.map(function(a) {
-            return {
-                source: a[0],
-                target: a[1]
-            }
-        });
-
-        this.simulation(nodes, links, charge);
 
     }
 
     simulation(nodes, links, charge) {
         let svg = this.svg;
-        let width = this.width;
-        let height = this.height;
+        let width = this.width - this.marginWidth;
+        let height = this.height - this.controlHeight;
 
         var simulation = d3.forceSimulation(nodes)
             .force('charge', d3.forceManyBody().strength(charge))
             .force('center', d3.forceCenter(width / 2, height / 2))
-            .force('link', d3.forceLink().links(links))
-            .force('collision', d3.forceCollide().radius(10))
-            .on('tick', tick.bind(this));
+            .force('link', d3.forceLink().links(links).distance(d => d.distance))
+            .force('collision', d3.forceCollide().radius(7))
+
+        .on('tick', tick.bind(this));
 
         this.svg.append("g").attr("class", "links");
         this.svg.append("g").attr("class", "nodes");
 
         ////////// draw graph ///////////
-        let radius = 8;
+        let radius = 6;
 
         function tick() {
             // console.log("update");
@@ -338,5 +322,43 @@ class graphComponent extends baseComponent {
 
             v.exit().remove();
         }
+    }
+
+    //// for testing ////
+    randomGraph(n, m, charge) {
+        //creates a random graph on n nodes and m links
+        function randomChoose(s, k) { // returns a random k element subset of s
+            var a = [],
+                i = -1,
+                j;
+            while (++i < k) {
+                j = Math.floor(Math.random() * s.length);
+                a.push(s.splice(j, 1)[0]);
+            };
+            return a;
+        }
+
+        function unorderedPairs(s) { // returns the list of all unordered pairs from s
+            var i = -1,
+                a = [],
+                j;
+            while (++i < s.length) {
+                j = i;
+                while (++j < s.length) a.push([s[i], s[j]])
+            };
+            return a;
+        }
+
+        var nodes = d3.range(n).map(Object);
+        var list = randomChoose(unorderedPairs(d3.range(n)), m);
+        var links = list.map(function(a) {
+            return {
+                source: a[0],
+                target: a[1]
+            }
+        });
+
+        this.simulation(nodes, links, charge);
+
     }
 }

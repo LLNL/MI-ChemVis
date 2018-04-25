@@ -75,6 +75,7 @@ class chemVisModule(visModule):
     def views(name):
         return app.send_static_file('viewTemplates/'+name)
 
+    ########### all function should have a return value ############
     def loadData(self, filename):
         with open(filename) as json_data:
             papers = json.load(json_data)
@@ -90,6 +91,10 @@ class chemVisModule(visModule):
             "aggregation":self.aggregator.aggregateByKeys(selection, keys),
             "keys": keys
             };
+
+    def addTagToSelection(self, type, tag):
+        pass
+        return True
     ############# list of other API #############
 
 

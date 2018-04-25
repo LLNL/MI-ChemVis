@@ -4,17 +4,17 @@
 
     <p>
     <label>Union</label>
-    <input id='tags_1' type='text' class='tags' value ="php,ios,javascript,ruby"></p>
+    <input id='{{id}}union' type='text' class='tags' value ="morphology:nanosphere,solvents:PVP">
     </p>
 
     <p>
     <label>Intersection</label>
-    <input id='tags_2' type='text' class='tags' value ="php,ios,javascript,ruby"></p>
+    <input id='{{id}}interset' type='text' class='tags' value ="material:AgNO3">
     </p>
 
     <p>
     <label>Exclusion</label>
-    <input id='tags_3' type='text' class='tags' value =""></p>
+    <input id='{{id}}exclude' type='text' class='tags' value ="">
     </p>
 
     </div>

@@ -13,15 +13,7 @@
 
     <br>
 
-    <label>Morphology:</label>
-    <div id="{{id}}morphology" style="font-size=14px;font-weight:bold;">
-    </div>
-
-    <br>
-
-    <label>Material:</label>
-    <div id="{{id}}material" style="font-size=14px;font-weight:bold;">
-    </div>
+    <div id="{{id}}tags"></div>
 
     <br>
 

@@ -8,41 +8,45 @@ class filterComponent extends baseComponent {
         });
 
 
-
+        $(this.div + "container").parent().css("overflow-y", "scroll");
         // this.setupUI();
         // this.updateFilter();
         this.setupUI();
     }
 
     setupUI() {
-        $('#tags_1').tagsInput({
-            width: 'auto'
-        });
-        $('#tags_2').tagsInput({
-            width: 'auto'
-        });
-        $('#tags_3').tagsInput({
-            width: 'auto',
-            onAddTag: this.onAddTag,
-            onRemoveTag: this.onRemoveTag,
-            onChange: this.onChangeTag
-                //autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
-                // autocomplete_url: 'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint
-        });
+        // console.log(this.div);
+        this.union = new tagInput(this.div + 'union');
+        this.union.setChangeTagCallback(this.onUpdateUnion.bind(this));
+
+        this.interset = new tagInput(this.div + 'interset');
+        this.interset.setChangeTagCallback(this.onUpdateInterset.bind(this));
+
+        this.exclude = new tagInput(this.div + 'exclude');
+        this.exclude.setChangeTagCallback(this.onUpdateExclude.bind(this));
+    }
+
+    onUpdateUnion() {
 
     }
 
-    onAddTag(tag) {
-        console.log("Added a tag: " + tag);
+    onUpdateInterset() {
+
     }
 
-    onRemoveTag(tag) {
-        console.log("Removed a tag: " + tag);
-    }
+    onUpdateExclude() {}
 
-    onChangeTag(input, tag) {
-        console.log("Changed a tag: " + tag);
-    }
+    // onAddTag(tag) {
+    //     console.log("Added a tag: " + tag);
+    // }
+    //
+    // onRemoveTag(tag) {
+    //     console.log("Removed a tag: " + tag);
+    // }
+    //
+    // onChangeTag(input, tag) {
+    //     console.log("Changed a tag: " + tag);
+    // }
 
     draw() {
 

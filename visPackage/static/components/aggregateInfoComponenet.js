@@ -34,6 +34,11 @@ class aggregateInfoComponenet extends baseComponent {
 
     }
 
+    initSvg() {
+        this.barChart = new barChart(this.div + "barChart");
+        this.scatterplot = new simpleScatterPlot(this.div + "scatterplot");
+    }
+
     handleAggregateInfo(data) {
         console.log(data);
 
@@ -43,11 +48,11 @@ class aggregateInfoComponenet extends baseComponent {
     Half scatterplot / half bar chat
     */
     draw() {
+        this.initSvg();
         // bar char
-
-
+        this.barChart.draw();
         // scatterplot
-
+        this.scatterplot.draw();
     }
 
 }

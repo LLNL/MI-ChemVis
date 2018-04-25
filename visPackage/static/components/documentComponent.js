@@ -30,11 +30,18 @@ class documentComponent extends baseComponent {
             d3.select(this.div + "abstract")
                 .html(paper.abstract);
 
-            d3.select(this.div + "morphology")
-                .html(paper.morphology);
-
-            d3.select(this.div + "material")
-                .html(paper.material);
+            let tags = paper.morphology;
+            tags = tags.concat(
+                    [paper.material],
+                    paper.method,
+                    paper.metal_salts,
+                    paper.solvents,
+                    paper.surfactants,
+                    paper.reducing_agents
+                )
+                // console.log(tags);
+                // , paper.
+            let labels = new tagLabel(this.div + "tags", tags, true);
 
             d3.select(this.div + "link")
                 .attr("href", paper.url);
