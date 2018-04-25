@@ -5,6 +5,10 @@ http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
 
 class tagInput {
     constructor(div, color) {
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
         $(div).tagsInput({
             width: 'auto',
             height: '80px',
@@ -22,16 +26,9 @@ class tagInput {
             },
             // onRemoveTag: this.onRemoveTag,
             // onChange: function(elem, elem_tags) {
-            //     $('.tag', elem_tags).each(function() {
-            //         // if ($(this).text().search(new RegExp(
-            //         //         '\\b(' + languages.join(
-            //         //             '|') + ')\\b')) >= 0)
-            //         $(this).css('background-color',
-            //             color);
-            //     });
-            // },
-            backgroundColor: color,
+
             onChange: this.onChangeTag,
+            backgroundColor: color,
             placeholderColor: color
 
             //autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
@@ -54,20 +51,24 @@ class tagInput {
 }
 
 class tagLabel {
-    constructor(div, tags, tagOptions = false) {
+    constructor(div, tags, tagOptions) {
+        // let tags = tagObjects.map(d => d.tag);
         let container = d3.select(div).html("");
         this.colorScale = d3.scaleOrdinal(d3["schemeCategory10"]);
 
         for (let i = 0; i < tags.length; i++) {
-            let tag = tags[i];
+            let tag = tags[i].tag;
+            let tooltip = tags[i].tooltip;
             let dropdown = container.append("div")
                 .attr("class", "btn-group");
             dropdown.append("button")
                 .attr("class", "btn btn-secondary btn-sm dropdown-toggle")
                 .attr("type", "button")
-                .attr("data-toggle", "dropdown")
+                // .attr("data-toggle", "dropdown tooltip")
                 .attr("aria-haspopup", "true")
-                // .style("")
+                .attr("data-toggle", "tooltip")
+                .attr("data-placement", "top")
+                .attr("title", tooltip)
                 .style("background-color", this.colorScale(i))
                 .style("border-color", this.colorScale(i))
                 .style("margin-left", '5px')
@@ -107,6 +108,10 @@ class tagLabel {
                     .html("Highlight");
             }
 
+            //init tooltip
+            $(function() {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
         }
     }
 

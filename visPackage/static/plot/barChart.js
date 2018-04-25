@@ -24,7 +24,7 @@ class barChart {
                 return d.count;
             })]);
 
-            console.log(height, width, barData);
+            // console.log(height, width, barData);
 
             this.svg.append("g")
                 .attr("class", "axis")
@@ -77,6 +77,7 @@ class barChart {
                 })
                 .style("fill", "grey");
         }
+
         // // UPDATE
         // bars.attr("x", function(d) {
         //         return x(d.name);

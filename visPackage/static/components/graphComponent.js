@@ -49,7 +49,6 @@ class graphComponent extends baseComponent {
                     .style("display", "inline-block")
                     .style("padding-left", "1.3rem")
                     .style("padding-right", "1.0rem");
-                // .style("display", "inline-block");
                 li.append("input")
                     .attr("type", "checkbox")
                     .attr("id", this.uuid + key)

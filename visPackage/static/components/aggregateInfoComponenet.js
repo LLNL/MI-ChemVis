@@ -38,7 +38,6 @@ class aggregateInfoComponenet extends baseComponent {
                 break;
             case "selection":
                 this.selection = this.data["selection"];
-                // console.log("filter updated", this.filter);
                 this.draw();
                 break;
 
@@ -103,14 +102,12 @@ class aggregateInfoComponenet extends baseComponent {
 
     handleAggregateInfo(data) {
         // console.log(data);
-        this.barChart.setData(data['data']['aggregation']);
-        this.scatter.setData([
-            [0, 1],
-            [4, 6],
-            [1, 1],
-            [0, 5]
-        ], ["axisX", "axisY"]);
+        var test = [];
+        for (var i = 0; i < 100; i++)
+            test.push([Math.random(), Math.random()]);
 
+        this.barChart.setData(data['data']['aggregation']);
+        this.scatter.setData(test, ["axisX", "axisY"]);
     }
 
     /*
