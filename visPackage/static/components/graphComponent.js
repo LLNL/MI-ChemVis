@@ -17,6 +17,8 @@ class graphComponent extends baseComponent {
 
         this.marginWidth = 10;
         this.setupUI();
+
+        this.colorScale = d3.scaleOrdinal(d3['schemeSet3']);
     }
 
     parseDataUpdate(msg) {
@@ -59,14 +61,7 @@ class graphComponent extends baseComponent {
                     .text(key + "\t");
             }
         }
-        // <div class="btn-group">
-        //   <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        //     Small button
-        //   </button>
-        //   <div class="dropdown-menu">
-        //     ...
-        //   </div>
-        // </div>
+
         let dropdown = this.filterList.append("div")
             .attr("class", "btn-group");
         dropdown.append("button")
@@ -81,7 +76,9 @@ class graphComponent extends baseComponent {
             if (this.filterState.hasOwnProperty(key)) {
                 menu.append("a")
                     .attr("class", "dropdown-item")
-                    .on("click", this.updateColor.bind(this))
+                    .on("click", d => {
+                        this.updateColor(key);
+                    })
                     .html(key);
             }
         }
@@ -104,6 +101,7 @@ class graphComponent extends baseComponent {
                 "edge filter", [0, 10], 2, ".1f");
             this.slider.bindUpdateCallback(this.redraw.bind(this));
 
+            // console.log("init slider");
             // this.svgSave = new svgExporter(this.svgContainer, [this.width -
             //     10, 10
             // ]);
@@ -120,14 +118,75 @@ class graphComponent extends baseComponent {
         }
     }
 
-    updateColor() {
+    updateColor(key) {
+        let labels = this.data["paperList"].map(d => {
+            if (Array.isArray(d[key]))
+                return d[key][0];
+            else
+                return d[key];
+        });
 
+        labels = labels.map(d => {
+            if (d === undefined)
+                return "undefined";
+            else
+                return d;
+        })
+
+        console.log(labels);
+        let labelSet = new Set(labels);
+        let labelMap = {};
+        let i = 0;
+        labelSet.forEach(function(value) {
+            console.log(value, i);
+            if (value === "undefined")
+                labelMap[value] = -1;
+            else
+                labelMap[value] = i;
+            i++;
+        });
+        let labelIndex = labels.map(d => labelMap[d]);
+
+        console.log(labelIndex);
+        let colorScale = d3.scaleOrdinal(d3["schemeSet3"]);
+        let nodeColor = labelIndex.map(d => {
+            if (d >= 0) {
+                return colorScale(d);
+            } else {
+                return "grey";
+            }
+
+        });
+        this.nodeColor = nodeColor;
+        // this.simulation.stop()
+        this.svg
+            .selectAll('.graphNode')
+            .each(function(d, i) {
+                d3.select(this).style("fill", nodeColor[i]);
+            });
+    }
+
+    updateHighlight(indices) {
+        let indexSet = new Set(indices);
+        this.svg
+            .select('.nodes')
+            .each(function(d, i) {
+                if (indexSet.size > 0) {
+                    if (!indexSet.has(i)) {
+                        d3.select(this).attr("opacity", 0.2);
+                    }
+                } else {
+                    d3.select(this).attr("opacity", 1.0);
+                }
+
+            })
     }
 
     updateFilter() {
         for (let key in this.filterState) {
             if (this.filterState.hasOwnProperty(key)) {
-                this.filterState[key] = this.filterList.select(this.div +
+                this.filterState[key] = this.filterList.select(this
+                    .div +
                     key).property('checked');
             }
         }
@@ -136,17 +195,11 @@ class graphComponent extends baseComponent {
         // this.setData("filter", this.filterState);
     }
 
-
-    updateHighlight(indices) {
-
-    }
-
-
     redraw(threshold) {
         if (this.data["paperList"]) {
             this.generateGraph(this.data["paperList"], threshold);
             // console.log("link size:", this.links.length);
-            this.simulation(this.nodes, this.links, -20);
+            this.runSimulation(this.nodes, this.links, -20);
         }
     }
 
@@ -159,9 +212,15 @@ class graphComponent extends baseComponent {
             // this.randomGraph(n, 2 * n, -20);
             let papers = this.data["paperList"];
             if (papers) {
-                this.generateGraph(papers, this.threshold());
-                console.log("link size:", this.links.length);
-                this.simulation(this.nodes, this.links, -20);
+                let threshold = this.threshold();
+                this.links = [];
+                while (this.links.length < this.nodes.length * 10) {
+                    this.generateGraph(papers, threshold);
+                    console.log("link size:", this.links.length,
+                        " threshold:", threshold);
+                    threshold = threshold - 0.5;
+                }
+                this.runSimulation(this.nodes, this.links, -20);
             }
         }
     }
@@ -176,7 +235,8 @@ class graphComponent extends baseComponent {
         for (let key in this.filterState) {
             if (this.filterState.hasOwnProperty(key))
                 if (this.filterState[key]) {
-                    if (Array.isArray(p1[key]) && Array.isArray(p2[key])) {
+                    if (Array.isArray(p1[key]) && Array.isArray(p2[
+                            key])) {
                         for (let i = 0; i < p1[key].length; i++)
                             for (let j = 0; j < p2[key].length; j++) {
                                 if (p1[key][i] === p2[key][j])
@@ -205,8 +265,8 @@ class graphComponent extends baseComponent {
 
     generateGraph(papers, threshold) {
         // let threshold = 0.0;
-        console.log("threshold:", threshold);
-        this.slider.setValue(this.threshold() * 0.5);
+        // console.log("threshold:", threshold);
+        this.slider.setValue(threshold);
         this.nodes = d3.range(papers.length).map(Object);
         let edgeList = [];
         for (var i = 0; i < papers.length; i++)
@@ -235,7 +295,7 @@ class graphComponent extends baseComponent {
 
     }
 
-    simulation(nodes, links, charge) {
+    runSimulation(nodes, links, charge) {
 
         let controlHeight = d3.select(this.div + "filter").node().getBoundingClientRect()
             .height;
@@ -249,13 +309,21 @@ class graphComponent extends baseComponent {
         var simulation = d3.forceSimulation(nodes)
             .force('charge', d3.forceManyBody().strength(charge))
             .force('center', d3.forceCenter(width / 2, height / 2))
-            .force('link', d3.forceLink().links(links).distance(d => d.distance))
+            .force('link', d3.forceLink().links(links).distance(d =>
+                d.distance))
             .force('collision', d3.forceCollide().radius(7))
 
         .on('tick', tick.bind(this));
+        this.simulation = simulation;
 
-        this.svg.append("g").attr("class", "links");
-        this.svg.append("g").attr("class", "nodes");
+        this.svg.select("#graphNode").remove();
+        this.svg.select("#graphlink").remove();
+        this.svg.append("g")
+            .attr("class", "links")
+            .attr("id", "graphlink");
+        this.svg.append("g")
+            .attr("class", "nodes")
+            .attr("id", "graphNode");
 
         ////////// draw graph ///////////
         let radius = 6;
@@ -296,11 +364,13 @@ class graphComponent extends baseComponent {
                 .append('circle')
                 .merge(v)
                 .attr("cx", function(d) {
-                    return d.x = Math.max(radius, Math.min(width -
+                    return d.x = Math.max(radius, Math.min(
+                        width -
                         radius, d.x));
                 })
                 .attr("cy", function(d) {
-                    return d.y = Math.max(radius, Math.min(height -
+                    return d.y = Math.max(radius, Math.min(
+                        height -
                         radius, d.y));
                 })
                 // .attr('cx', function(d) {
@@ -310,18 +380,26 @@ class graphComponent extends baseComponent {
                 //     return d.y
                 // })
                 .attr("r", radius)
-                .style("fill", "grey")
+                .attr("class", "graphNode")
+                .style("fill", (d, i) => {
+                    if (this.nodeColor) {
+                        return this.nodeColor[i];
+                    } else {
+                        return "grey";
+                    }
+                })
                 .style("stroke", "white")
                 .style("stroke-width", 2)
-                .on("mouseover", function(d) {
-                    d3.select(this).style("fill", "lightgrey")
-                })
-                .on("mouseout", function(d) {
-                    d3.select(this).style("fill", "grey")
-                })
+                // .on("mouseover", function(d) {
+                //     d3.select(this).style("fill", "lightgrey")
+                // })
+                // .on("mouseout", function(d) {
+                //     d3.select(this).style("fill", "grey")
+                // })
                 .on("click", (d) => {
                     // console.log(this.data["paperList"][d.index]);
-                    this.setData("paper", this.data["paperList"][d.index]);
+                    this.setData("paper", this.data["paperList"]
+                        [d.index]);
                 });
 
             v.exit().remove();

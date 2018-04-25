@@ -13,7 +13,7 @@ class sliderPlot {
 
     setValue(value) {
         this.value = value;
-        // this.draw();
+        this.draw();
     }
 
     mapValToWidth() {
