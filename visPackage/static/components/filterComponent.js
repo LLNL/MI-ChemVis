@@ -7,16 +7,7 @@ class filterComponent extends baseComponent {
             "filename": "papers.json"
         });
 
-        // this.filterState = {
-        //     "morphology": true,
-        //     "material": true,
-        //
-        //     "solvents": false,
-        //     "surfactants": true,
-        //
-        //     "method": true,
-        //     "composition": true
-        // };
+
 
         // this.setupUI();
         // this.updateFilter();
@@ -54,19 +45,6 @@ class filterComponent extends baseComponent {
     }
 
     draw() {
-
-    }
-
-    updateFilter() {
-
-        for (let key in this.filterState) {
-            if (this.filterState.hasOwnProperty(key)) {
-                this.filterState[key] = this.container.select(this.div +
-                    key).property('checked');
-            }
-        }
-
-        this.setData("filter", this.filterState);
 
     }
 

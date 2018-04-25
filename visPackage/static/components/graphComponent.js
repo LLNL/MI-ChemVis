@@ -1,8 +1,20 @@
 class graphComponent extends baseComponent {
     constructor(uuid) {
         super(uuid);
-        this.subscribeDatabyNames(["paperList", "filter"]);
+        this.subscribeDatabyNames(["paperList"]);
         /////// edge filter ///////
+        this.filterState = {
+            "morphology": true,
+            "material": true,
+
+            "solvents": false,
+            "surfactants": true,
+
+            "method": true,
+            "composition": true
+        };
+        this.setupUI();
+
     }
 
     parseDataUpdate(msg) {
@@ -23,24 +35,64 @@ class graphComponent extends baseComponent {
         }
     }
 
-    setupUI() {
-        this.container = d3.select(this.div);
+    updateFilter() {
         for (let key in this.filterState) {
             if (this.filterState.hasOwnProperty(key)) {
-                let control = this.container.append("div")
-                    .attr("class", "custom-control custom-checkbox");
-                control.append("input")
-                    .attr("type", "checkbox")
-                    .attr("class", "custom-control-input")
-                    .attr("id", this.uuid + key)
-                    .property('checked', this.filterState[key])
-                    .on("click", this.updateFilter.bind(this));
-                control.append("label")
-                    .attr("class", "custom-control-label")
-                    .attr("for", this.uuid + key)
-                    .html(key);
+                this.filterState[key] = this.container.select(this.div +
+                    key).property('checked');
             }
         }
+
+        this.setData("filter", this.filterState);
+
+    }
+
+    setupUI() {
+
+        this.filterList = d3.select(this.div + "filter");
+        for (let key in this.filterState) {
+            if (this.filterState.hasOwnProperty(key)) {
+                let li = this.filterList.append("div")
+                    .attr("class", "custom-control custom-checkbox")
+                    .style("display", "inline-block")
+                    .style("padding-left", "1.3rem")
+                    .style("padding-right", "1.0rem");
+                // .style("display", "inline-block");
+                li.append("input")
+                    .attr("type", "checkbox")
+                    .attr("id", this.uuid + key)
+                    .attr("class", "custom-control-input")
+                    .on("click", this.updateFilter.bind(this));
+                li.append("label")
+                    .attr("class", "custom-control-label")
+                    .attr("for", this.uuid + key)
+                    .text(key + "\t");
+                // <td>&nbsp;</td>
+                // this.filterList.append('td').html("nbsp;");
+            }
+        }
+
+        // <li style="display:inline-block">
+        //   <input class="any" id="any" name="any" type="checkbox">
+        //   <label id="any" for="any">Any</label>
+        // </li>
+
+        // for (let key in this.filterState) {
+        //     if (this.filterState.hasOwnProperty(key)) {
+        //         let control = this.container.append("div")
+        //             .attr("class", "custom-control custom-checkbox");
+        //         control.append("input")
+        //             .attr("type", "checkbox")
+        //             .attr("class", "custom-control-input")
+        //             .attr("id", this.uuid + key)
+        //             .property('checked', this.filterState[key])
+        //             .on("click", this.updateFilter.bind(this));
+        //         control.append("label")
+        //             .attr("class", "custom-control-label")
+        //             .attr("for", this.uuid + key)
+        //             .html(key);
+        //     }
+        // }
 
     }
 
