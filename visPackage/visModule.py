@@ -95,6 +95,10 @@ class chemVisModule(visModule):
     def addTagToSelection(self, type, tag):
         pass
         return True
+
+    def highlightByTag(self, tag):
+        pass
+        return True
     ############# list of other API #############
 
 

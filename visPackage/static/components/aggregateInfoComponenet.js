@@ -3,6 +3,28 @@ class aggregateInfoComponenet extends baseComponent {
         super(uuid);
         this.subscribeDatabyNames(["selection"], "paperList");
 
+        this.setupUI();
+
+    }
+
+    setupUI() {
+        this.container = select(this.div);
+        let dropdown = this.container.append("div")
+            .attr("class", "btn-group");
+        dropdown.append("button")
+            .attr("class", "btn btn-secondary btn-sm dropdown-toggle")
+            .attr("type", "button")
+            .attr("data-toggle", "dropdown")
+            .attr("aria-haspopup", "true")
+            .html("aggregate-by");
+        let menu = dropdown.append("div")
+            .attr("class", "dropdown-menu");
+        menu.append("a")
+            .attr("class", "dropdown-item")
+            .on("click", d => {
+                this.handleAggregateInfo("chemicals");
+            })
+            .html("chemicals");
     }
 
     parseDataUpdate(msg) {

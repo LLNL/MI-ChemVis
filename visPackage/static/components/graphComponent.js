@@ -14,9 +14,8 @@ class graphComponent extends baseComponent {
             "method": true,
             "composition": true
         };
-        this.controlHeight = 90;
-        this.marginWidth = 10;
 
+        this.marginWidth = 10;
         this.setupUI();
     }
 
@@ -105,7 +104,6 @@ class graphComponent extends baseComponent {
                 "edge filter", [0, 10], 2, ".1f");
             this.slider.bindUpdateCallback(this.redraw.bind(this));
 
-            // console.log("init slider");
             // this.svgSave = new svgExporter(this.svgContainer, [this.width -
             //     10, 10
             // ]);
@@ -238,9 +236,15 @@ class graphComponent extends baseComponent {
     }
 
     simulation(nodes, links, charge) {
+
+        let controlHeight = d3.select(this.div + "filter").node().getBoundingClientRect()
+            .height;
+        // console.log(controlHeight);
+        // this.controlHeight = controlHeight;
+
         let svg = this.svg;
         let width = this.width - this.marginWidth;
-        let height = this.height - this.controlHeight;
+        let height = this.height - controlHeight - 8;
 
         var simulation = d3.forceSimulation(nodes)
             .force('charge', d3.forceManyBody().strength(charge))

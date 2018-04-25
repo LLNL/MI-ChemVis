@@ -51,6 +51,9 @@ class tagLabel {
                 .attr("aria-haspopup", "true")
                 // .style("")
                 .style("background-color", this.colorScale(i))
+                .style("border-color", this.colorScale(i))
+                .style("margin-left", '5px')
+                .style("margin-top", '5px')
                 .html(tag);
 
             if (tagOptions) {
@@ -77,9 +80,22 @@ class tagLabel {
                         this.addtoSelection("exclude", tag);
                     })
                     .html("Add to exclusion");
+
+                menu.append("a")
+                    .attr("class", "dropdown-item")
+                    .on("click", d => {
+                        this.highlightByTag(tag);
+                    })
+                    .html("Highlight");
             }
 
         }
+    }
+
+    highlightByTag(tag) {
+        this.callFunc("highlightByTag", {
+            "tag": tag
+        });
     }
 
     addtoSelection(type, tag) {
