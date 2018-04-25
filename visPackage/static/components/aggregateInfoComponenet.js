@@ -1,14 +1,13 @@
 class aggregateInfoComponenet extends baseComponent {
     constructor(uuid) {
         super(uuid);
-        this.subscribeDatabyNames(["selection"], "paperList");
-
+        this.subscribeDatabyNames(["selection", "paperList"]);
         this.setupUI();
-
     }
 
     setupUI() {
-        this.container = select(this.div);
+        this.container = d3.select(this.div);
+
         let dropdown = this.container.append("div")
             .attr("class", "btn-group");
         dropdown.append("button")
@@ -57,8 +56,38 @@ class aggregateInfoComponenet extends baseComponent {
     }
 
     initSvg() {
-        this.barChart = new barChart(this.div + "barChart");
-        this.scatterplot = new simpleScatterPlot(this.div + "scatterplot");
+        if (this.svgContainer === undefined) {
+            this.svgContainer = d3.select(this.div).append("svg")
+                .attr("width", this.pwidth)
+                .attr("height", this.pheight);
+            this.svg = this.svgContainer
+                .append("g")
+                .attr("width", this.width)
+                .attr("height", this.height);
+
+            this.barChart = new barChart(this.svg, [0, 0], [this.width,
+                this.height * 0.5
+            ]);
+            this.scatter = new simpleScatterPlot(this.svg, [0, this.height *
+                0.5
+            ], [this.width, this.height * 0.5]);
+
+        } else {
+            this.svgContainer
+                .attr("width", this.pwidth)
+                .attr("height", this.pheight - controlHeight);
+
+            this.svg
+                .attr("width", this.width)
+                .attr("height", this.height - controlHeight);
+
+            this.barChart.update([0, 0], [this.width,
+                this.height * 0.5
+            ]);
+            this.scatter.update([0, this.height *
+                0.5
+            ], [this.width, this.height * 0.5]);
+        }
     }
 
     handleAggregateInfo(data) {
@@ -70,11 +99,13 @@ class aggregateInfoComponenet extends baseComponent {
     Half scatterplot / half bar chat
     */
     draw() {
+        this._updateWidthHeight();
+
         this.initSvg();
         // bar char
         this.barChart.draw();
         // scatterplot
-        this.scatterplot.draw();
+        this.scatter.draw();
     }
 
 }

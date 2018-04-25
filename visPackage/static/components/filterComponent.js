@@ -16,13 +16,15 @@ class filterComponent extends baseComponent {
 
     setupUI() {
         // console.log(this.div);
-        this.union = new tagInput(this.div + 'union');
+        this.union = new tagInput(this.div + 'union', "rgb(44, 160, 44)");
         this.union.setChangeTagCallback(this.onUpdateUnion.bind(this));
 
-        this.interset = new tagInput(this.div + 'interset');
+        this.interset = new tagInput(this.div + 'interset',
+            "rgb(31, 119, 180)");
         this.interset.setChangeTagCallback(this.onUpdateInterset.bind(this));
 
-        this.exclude = new tagInput(this.div + 'exclude');
+        this.exclude = new tagInput(this.div + 'exclude',
+            "rgb(214, 39, 40)");
         this.exclude.setChangeTagCallback(this.onUpdateExclude.bind(this));
     }
 

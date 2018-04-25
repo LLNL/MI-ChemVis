@@ -4,17 +4,35 @@ http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
 */
 
 class tagInput {
-    constructor(div) {
+    constructor(div, color) {
         $(div).tagsInput({
             width: 'auto',
             height: '80px',
-            'autocomplete': {
+            autocomplete: {
                 morphology: "morphology",
                 material: "material"
             },
-            // onAddTag: this.onAddTag,
+            onAddTag: function(elem, elem_tags) {
+                $(this).css('background-color',
+                    color);
+                // $('.tag', elem_tags).each(function() {
+                //     $(this).css('background-color',
+                //         color);
+                // });
+            },
             // onRemoveTag: this.onRemoveTag,
-            onChange: this.onChangeTag
+            // onChange: function(elem, elem_tags) {
+            //     $('.tag', elem_tags).each(function() {
+            //         // if ($(this).text().search(new RegExp(
+            //         //         '\\b(' + languages.join(
+            //         //             '|') + ')\\b')) >= 0)
+            //         $(this).css('background-color',
+            //             color);
+            //     });
+            // },
+            backgroundColor: color,
+            onChange: this.onChangeTag,
+            placeholderColor: color
 
             //autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
             // autocomplete_url: 'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint

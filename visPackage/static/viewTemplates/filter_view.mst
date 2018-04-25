@@ -14,7 +14,7 @@
 
     <p>
     <label>Exclusion</label>
-    <input id='{{id}}exclude' type='text' class='tags' value ="">
+    <input id='{{id}}exclude' type='text' class='tags' value ="morphology:nanowire">
     </p>
 
     </div>
