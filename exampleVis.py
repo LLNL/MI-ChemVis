@@ -4,7 +4,9 @@ from visPackage import *
 #visualization components
 visLayout = {
     "row":[{"column":["Filter", "Graph"]},
-            {"column":["Document"]}]
+            {"column":["AggregateInfo"]},
+            {"column":["Document"]}
+            ]
     }
 
 #setup interface

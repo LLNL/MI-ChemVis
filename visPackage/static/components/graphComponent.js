@@ -2,6 +2,7 @@ class graphComponent extends baseComponent {
     constructor(uuid) {
         super(uuid);
         this.subscribeDatabyNames(["paperList", "filter"]);
+        /////// edge filter ///////
     }
 
     parseDataUpdate(msg) {
@@ -11,12 +12,36 @@ class graphComponent extends baseComponent {
                 console.log("paperList updated");
                 this.draw();
                 break;
-            case "filter":
+            case "selection":
                 this.filter = this.data["filter"];
                 console.log("filter updated", this.filter);
                 this.draw();
                 break;
+            case "highlight":
+                this.highlight = this.data["highlight"];
+                break;
         }
+    }
+
+    setupUI() {
+        this.container = d3.select(this.div);
+        for (let key in this.filterState) {
+            if (this.filterState.hasOwnProperty(key)) {
+                let control = this.container.append("div")
+                    .attr("class", "custom-control custom-checkbox");
+                control.append("input")
+                    .attr("type", "checkbox")
+                    .attr("class", "custom-control-input")
+                    .attr("id", this.uuid + key)
+                    .property('checked', this.filterState[key])
+                    .on("click", this.updateFilter.bind(this));
+                control.append("label")
+                    .attr("class", "custom-control-label")
+                    .attr("for", this.uuid + key)
+                    .html(key);
+            }
+        }
+
     }
 
     initSvg() {

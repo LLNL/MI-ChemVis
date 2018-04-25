@@ -1,6 +1,22 @@
-<div id="{{id}}container" style="padding: 40px;">
+<div id="{{id}}container" style="padding: 10px;">
 
-<div id='{{id}}' class="content">
-</div>
+    <div id='{{id}}' class="content">
+
+    <p>
+    <label>Union</label>
+    <input id='tags_1' type='text' class='tags' value ="php,ios,javascript,ruby"></p>
+    </p>
+
+    <p>
+    <label>Intersection</label>
+    <input id='tags_2' type='text' class='tags' value ="php,ios,javascript,ruby"></p>
+    </p>
+
+    <p>
+    <label>Exclusion</label>
+    <input id='tags_3' type='text' class='tags' value =""></p>
+    </p>
+
+    </div>
 
 </div>

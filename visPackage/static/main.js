@@ -4,16 +4,18 @@ var socket = io('http://' + document.domain + ':' + location.port + namespace);
 // var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
 
 var panelMetaInfo = {
-    'Filter': ['filter_view', 'filterComponent'],
-    'Graph': ['graph_view', 'graphComponent'],
-    'Document': ['doc_view', 'documentComponent']
+    'Filter': ['filter_view.mst', 'filterComponent'],
+    'Graph': ['graph_view.mst', 'graphComponent'],
+    'Document': ['doc_view.mst', 'documentComponent'],
+    'AggregateInfo': ['aggregateInfo_view.mst', 'aggregateInfoComponenet']
 };
 
 //for lookup component class on-the-fly
 var objectMap = {
     filterComponent: filterComponent,
     graphComponent: graphComponent,
-    documentComponent: documentComponent
+    documentComponent: documentComponent,
+    aggregateInfoComponenet: aggregateInfoComponenet
 };
 
 //////////////////////create layout ///////////////////////

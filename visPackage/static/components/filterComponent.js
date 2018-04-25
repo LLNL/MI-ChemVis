@@ -2,47 +2,58 @@ class filterComponent extends baseComponent {
     constructor(uuid) {
         super(uuid);
         this.subscribeDatabyNames(["paperList"]);
+
         this.callFunc("loadData", {
             "filename": "papers.json"
         });
 
-        this.filterState = {
-            "morphology": true,
-            "material": true,
+        // this.filterState = {
+        //     "morphology": true,
+        //     "material": true,
+        //
+        //     "solvents": false,
+        //     "surfactants": true,
+        //
+        //     "method": true,
+        //     "composition": true
+        // };
 
-            "solvents": false,
-            "surfactants": true,
-
-            "method": true,
-            "composition": true
-        };
-
+        // this.setupUI();
+        // this.updateFilter();
         this.setupUI();
-        this.updateFilter();
-    }
-
-    draw() {
-
     }
 
     setupUI() {
-        this.container = d3.select(this.div);
-        for (let key in this.filterState) {
-            if (this.filterState.hasOwnProperty(key)) {
-                let control = this.container.append("div")
-                    .attr("class", "custom-control custom-checkbox");
-                control.append("input")
-                    .attr("type", "checkbox")
-                    .attr("class", "custom-control-input")
-                    .attr("id", this.uuid + key)
-                    .property('checked', this.filterState[key])
-                    .on("click", this.updateFilter.bind(this));
-                control.append("label")
-                    .attr("class", "custom-control-label")
-                    .attr("for", this.uuid + key)
-                    .html(key);
-            }
-        }
+        $('#tags_1').tagsInput({
+            width: 'auto'
+        });
+        $('#tags_2').tagsInput({
+            width: 'auto'
+        });
+        $('#tags_3').tagsInput({
+            width: 'auto',
+            onAddTag: this.onAddTag,
+            onRemoveTag: this.onRemoveTag,
+            onChange: this.onChangeTag
+                //autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
+                // autocomplete_url: 'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint
+        });
+
+    }
+
+    onAddTag(tag) {
+        console.log("Added a tag: " + tag);
+    }
+
+    onRemoveTag(tag) {
+        console.log("Removed a tag: " + tag);
+    }
+
+    onChangeTag(input, tag) {
+        console.log("Changed a tag: " + tag);
+    }
+
+    draw() {
 
     }
 
