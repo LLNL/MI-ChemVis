@@ -28,7 +28,7 @@ class documentComponent extends baseComponent {
                 .html(paper.authors);
 
             d3.select(this.div + "abstract")
-                .html(paper.abstract);
+                .html("<b>Abstract:</b> " + paper.abstract);
 
             let tags = []
             tags.push({

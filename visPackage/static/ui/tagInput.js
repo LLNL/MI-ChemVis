@@ -76,11 +76,10 @@ class tagLabel {
         let dropdown = this.container.append("div")
             .attr("class", "btn-group");
         dropdown.append("button")
-            .attr("class", "btn btn-secondary btn-sm dropdown-toggle")
+            .attr("class", "btn btn-secondary btn-sm")
             .attr("type", "button")
-            // .attr("data-toggle", "dropdown tooltip")
-            .attr("aria-haspopup", "true")
             .attr("data-toggle", "tooltip")
+            .attr("aria-haspopup", "true")
             .attr("data-placement", "top")
             .attr("title", tooltip)
             .style("background-color", color)
@@ -88,6 +87,20 @@ class tagLabel {
             .style("margin-left", '5px')
             .style("margin-top", '5px')
             .html(tag);
+
+        dropdown.append("button")
+            .attr("class",
+                "btn btn-secondary btn-sm dropdown-toggle "
+            )
+            .attr("type", "button")
+            .attr("data-toggle", "dropdown")
+            .attr("aria-haspopup", "true")
+            .attr("aria-expanded", "false")
+            .style("background-color", color)
+            .style("border-color", color)
+            .style("margin-top", '5px')
+            .append("span")
+            .attr("class", "sr-only").html("Toggle Dropdown");
 
         if (tagOption) {
             let menu = dropdown.append("div")
