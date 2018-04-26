@@ -40,7 +40,6 @@ class aggregateInfoComponenet extends baseComponent {
                 this.selection = this.data["selection"];
                 this.draw();
                 break;
-
             case "highlight":
                 this.highlight = this.data["highlight"];
                 break;
@@ -58,14 +57,16 @@ class aggregateInfoComponenet extends baseComponent {
     }
 
     initSvg() {
+        let controlHeight = d3.select(this.div + "control").node().getBoundingClientRect()
+            .height;
         if (this.svgContainer === undefined) {
             this.svgContainer = d3.select(this.div).append("svg")
                 .attr("width", this.pwidth)
-                .attr("height", this.pheight);
+                .attr("height", this.pheight - controlHeight);
             this.svg = this.svgContainer
                 .append("g")
                 .attr("width", this.width)
-                .attr("height", this.height);
+                .attr("height", this.height - controlHeight);
 
             this.barChart = new barChart(this.svg, [0, 20], [this.width,
                 this.height * 0.45
@@ -74,8 +75,8 @@ class aggregateInfoComponenet extends baseComponent {
                 this));
 
             this.scatter = new simpleScatterPlot(this.svg, [0, this.height *
-                0.55
-            ], [this.width, this.height * 0.40]);
+                0.55 + controlHeight
+            ], [this.width, this.height * 0.40 - controlHeight]);
 
         } else {
             this.svgContainer
@@ -90,8 +91,8 @@ class aggregateInfoComponenet extends baseComponent {
                 this.height * 0.45
             ]);
             this.scatter.update([0, this.height *
-                0.5
-            ], [this.width, this.height * 0.45]);
+                0.55 + controlHeight
+            ], [this.width, this.height * 0.40 - controlHeight]);
         }
     }
 
@@ -121,6 +122,10 @@ class aggregateInfoComponenet extends baseComponent {
         this.barChart.draw();
         // scatterplot
         this.scatter.draw();
+    }
+
+    resize() {
+        this.draw();
     }
 
 }

@@ -17,12 +17,8 @@ class barChart {
             x.rangeRound([this.pos[0], width]);
             y.rangeRound([height, this.pos[1]]);
             let barData = this.data.slice(0, 20);
-            x.domain(barData.map(function(d) {
-                return d.name;
-            }));
-            y.domain([0, d3.max(barData, function(d) {
-                return d.count;
-            })]);
+            x.domain(barData.map(d => d.name));
+            y.domain([0, d3.max(barData, d => d.count)]);
 
             this.svg.append("g")
                 .attr("class", "axis")

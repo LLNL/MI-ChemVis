@@ -171,7 +171,7 @@ class graphComponent extends baseComponent {
         this.svg
             .selectAll('.graphNode')
             .each(function(d, i) {
-                console.log(d, i);
+                // console.log(d, i);
                 if (indexSet.size > 0) {
                     if (!indexSet.has(i)) {
                         d3.select(this).attr("opacity", 0.2);
