@@ -82,6 +82,34 @@ class graphComponent extends baseComponent {
                     .html(key);
             }
         }
+        // <button type="button" class="btn btn-secondary">Secondary</button>
+        ///// add edge control buttons //////
+        this.filterList.append("button")
+            .attr("type", "button")
+            .attr("class", "btn btn-sm btn-secondary")
+            .style("margin-left", "5px")
+            .html("+")
+            .attr("data-toggle", "tooltip")
+            .attr("data-placement", "top")
+            .attr("title", "increase edges")
+            .on("click", d => {
+                this.redraw(this.currentEdgeThreshold - 1.0)
+            });
+        this.filterList.append("button")
+            .attr("type", "button")
+            .attr("class", "btn btn-sm btn-secondary")
+            .style("margin-left", "5px")
+            .html("-")
+            .attr("data-toggle", "tooltip")
+            .attr("data-placement", "top")
+            .attr("title", "decrease edges")
+            .on("click", d => {
+                this.redraw(this.currentEdgeThreshold + 1.0)
+            });
+
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
     }
 
     initSvg() {
@@ -96,9 +124,9 @@ class graphComponent extends baseComponent {
                 .attr("transform", "translate(" + this.margin.left + "," +
                     this.margin.top + ")");
 
-            this.slider = new sliderPlot(this.svg, [25, 5], [50, 15],
-                "edge filter", [0, 10], 2, ".1f");
-            this.slider.bindUpdateCallback(this.redraw.bind(this));
+            // this.slider = new sliderPlot(this.svg, [25, 5], [50, 15],
+            //     "edge filter", [0, 10], 2, ".1f");
+            // this.slider.bindUpdateCallback(this.redraw.bind(this));
 
             // console.log("init slider");
             // this.svgSave = new svgExporter(this.svgContainer, [this.width -
@@ -109,8 +137,7 @@ class graphComponent extends baseComponent {
                 .attr("width", this.pwidth)
                 .attr("height", this.pheight)
 
-            this.svg.selectAll(
-                ".link, .node").remove();
+            this.svg.selectAll("*").remove();
 
             // this.svgSave.updatePos([this.width - 10, 10])
             // this.svgSave.draw();
@@ -157,7 +184,7 @@ class graphComponent extends baseComponent {
 
         });
         this.nodeColor = nodeColor;
-        // this.simulation.stop()
+
         this.svg
             .selectAll('.graphNode')
             .each(function(d, i) {
@@ -199,7 +226,8 @@ class graphComponent extends baseComponent {
     }
 
     redraw(threshold) {
-        if (this.data["paperList"]) {
+        if (this.data["paperList"] && this.svg) {
+
             this.generateGraph(this.data["paperList"], threshold);
             // console.log("link size:", this.links.length);
             this.runSimulation(this.nodes, this.links, -20);
@@ -216,12 +244,13 @@ class graphComponent extends baseComponent {
             let papers = this.data["paperList"];
             if (papers) {
                 let threshold = this.threshold();
+                this.generateGraph(papers, threshold);
                 this.links = [];
                 while (this.links.length < this.nodes.length * 10) {
                     this.generateGraph(papers, threshold);
                     console.log("link size:", this.links.length,
                         " threshold:", threshold);
-                    threshold = threshold - 0.5;
+                    threshold = threshold - 1.0;
                 }
                 this.runSimulation(this.nodes, this.links, -20);
             }
@@ -262,15 +291,19 @@ class graphComponent extends baseComponent {
                     count += 1.0;
             }
         }
-        return count - 1.0;
+        return count - 1.0 + 0.5;
 
     }
 
     generateGraph(papers, threshold) {
         // let threshold = 0.0;
         // console.log("threshold:", threshold);
-        this.slider.setValue(threshold);
-        this.nodes = d3.range(papers.length).map(Object);
+        // this.slider.setValue(threshold);
+        this.currentEdgeThreshold = threshold;
+        if (!this.nodes || this.nodes.length != papers.length) {
+            this.nodes = d3.range(papers.length).map(Object);
+        }
+        // this.nodes = d3.range(papers.length).map(Object);
         let edgeList = [];
         for (var i = 0; i < papers.length; i++)
             for (var j = 0; j < papers.length; j++)
@@ -299,7 +332,6 @@ class graphComponent extends baseComponent {
     }
 
     runSimulation(nodes, links, charge) {
-
         let controlHeight = d3.select(this.div + "filter").node().getBoundingClientRect()
             .height;
         // console.log(controlHeight);
@@ -309,24 +341,33 @@ class graphComponent extends baseComponent {
         let width = this.width - this.marginWidth;
         let height = this.height - controlHeight - 8;
 
-        var simulation = d3.forceSimulation(nodes)
-            .force('charge', d3.forceManyBody().strength(charge))
-            .force('center', d3.forceCenter(width / 2, height / 2))
-            .force('link', d3.forceLink().links(links).distance(d =>
-                d.distance))
-            .force('collision', d3.forceCollide().radius(7))
+        if (!this.simulation) {
+            this.simulation = d3.forceSimulation(nodes)
+                .force('charge', d3.forceManyBody().strength(charge))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('link', d3.forceLink().links(links).distance(d =>
+                    d.distance))
+                .force('collision', d3.forceCollide().radius(7))
+                .on('tick', tick.bind(this));
+        } else {
+            this.simulation
+                .force('link', d3.forceLink().links(links).distance(d =>
+                    d.distance))
+                .on('tick', tick.bind(this));
+            console.log("simulation restart!");
+            this.simulation.alpha(0.5).restart();
+        }
 
-        .on('tick', tick.bind(this));
-        this.simulation = simulation;
-
-        this.svg.select("#graphNode").remove();
-        this.svg.select("#graphlink").remove();
-        this.svg.append("g")
-            .attr("class", "links")
-            .attr("id", "graphlink");
-        this.svg.append("g")
-            .attr("class", "nodes")
-            .attr("id", "graphNode");
+        if (this.svg.select("#graphlink").empty()) {
+            this.svg.append("g")
+                .attr("class", "links")
+                .attr("id", "graphlink");
+        }
+        if (this.svg.select("#graphNode").empty()) {
+            this.svg.append("g")
+                .attr("class", "nodes")
+                .attr("id", "graphNode");
+        }
 
         ////////// draw graph ///////////
         let radius = 6;
@@ -376,12 +417,6 @@ class graphComponent extends baseComponent {
                         height -
                         radius, d.y));
                 })
-                // .attr('cx', function(d) {
-                //     return d.x
-                // })
-                // .attr('cy', function(d) {
-                //     return d.y
-                // })
                 .attr("r", radius)
                 .attr("class", "graphNode")
                 .style("fill", (d, i) => {
