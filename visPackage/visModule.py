@@ -42,7 +42,7 @@ class visModule:
 
     # @staticmethod
     def startServer(self):
-        eventlet.wsgi.server(eventlet.listen(('localhost', 5010)), fApp)
+        eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 5010)), fApp)
         # socketio.run(app, host='localhost',port=5050, debug=True)
 
 ############## specialized vis modules ################
