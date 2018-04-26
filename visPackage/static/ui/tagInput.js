@@ -51,67 +51,78 @@ class tagInput {
 }
 
 class tagLabel {
-    constructor(div, tags, tagOptions) {
+    constructor(div, tags, tagOption) {
         // let tags = tagObjects.map(d => d.tag);
-        let container = d3.select(div).html("");
+        this.container = d3.select(div).html("");
         this.colorScale = d3.scaleOrdinal(d3["schemeCategory10"]);
 
+        console.log("tag length:", tags.length);
+
         for (let i = 0; i < tags.length; i++) {
-            let tag = tags[i].tag;
+            let color = this.colorScale(i);
             let tooltip = tags[i].tooltip;
-            let dropdown = container.append("div")
-                .attr("class", "btn-group");
-            dropdown.append("button")
-                .attr("class", "btn btn-secondary btn-sm dropdown-toggle")
-                .attr("type", "button")
-                // .attr("data-toggle", "dropdown tooltip")
-                .attr("aria-haspopup", "true")
-                .attr("data-toggle", "tooltip")
-                .attr("data-placement", "top")
-                .attr("title", tooltip)
-                .style("background-color", this.colorScale(i))
-                .style("border-color", this.colorScale(i))
-                .style("margin-left", '5px')
-                .style("margin-top", '5px')
-                .html(tag);
-
-            if (tagOptions) {
-                let menu = dropdown.append("div")
-                    .attr("class", "dropdown-menu");
-
-                menu.append("a")
-                    .attr("class", "dropdown-item")
-                    .on("click", d => {
-                        this.addtoSelection("union", tag);
-                    })
-                    .html("Add to union");
-
-                menu.append("a")
-                    .attr("class", "dropdown-item")
-                    .on("click", d => {
-                        this.addtoSelection("interset", tag);
-                    })
-                    .html("Add to intersetion");
-
-                menu.append("a")
-                    .attr("class", "dropdown-item")
-                    .on("click", d => {
-                        this.addtoSelection("exclude", tag);
-                    })
-                    .html("Add to exclusion");
-
-                menu.append("a")
-                    .attr("class", "dropdown-item")
-                    .on("click", d => {
-                        this.highlightByTag(tag);
-                    })
-                    .html("Highlight");
+            let tag = tags[i];
+            if (Array.isArray(tag.tag)) {
+                let multiTag = tag.tag;
+                for (let j = 0; j < multiTag.length; j++) {
+                    this.addTag(multiTag[j], tooltip, tagOption, color);
+                }
+            } else {
+                this.addTag(tag.tag, tooltip, tagOption, color);
             }
+        }
+        //init tooltip
+        $('[data-toggle="tooltip"]').tooltip()
+    }
 
-            //init tooltip
-            $(function() {
-                $('[data-toggle="tooltip"]').tooltip()
-            })
+    addTag(tag, tooltip, tagOption, color) {
+        let dropdown = this.container.append("div")
+            .attr("class", "btn-group");
+        dropdown.append("button")
+            .attr("class", "btn btn-secondary btn-sm dropdown-toggle")
+            .attr("type", "button")
+            // .attr("data-toggle", "dropdown tooltip")
+            .attr("aria-haspopup", "true")
+            .attr("data-toggle", "tooltip")
+            .attr("data-placement", "top")
+            .attr("title", tooltip)
+            .style("background-color", color)
+            .style("border-color", color)
+            .style("margin-left", '5px')
+            .style("margin-top", '5px')
+            .html(tag);
+
+        if (tagOption) {
+            let menu = dropdown.append("div")
+                .attr("class", "dropdown-menu");
+
+            menu.append("a")
+                .attr("class", "dropdown-item")
+                .on("click", d => {
+                    this.addtoSelection("union", tag);
+                })
+                .html("Add to union");
+
+            menu.append("a")
+                .attr("class", "dropdown-item")
+                .on("click", d => {
+                    this.addtoSelection("interset", tag);
+                })
+                .html("Add to intersetion");
+
+            menu.append("a")
+                .attr("class", "dropdown-item")
+                .on("click", d => {
+                    this.addtoSelection("exclude", tag);
+                })
+                .html("Add to exclusion");
+
+            menu.append("a")
+                .attr("class", "dropdown-item")
+                .on("click", d => {
+                    this.highlightByTag(tag);
+                })
+                .html("Highlight");
         }
     }
 

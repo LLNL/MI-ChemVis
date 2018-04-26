@@ -354,8 +354,8 @@ class graphComponent extends baseComponent {
                 .force('link', d3.forceLink().links(links).distance(d =>
                     d.distance))
                 .on('tick', tick.bind(this));
-            console.log("simulation restart!");
-            this.simulation.alpha(0.5).restart();
+            // console.log("simulation restart!");
+            this.simulation.alpha(0.3).restart();
         }
 
         if (this.svg.select("#graphlink").empty()) {

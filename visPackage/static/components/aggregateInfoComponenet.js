@@ -2,6 +2,14 @@ class aggregateInfoComponenet extends baseComponent {
     constructor(uuid) {
         super(uuid);
         this.subscribeDatabyNames(["selection", "paperList"]);
+
+        this.selection = [];
+        this.aggregators = [
+            ["chemicals", "mf"],
+            ["solvents"],
+            ["surfactants"]
+        ];
+
         this.setupUI();
     }
 
@@ -18,16 +26,37 @@ class aggregateInfoComponenet extends baseComponent {
             .html("aggregate-by");
         let menu = dropdown.append("div")
             .attr("class", "dropdown-menu");
-        menu.append("a")
-            .attr("class", "dropdown-item")
-            .on("click", d => {
-                this.callFunc("aggregateByKeys", {
-                    selection: [],
-                    keys: ["chemicals", "mf"]
-                });
-            })
-            .html("chemicals");
+        ////// generate
+        for (let i = 0; i < this.aggregators.length; i++) {
+            let keys = this.aggregators[i];
+            menu.append("a")
+                .attr("class", "dropdown-item")
+                .on("click", d => {
+                    this.aggregateByKeys(this.selection, keys);
+                })
+                .html(keys[0]);
+        }
+        // menu.append("a")
+        //     .attr("class", "dropdown-item")
+        //     .on("click", d => {
+        //         this.aggregateByKeys(this.selection, ["solvents"]);
+        //     })
+        //     .html("solvents");
+        // menu.append("a")
+        //     .attr("class", "dropdown-item")
+        //     .on("click", d => {
+        //         this.aggregateByKeys(this.selection, ["surfactants"]);
+        //     })
+        //     .html("surfactants");
     }
+
+    aggregateByKeys(selection, keys) {
+        this.callFunc("aggregateByKeys", {
+            "selection": selection,
+            "keys": keys
+        });
+    }
+
 
     parseDataUpdate(msg) {
         super.parseDataUpdate(msg);

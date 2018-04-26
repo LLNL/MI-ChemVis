@@ -32,7 +32,7 @@ class documentComponent extends baseComponent {
 
             let tags = []
             tags.push({
-                tag: paper.morphology[0],
+                tag: paper.morphology,
                 tooltip: "morphology"
             })
 
@@ -41,25 +41,30 @@ class documentComponent extends baseComponent {
                 tooltip: "material"
             })
             tags.push({
-                tag: paper.method[0],
+                tag: paper.method,
                 tooltip: "method"
             })
             tags.push({
-                tag: paper.metal_salts[0],
+                tag: paper.metal_salts,
                 tooltip: "metal_salts"
             })
             tags.push({
-                tag: paper.solvents[0],
+                tag: paper.solvents,
                 tooltip: "solvents"
             })
             tags.push({
-                tag: paper.surfactants[0],
+                tag: paper.surfactants,
                 tooltip: "surfactants"
             })
             tags.push({
-                tag: paper.reducing_agents[0],
+                tag: paper.reducing_agents,
                 tooltip: "reducing_agents"
             })
+            tags.push({
+                tag: paper.chemicals.map(d => d.chemical),
+                tooltip: "chemical"
+            })
+            console.log(tags);
 
             let labels = new tagLabel(this.div + "tags", tags, true);
 

@@ -132,7 +132,7 @@ class barChart {
             return a.count - b.count;
         });
 
-        console.log(this.data);
+        // console.log(this.data);
         this.draw();
     }
 
