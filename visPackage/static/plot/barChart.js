@@ -24,8 +24,6 @@ class barChart {
                 return d.count;
             })]);
 
-            // console.log(height, width, barData);
-
             this.svg.append("g")
                 .attr("class", "axis")
                 .call(d3.axisLeft(y).ticks(20, "%"));
@@ -53,6 +51,7 @@ class barChart {
             var bars = this.svg.selectAll(".bar")
                 .data(barData);
             // ENTER
+            let callback = this.callback;
             bars
                 .enter().append("rect")
                 .attr("class", "bar")
@@ -67,13 +66,23 @@ class barChart {
                     return height - y(d.count);
                 })
                 .on("mouseover", function(d) {
-                    d3.select(this).style("fill", "lightgrey")
+                    if (d3.select(this).style("fill") !== "lightblue")
+                        d3.select(this).style("fill", "lightgrey");
                 })
                 .on("mouseout", function(d) {
-                    d3.select(this).style("fill", "grey")
+                    if (d3.select(this).style("fill") !== "lightblue")
+                        d3.select(this).style("fill", "grey");
                 })
-                .on("click", d => {
-                    this.callback(d.array);
+                .on("click", function(d) {
+
+                    console.log(d3.select(this).style("fill"));
+                    if (d3.select(this).style("fill") === "lightblue") {
+                        d3.select(this).style("fill", "lightgrey");
+                    } else {
+                        d3.selectAll(".bar").style("fill", "grey");
+                        d3.select(this).style("fill", "lightblue");
+                    }
+                    callback(d.array);
                 })
                 .style("fill", "grey");
         }
