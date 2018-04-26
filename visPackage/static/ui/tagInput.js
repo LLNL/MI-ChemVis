@@ -5,9 +5,6 @@ http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
 
 class tagInput {
     constructor(div, color) {
-        $(function() {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
 
         $(div).tagsInput({
             width: 'auto',

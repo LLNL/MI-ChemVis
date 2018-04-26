@@ -12,7 +12,10 @@ class graphComponent extends baseComponent {
             "surfactants": true,
 
             "method": true,
-            "composition": true
+            "reducing_agents": true,
+
+            // "chemicals": false
+            // "composition": true
         };
 
         this.marginWidth = 10;
@@ -271,8 +274,15 @@ class graphComponent extends baseComponent {
                             key])) {
                         for (let i = 0; i < p1[key].length; i++)
                             for (let j = 0; j < p2[key].length; j++) {
-                                if (p1[key][i] === p2[key][j])
-                                    dist += 1.0;
+                                if (p1[key][0] instanceof Object) {
+                                    if (p1[key][i]["chemical"] ===
+                                        p2[key][j]["chemical"])
+                                        dist += 1.0;
+
+                                } else {
+                                    if (p1[key][i] === p2[key][j])
+                                        dist += 1.0;
+                                }
                             }
                     } else {
                         if (p1[key] === p2[key])

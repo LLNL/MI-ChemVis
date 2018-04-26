@@ -34,37 +34,45 @@ class documentComponent extends baseComponent {
             tags.push({
                 tag: paper.morphology,
                 tooltip: "morphology"
-            })
+            });
 
             tags.push({
                 tag: paper.material,
                 tooltip: "material"
-            })
-            tags.push({
-                tag: paper.method,
-                tooltip: "method"
-            })
+            });
             tags.push({
                 tag: paper.metal_salts,
                 tooltip: "metal_salts"
-            })
+            });
             tags.push({
                 tag: paper.solvents,
                 tooltip: "solvents"
-            })
+            });
             tags.push({
                 tag: paper.surfactants,
                 tooltip: "surfactants"
-            })
+            });
             tags.push({
                 tag: paper.reducing_agents,
                 tooltip: "reducing_agents"
-            })
+            });
             tags.push({
                 tag: paper.chemicals.map(d => d.chemical),
                 tooltip: "chemical"
-            })
-            console.log(tags);
+            });
+            tags.push({
+                tag: paper.method,
+                tooltip: "method"
+            });
+            tags.push({
+                tag: paper.pixie_dust,
+                tooltip: "pixie_dust"
+            });
+            tags.push({
+                tag: paper.pressure,
+                tooltip: "pressure"
+            });
+            // console.log(tags);
 
             let labels = new tagLabel(this.div + "tags", tags, true);
 

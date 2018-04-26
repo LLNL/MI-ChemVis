@@ -60,6 +60,7 @@ class filterComponent extends baseComponent {
         switch (msg['name']) {
             case "paperList":
                 let papers = this.data["paperList"];
+                this.setData("paper", papers[0]);
                 this.draw();
 
                 // let flat_sme_papers = this.flatten_normal_data(papers, true);

@@ -97,7 +97,7 @@ class chemVisModule(visModule):
         return True
 
     def highlightByTag(self, tag):
-        pass
+
         return True
     ############# list of other API #############
 
