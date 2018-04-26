@@ -68,7 +68,8 @@ class aggregateInfoComponenet extends baseComponent {
                 .attr("width", this.width)
                 .attr("height", this.height - controlHeight);
 
-            this.barChart = new barChart(this.svg, [0, 20], [this.width,
+            this.barChart = new barChart(this.svg, [20, 20], [this.width -
+                20,
                 this.height * 0.45
             ]);
             this.barChart.setSelectionCallback(this.setHighlight.bind(
@@ -87,7 +88,7 @@ class aggregateInfoComponenet extends baseComponent {
                 .attr("width", this.width)
                 .attr("height", this.height - controlHeight);
 
-            this.barChart.update([0, 20], [this.width,
+            this.barChart.update([20, 20], [this.width - 20,
                 this.height * 0.45
             ]);
             this.scatter.update([0, this.height *

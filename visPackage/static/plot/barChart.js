@@ -12,7 +12,7 @@ class barChart {
             let height = this.size[1];
             let width = this.size[0];
 
-            let x = d3.scaleBand().padding(0.1);
+            let x = d3.scaleBand().padding(0.2);
             let y = d3.scaleLinear();
             x.rangeRound([this.pos[0], width]);
             y.rangeRound([height, this.pos[1]]);
@@ -20,14 +20,18 @@ class barChart {
             x.domain(barData.map(d => d.name));
             y.domain([0, d3.max(barData, d => d.count)]);
 
+            // Y axis
             this.svg.append("g")
                 .attr("class", "axis")
-                .call(d3.axisLeft(y).ticks(20, "%"));
+                .attr("transform", "translate(" + this.pos[0] + "," +
+                    0 + ")")
+                .call(d3.axisLeft(y).ticks(7, "d"));
 
+            // X axis
             this.svg.append("g")
                 .attr("class", "axis")
-                .attr("id", "axisY")
-                .attr("transform", "translate(0," + height + ")")
+                .attr("transform", "translate(" + 0 + "," +
+                    height + ")")
                 .call(d3.axisBottom(x))
                 .selectAll("text")
                 .style("text-anchor", "end")
@@ -36,13 +40,13 @@ class barChart {
                 .attr("dy", ".15em")
                 .attr("transform", "rotate(-65)");
 
-            this.svg.append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 10)
-                .attr("x", 0)
-                .attr("dy", "0.71em")
-                .attr("text-anchor", "end")
-                .text("Frequency");
+            // this.svg.append("text")
+            //     .attr("transform", "rotate(-90)")
+            //     .attr("y", 10)
+            //     .attr("x", 0)
+            //     .attr("dy", "0.71em")
+            //     .attr("text-anchor", "end")
+            //     .text("Frequency");
 
             var bars = this.svg.selectAll(".bar")
                 .data(barData);
