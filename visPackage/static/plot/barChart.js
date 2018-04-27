@@ -75,8 +75,10 @@ class barChart {
                 .on("click", function(d) {
 
                     // d3.selectAll(".partialBar").style("fill", "grey");
-                    for (let i = 0; i < partialBarData.length; i++) {
-                        partialBarData[i].count = 0;
+                    if (partialBarData) {
+                        for (let i = 0; i < partialBarData.length; i++) {
+                            partialBarData[i].count = 0;
+                        }
                     }
                     d3.selectAll(".partialBar").remove();
 
