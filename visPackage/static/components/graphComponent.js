@@ -195,7 +195,7 @@ class graphComponent extends baseComponent {
 
     updateHighlight(indices) {
         let indexSet = new Set(indices);
-        console.log(indexSet.size);
+        // console.log(indexSet.size);
         this.svg
             .selectAll('.graphNode')
             .each(function(d, i) {
@@ -361,6 +361,7 @@ class graphComponent extends baseComponent {
             this.simulation
                 .force('link', d3.forceLink().links(links).distance(d =>
                     d.distance))
+                .force('center', d3.forceCenter(width / 2, height / 2))
                 .on('tick', tick.bind(this));
             // console.log("simulation restart!");
             this.simulation.alpha(0.3).restart();

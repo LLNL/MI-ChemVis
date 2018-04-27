@@ -101,6 +101,8 @@ class aggregateInfoComponenet extends baseComponent {
     }
 
     aggregateLabelsByKeys(selection, keys) {
+        //reset highlight
+        this.setHighlight([]);
         this.callFunc("aggregateLabelsByKeys", {
             "selection": selection,
             "keys": keys
@@ -132,6 +134,7 @@ class aggregateInfoComponenet extends baseComponent {
                 break;
             case "highlight":
                 this.highlight = this.data["highlight"];
+                this.handleHighlight(this.highlight);
                 break;
         }
     }
@@ -200,6 +203,8 @@ class aggregateInfoComponenet extends baseComponent {
 
     setHighlight(list) {
         // console.log(list);
+        if (this.scatter)
+            this.scatter.highlight(list);
         this.setData("highlight", list);
     }
 

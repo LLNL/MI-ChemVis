@@ -23,7 +23,7 @@ class simpleScatterPlot {
             xScale.domain(d3.extent(data, d => d[0])).nice();
             yScale.domain(d3.extent(data, d => d[1])).nice();
 
-            var r = 5;
+            var r = 6;
             var points = this.svg.selectAll('.point')
                 .data(data)
                 .enter().append('circle')
@@ -35,7 +35,7 @@ class simpleScatterPlot {
                     return yScale(d[1]);
                 })
                 .attr('r', r)
-                .style("opacity", 0.5)
+                .style("opacity", 0.8)
                 .style('fill', "lightgrey")
                 .on("click", (d, i) => {
                     this.callback(this.data[i]);
@@ -43,11 +43,13 @@ class simpleScatterPlot {
                 .on("mouseover", function(d) {
                     // console.log("mouseOver");
                     d3.select(this).style("fill", "grey");
+                    d3.select(this).attr("r", 8);
                     // d3.select(this).attr("r", 2*r);
                     //draw tooltip
                 })
                 .on("mouseout", function(d) {
                     d3.select(this).style("fill", "lightgrey");
+                    d3.select(this).attr("r", 6);
                 });
 
             if (this.axisXflag) {
@@ -93,5 +95,29 @@ class simpleScatterPlot {
 
     bindSelectionCallback(callback) {
         this.callback = callback;
+    }
+
+    highlight(list) {
+        let indexSet = new Set(list);
+        if (list.length > 0) {
+            this.svg.selectAll(".point").each(function(d, i) {
+                let highlight = false;
+                if (d[2]) {
+                    if (indexSet.has(d[2]))
+                        highlight = true;
+                } else {
+                    if (indexSet.has(i))
+                        highlight = true;
+                }
+
+                if (highlight)
+                    d3.select(this).style("fill", "lightblue");
+                else
+                    d3.select(this).style("fill", "lightgrey");
+            })
+
+        } else {
+            this.svg.selectAll(".point").style("fill", "lightgrey");
+        }
     }
 }
