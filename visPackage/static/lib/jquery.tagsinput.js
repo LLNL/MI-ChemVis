@@ -16,8 +16,6 @@
 
 (function($) {
 	//allow access settings from anywhere
-	var settings;
-
 	var delimiter = new Array();
 	var tags_callbacks = new Array();
 	$.fn.doAutosize = function(o) {
@@ -86,6 +84,7 @@
 			focus: false,
 			callback: true
 		}, options);
+		console.log(options)
 		this.each(function() {
 			var id = $(this).attr('id');
 
@@ -118,7 +117,7 @@
 						return $('#' + id).removeTag(escape(value));
 					})
 				).insertBefore('#' + id + '_addTag')
-				span.css("background-color", settings.backgroundColor);
+				span.css("background-color", options.backgroundColor);
 
 				tagslist.push(value);
 
@@ -194,7 +193,7 @@
 			defaultText: 'add a tag',
 			minChars: 0,
 			width: '300px',
-			height: '100px',
+			height: '50px',
 			autocomplete: {
 				selectFirst: false
 			},
@@ -203,7 +202,7 @@
 			'unique': true,
 			removeWithBackspace: true,
 			placeholderColor: '#666666',
-			backgroundColor: '070',
+			backgroundColor: '#777',
 			autosize: true,
 			comfortZone: 20,
 			inputPadding: 6 * 2
@@ -280,12 +279,14 @@
 
 					if (jQuery.Autocompleter !== undefined) {
 						$(data.fake_input).autocomplete(settings.autocomplete_url, settings.autocomplete);
+						// console.log("backgroundColor:", settings.backgroundColor);
 						$(data.fake_input).bind('result', data, function(event, data,
 							formatted) {
 							if (data) {
 								$('#' + id).addTag(data[0] + "", {
 									focus: true,
-									unique: (settings.unique)
+									unique: (settings.unique),
+									backgroundColor: settings.backgroundColor
 								});
 							}
 						});
@@ -295,12 +296,12 @@
 							ui) {
 							$(event.data.real_input).addTag(ui.item.value, {
 								focus: true,
-								unique: (settings.unique)
+								unique: (settings.unique),
+								backgroundColor: settings.backgroundColor
 							});
 							return false;
 						});
 					}
-
 
 				} else {
 					// if a user tabs out of the field, create a new tag
@@ -314,7 +315,8 @@
 									.val().length)))
 								$(event.data.real_input).addTag($(event.data.fake_input).val(), {
 									focus: true,
-									unique: (settings.unique)
+									unique: (settings.unique),
+									backgroundColor: settings.backgroundColor
 								});
 						} else {
 							$(event.data.fake_input).val($(event.data.fake_input).attr(
@@ -335,7 +337,8 @@
 								.val().length)))
 							$(event.data.real_input).addTag($(event.data.fake_input).val(), {
 								focus: true,
-								unique: (settings.unique)
+								unique: (settings.unique),
+								backgroundColor: settings.backgroundColor
 							});
 						$(event.data.fake_input).resetAutosize(settings);
 						return false;

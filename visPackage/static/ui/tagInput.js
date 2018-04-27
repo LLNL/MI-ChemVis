@@ -8,25 +8,25 @@ class tagInput {
 
         $(div).tagsInput({
             width: 'auto',
-            height: '80px',
+            height: '50px',
             autocomplete: {
                 morphology: "morphology",
                 material: "material"
             },
-            onAddTag: function(elem, elem_tags) {
-                $(this).css('background-color',
-                    color);
-                // $('.tag', elem_tags).each(function() {
-                //     $(this).css('background-color',
-                //         color);
-                // });
-            },
+            // onAddTag: function(elem, elem_tags) {
+            //     $(this).css('background-color',
+            //         color);
+            //     // $('.tag', elem_tags).each(function() {
+            //     //     $(this).css('background-color',
+            //     //         color);
+            //     // });
+            // },
             // onRemoveTag: this.onRemoveTag,
             // onChange: function(elem, elem_tags) {
 
             onChange: this.onChangeTag,
-            backgroundColor: color,
-            placeholderColor: color
+            // backgroundColor: color,
+            // placeholderColor: color
 
             //autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
             // autocomplete_url: 'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint

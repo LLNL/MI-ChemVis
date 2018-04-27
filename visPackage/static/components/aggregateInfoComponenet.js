@@ -6,11 +6,23 @@ class aggregateInfoComponenet extends baseComponent {
         this.selection = [];
         this.aggregators = [
             ["chemicals", "mf"],
+            ["material"],
+            ["morphology"],
             ["solvents"],
+            ["reducing_agents"],
+            ["method"],
             ["surfactants"]
         ];
 
+        this.valueAggregators = [
+            ["temp"],
+            ["volume"]
+        ];
+
         this.setupUI();
+
+        this.aggregateLabelsByKeys(this.selection, this.aggregators[0]);
+        // this.aggregateValuesByKeys(this.selection, this.aggregators[0]);
     }
 
     setupUI() {
@@ -23,7 +35,7 @@ class aggregateInfoComponenet extends baseComponent {
             .attr("type", "button")
             .attr("data-toggle", "dropdown")
             .attr("aria-haspopup", "true")
-            .html("aggregate-by");
+            .html("bar-group-by");
         let menu = dropdown.append("div")
             .attr("class", "dropdown-menu");
         ////// generate
@@ -32,7 +44,52 @@ class aggregateInfoComponenet extends baseComponent {
             menu.append("a")
                 .attr("class", "dropdown-item")
                 .on("click", d => {
-                    this.aggregateByKeys(this.selection, keys);
+                    this.aggregateLabelsByKeys(this.selection, keys);
+                })
+                .html(keys[0]);
+        }
+
+        /////////////// scatterplot controls //////////////
+        dropdown = this.container.append("div")
+            .attr("class", "btn-group");
+        dropdown.append("button")
+            .attr("class", "btn btn-secondary btn-sm dropdown-toggle")
+            .attr("type", "button")
+            .attr("data-toggle", "dropdown")
+            .attr("aria-haspopup", "true")
+            .style("margin-left", '10px')
+            .html("x-group-by");
+        menu = dropdown.append("div")
+            .attr("class", "dropdown-menu");
+        ////// generate
+        for (let i = 0; i < this.valueAggregators.length; i++) {
+            let keys = this.valueAggregators[i];
+            menu.append("a")
+                .attr("class", "dropdown-item")
+                .on("click", d => {
+                    this.aggregateValuesByKeys(this.selection, keys);
+                })
+                .html(keys[0]);
+        }
+
+        dropdown = this.container.append("div")
+            .attr("class", "btn-group");
+        dropdown.append("button")
+            .attr("class", "btn btn-secondary btn-sm dropdown-toggle")
+            .attr("type", "button")
+            .attr("data-toggle", "dropdown")
+            .attr("aria-haspopup", "true")
+            .style("margin-left", '5px')
+            .html("y-group-by");
+        menu = dropdown.append("div")
+            .attr("class", "dropdown-menu");
+        ////// generate
+        for (let i = 0; i < this.valueAggregators.length; i++) {
+            let keys = this.valueAggregators[i];
+            menu.append("a")
+                .attr("class", "dropdown-item")
+                .on("click", d => {
+                    this.aggregateValuesByKeys(this.selection, keys);
                 })
                 .html(keys[0]);
         }
@@ -50,8 +107,8 @@ class aggregateInfoComponenet extends baseComponent {
         //     .html("surfactants");
     }
 
-    aggregateByKeys(selection, keys) {
-        this.callFunc("aggregateByKeys", {
+    aggregateLabelsByKeys(selection, keys) {
+        this.callFunc("aggregateLabelsByKeys", {
             "selection": selection,
             "keys": keys
         });
@@ -77,10 +134,13 @@ class aggregateInfoComponenet extends baseComponent {
 
     parseFunctionReturn(msg) {
         super.parseFunctionReturn(msg);
-        console.log(msg);
+        // console.log(msg);
         switch (msg['func']) {
-            case "aggregateByKeys":
-                this.handleAggregateInfo(msg['data']);
+            case "aggregateLabelsByKeys":
+                this.handleAggregateLabelInfo(msg['data']);
+                break;
+            case "aggregateValuesByKeys":
+                this.handleAggregateValueInfo(msg['data']);
                 break;
         }
     }
@@ -97,16 +157,17 @@ class aggregateInfoComponenet extends baseComponent {
                 .attr("width", this.width)
                 .attr("height", this.height - controlHeight);
 
-            this.barChart = new barChart(this.svg, [20, 20], [this.width -
-                20,
+            this.barChart = new barChart(this.svg, [15, 15], [
+                this.width - 15,
                 this.height * 0.45
             ]);
+
             this.barChart.setSelectionCallback(this.setHighlight.bind(
                 this));
 
             this.scatter = new simpleScatterPlot(this.svg, [0, this.height *
-                0.55 + controlHeight
-            ], [this.width, this.height * 0.40 - controlHeight]);
+                0.50 + controlHeight
+            ], [this.width, this.height * 0.45 - controlHeight]);
 
         } else {
             this.svgContainer
@@ -117,28 +178,38 @@ class aggregateInfoComponenet extends baseComponent {
                 .attr("width", this.width)
                 .attr("height", this.height - controlHeight);
 
-            this.barChart.update([20, 20], [this.width - 20,
+            this.barChart.update([15, 15], [this.width - 15,
                 this.height * 0.45
             ]);
             this.scatter.update([0, this.height *
-                0.55 + controlHeight
-            ], [this.width, this.height * 0.40 - controlHeight]);
+                0.50 + controlHeight
+            ], [this.width, this.height * 0.45 - controlHeight]);
         }
     }
 
     setHighlight(list) {
-        console.log(list);
+        // console.log(list);
         this.setData("highlight", list);
     }
 
-    handleAggregateInfo(data) {
+    handleAggregateLabelInfo(data) {
         // console.log(data);
-        var test = [];
-        for (var i = 0; i < 100; i++)
-            test.push([Math.random(), Math.random()]);
+        if (this.barChart) {
+            this.barChart.setData(
+                data['data']['aggregation'],
+                data['data']['keys'][0]);
+        }
 
-        this.barChart.setData(data['data']['aggregation']);
-        this.scatter.setData(test, ["axisX", "axisY"]);
+    }
+
+    handleAggregateValueInfo(data) {
+        if (this.scatter) {
+            var test = [];
+            for (var i = 0; i < 100; i++)
+                test.push([Math.random(), Math.random()]);
+
+            this.scatter.setData(test, ["axisX", "axisY"]);
+        }
     }
 
     /*

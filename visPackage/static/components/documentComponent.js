@@ -58,6 +58,7 @@ class documentComponent extends baseComponent {
             });
             tags.push({
                 tag: paper.chemicals.map(d => d.chemical),
+                // tag: paper.chemicals.map(d => d.mf),
                 tooltip: "chemical"
             });
             tags.push({

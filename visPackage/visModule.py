@@ -49,6 +49,7 @@ class visModule:
 
 '''
 data organization structure
+    - fullPaperList (list of all paper)
     - paperList (list of all paper)
     - selection (current select list of paper)
     - allSeletions (all selections set)
@@ -86,9 +87,15 @@ class chemVisModule(visModule):
             return True
 
 
-    def aggregateByKeys(self, selection, keys):
+    def aggregateLabelsByKeys(self, selection, keys):
         return {
             "aggregation":self.aggregator.aggregateByKeys(selection, keys),
+            "keys": keys
+            };
+
+    def aggregateValuesByKeys(self, selection, keys):
+        return {
+            "aggregation":self.aggregator.aggregateValuesByKeys(selection, keys),
             "keys": keys
             };
 

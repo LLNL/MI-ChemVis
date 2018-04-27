@@ -18,18 +18,15 @@ class aggregator(object):
         for key in keys:
             newItems = []
             for item in items:
-                if isinstance(item[0], list):
-                    for it in item[0]:
-                        if key in it:
-                            newItems.append( (it[key], item[1]) )
-                else:
-                    if key in item[0]:
+                if key in item[0]:
+                    ####### flatten the list #######
+                    if isinstance(item[0][key], list):
+                        for it in item[0][key]:
+                            newItems.append( (it, item[1]) )
+                    else:
                         newItems.append( (item[0][key], item[1]) )
-
             items = newItems
-
-        # print items
-        # itSet = {el:0 for el in items}
+        
         keyCount = {}
         for it in items:
             if it[0] not in keyCount:
@@ -41,8 +38,6 @@ class aggregator(object):
         keyCount.pop(None, None)
         print "keyCount:", keyCount.keys()
         return keyCount
-
-
 
     def distByIndex(indexPairs, keys):
         dist = []

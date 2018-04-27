@@ -7,30 +7,30 @@ class barChart {
 
     draw() {
         if (this.data) {
-
+            let barData = this.barData;
             this.svg.selectAll("*").remove();
-            let height = this.size[1];
+            let height = this.size[1] - this.labelSize;
             let width = this.size[0];
 
             let x = d3.scaleBand().padding(0.2);
             let y = d3.scaleLinear();
-            x.rangeRound([this.pos[0], width]);
+            x.rangeRound([this.pos[0] + 10, width - 10]);
             y.rangeRound([height, this.pos[1]]);
-            let barData = this.data.slice(0, 20);
+
             x.domain(barData.map(d => d.name));
             y.domain([0, d3.max(barData, d => d.count)]);
 
             // Y axis
             this.svg.append("g")
                 .attr("class", "axis")
-                .attr("transform", "translate(" + this.pos[0] + "," +
+                .attr("transform", "translate(" + (this.pos[0] + 10) + "," +
                     0 + ")")
-                .call(d3.axisLeft(y).ticks(7, "d"));
+                .call(d3.axisLeft(y).ticks(5, "d"));
 
             // X axis
             this.svg.append("g")
                 .attr("class", "axis")
-                .attr("transform", "translate(" + 0 + "," +
+                .attr("transform", "translate(0," +
                     height + ")")
                 .call(d3.axisBottom(x))
                 .selectAll("text")
@@ -38,15 +38,13 @@ class barChart {
                 .style("font-size", 12)
                 .attr("dx", "-.8em")
                 .attr("dy", ".15em")
-                .attr("transform", "rotate(-65)");
+                .attr("transform", "rotate(-50)");
 
-            // this.svg.append("text")
-            //     .attr("transform", "rotate(-90)")
-            //     .attr("y", 10)
-            //     .attr("x", 0)
-            //     .attr("dy", "0.71em")
-            //     .attr("text-anchor", "end")
-            //     .text("Frequency");
+            this.svg.append("text")
+                .attr("y", 30)
+                .attr("x", width * 0.5)
+                .attr("text-anchor", "middle")
+                .text(this.title);
 
             var bars = this.svg.selectAll(".bar")
                 .data(barData);
@@ -74,11 +72,7 @@ class barChart {
                         d3.select(this).style("fill", "grey");
                 })
                 .on("click", function(d) {
-
-                    console.log(d3.select(this).style("fill"));
-
                     if (d3.select(this).style("fill") === "lightblue") {
-
                         //cancel highlight
                         d3.select(this).style("fill", "lightgrey");
                         callback([]);
@@ -88,9 +82,7 @@ class barChart {
                         d3.selectAll(".bar").style("fill", "grey");
                         d3.select(this).style("fill", "lightblue");
                         callback(d.array);
-
                     }
-
                 })
                 .style("fill", "grey");
         }
@@ -117,8 +109,9 @@ class barChart {
         this.size = size;
     }
 
-    setData(data) {
+    setData(data, title) {
         this.data = [];
+        this.title = title;
         for (let key in data) {
             if (data.hasOwnProperty(key)) {
                 this.data.push({
@@ -132,7 +125,9 @@ class barChart {
             return a.count - b.count;
         });
 
-        // console.log(this.data);
+        this.barData = this.data.slice(0, 20);
+        this.labelSize = d3.max(this.barData.map(d => d.name.length)) * 3;
+        console.log(this.labelSize);
         this.draw();
     }
 

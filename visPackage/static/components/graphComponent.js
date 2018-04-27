@@ -7,10 +7,8 @@ class graphComponent extends baseComponent {
         this.filterState = {
             "morphology": true,
             "material": true,
-
             "solvents": false,
             "surfactants": true,
-
             "method": true,
             "reducing_agents": true,
 
