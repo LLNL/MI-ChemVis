@@ -46,10 +46,11 @@ class barChart {
                 .attr("text-anchor", "middle")
                 .text(this.title);
 
+            let callback = this.callback;
+            let partialBarData = this.partialBarData;
+
             var bars = this.svg.selectAll(".bar")
                 .data(barData);
-            // ENTER
-            let callback = this.callback;
             bars
                 .enter().append("rect")
                 .attr("class", "bar")
@@ -72,6 +73,13 @@ class barChart {
                         d3.select(this).style("fill", "grey");
                 })
                 .on("click", function(d) {
+
+                    // d3.selectAll(".partialBar").style("fill", "grey");
+                    for (let i = 0; i < partialBarData.length; i++) {
+                        partialBarData[i].count = 0;
+                    }
+                    d3.selectAll(".partialBar").remove();
+
                     if (d3.select(this).style("fill") === "lightblue") {
                         //cancel highlight
                         d3.select(this).style("fill", "lightgrey");
@@ -85,23 +93,34 @@ class barChart {
                     }
                 })
                 .style("fill", "grey");
-        }
 
-        // // UPDATE
-        // bars.attr("x", function(d) {
-        //         return x(d.name);
-        //     })
-        //     .attr("y", function(d) {
-        //         return y(d.count);
-        //     })
-        //     .attr("width", x.bandwidth())
-        //     .attr("height", function(d) {
-        //         return height - y(d.count);
-        //     });
-        //
-        // // EXIT
-        // bars.exit()
-        //     .remove();
+            if (this.partialBarData) {
+                this.svg.selectAll(".partialBar").remove();
+                var partialBar = this.svg.selectAll(".partialBar")
+                    .data(this.partialBarData);
+
+                partialBar
+                    .enter().append("rect")
+                    .attr("class", "partialBar")
+                    .attr("x", function(d) {
+                        return x(d.name);
+                    })
+                    .attr("y", function(d) {
+                        return y(d.count);
+                    })
+                    .attr("width", x.bandwidth())
+                    .attr("height", function(d) {
+                        let h = height - y(d.count);
+                        // console.log(h);
+                        //FIXME why the negative value?
+                        if (h < 0)
+                            h = 0;
+                        return h;
+                    })
+                    .style("fill", "lightblue")
+                    .style("pointer-events", "none");
+            }
+        }
     }
 
     update(pos, size) {
@@ -127,11 +146,30 @@ class barChart {
 
         this.barData = this.data.slice(0, 20);
         this.labelSize = d3.max(this.barData.map(d => d.name.length)) * 3;
-        console.log(this.labelSize);
+        // console.log(this.labelSize);
         this.draw();
     }
 
     bindSelectionCallback(func) {
         this.callback = func;
+    }
+
+    highlight(indices) {
+        //compute highlight indice
+        let indexSet = new Set(indices);
+        this.partialBarData = []
+        for (let i = 0; i < this.barData.length; i++) {
+            let count = 0;
+            for (let j = 0; j < this.barData[i].array.length; j++) {
+                if (indexSet.has(this.barData[i].array[j]))
+                    count++;
+            }
+            this.partialBarData.push({
+                name: this.barData[i].name,
+                count: count
+            });
+        }
+        // console.log(this.partialBarData);
+        this.draw();
     }
 }

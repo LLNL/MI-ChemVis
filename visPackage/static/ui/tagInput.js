@@ -58,21 +58,24 @@ class tagLabel {
         for (let i = 0; i < tags.length; i++) {
             let color = this.colorScale(i);
             let tooltip = tags[i].tooltip;
+            let keys = tags[i].keys;
             let tag = tags[i];
             if (Array.isArray(tag.tag)) {
                 let multiTag = tag.tag;
                 for (let j = 0; j < multiTag.length; j++) {
-                    this.addTag(multiTag[j], tooltip, tagOption, color);
+                    this.addTag(multiTag[j], tooltip, tagOption, color,
+                        keys.concat([multiTag[j]]));
                 }
             } else {
-                this.addTag(tag.tag, tooltip, tagOption, color);
+                this.addTag(tag.tag, tooltip, tagOption, color,
+                    keys.concat([tag.tag]));
             }
         }
         //init tooltip
         $('[data-toggle="tooltip"]').tooltip()
     }
 
-    addTag(tag, tooltip, tagOption, color) {
+    addTag(tag, tooltip, tagOption, color, keys) {
         let dropdown = this.container.append("div")
             .attr("class", "btn-group");
         dropdown.append("button")
@@ -109,44 +112,44 @@ class tagLabel {
             menu.append("a")
                 .attr("class", "dropdown-item")
                 .on("click", d => {
-                    this.addtoSelection("union", tag);
+                    this.highlightCallback(keys);
+                })
+                .html("Highlight");
+
+            // <div class="dropdown-divider"></div>
+            menu.append("div")
+                .attr("class", "dropdown-divider");
+
+            menu.append("a")
+                .attr("class", "dropdown-item")
+                .on("click", d => {
+                    this.selectionCallback("union", keys);
                 })
                 .html("Add to union");
 
             menu.append("a")
                 .attr("class", "dropdown-item")
                 .on("click", d => {
-                    this.addtoSelection("interset", tag);
+                    this.selectionCallback("interset", keys);
                 })
                 .html("Add to intersetion");
 
             menu.append("a")
                 .attr("class", "dropdown-item")
                 .on("click", d => {
-                    this.addtoSelection("exclude", tag);
+                    this.selectionCallback("exclude", keys);
                 })
                 .html("Add to exclusion");
 
-            menu.append("a")
-                .attr("class", "dropdown-item")
-                .on("click", d => {
-                    this.highlightByTag(tag);
-                })
-                .html("Highlight");
         }
     }
 
-    highlightByTag(tag) {
-        this.callFunc("highlightByTag", {
-            "tag": tag
-        });
+    bindHighlightCallback(func) {
+        this.highlightCallback = func;
     }
 
-    addtoSelection(type, tag) {
-        this.callFunc("addTagToSelection", {
-            "type": type,
-            "tag": tag
-        });
+    bindSelectionCallback(func) {
+        this.selectionCallback = func;
     }
 
 }

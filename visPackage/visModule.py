@@ -100,11 +100,18 @@ class chemVisModule(visModule):
             "keysY": keysY
             };
 
-    def addTagToSelection(self, type, tag):
-        pass
+    def addTagToSelection(self, selectionType, tag):
+        ### type determine what kind of selection label
+        print "selectionType:", selectionType
+        print "tag:", tag
+
         return True
 
     def highlightByTag(self, tag):
+        print tag
+        group = self.aggregator.groupByKeys([],tag)
+        print group
+        dataManager.setData("highlight", group)
 
         return True
     ############# list of other API #############

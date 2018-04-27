@@ -1,7 +1,7 @@
 class aggregateInfoComponenet extends baseComponent {
     constructor(uuid) {
         super(uuid);
-        this.subscribeDatabyNames(["selection", "paperList"]);
+        this.subscribeDatabyNames(["selection", "paperList", "highlight"]);
 
         this.selection = [];
         this.aggregators = [
@@ -60,7 +60,7 @@ class aggregateInfoComponenet extends baseComponent {
             .attr("type", "button")
             .attr("data-toggle", "dropdown")
             .attr("aria-haspopup", "true")
-            .style("margin-left", '10px')
+            .style("margin-left", '30px')
             .html("x-group-by");
         menu = dropdown.append("div")
             .attr("class", "dropdown-menu");
@@ -133,8 +133,7 @@ class aggregateInfoComponenet extends baseComponent {
                 this.draw();
                 break;
             case "highlight":
-                this.highlight = this.data["highlight"];
-                this.handleHighlight(this.highlight);
+                this.handleHighlight(this.data["highlight"]);
                 break;
         }
     }
@@ -177,6 +176,7 @@ class aggregateInfoComponenet extends baseComponent {
             ], [this.width, this.height * 0.45 - controlHeight]);
             this.scatter.bindSelectionCallback(d => {
                 this.selectPaperByIndex(d[2]);
+                // this.setData("highlight", [d[2]])
             });
 
         } else {
@@ -221,14 +221,17 @@ class aggregateInfoComponenet extends baseComponent {
     handleAggregateValueInfo(data) {
         console.log(data);
         if (this.scatter) {
-            // var test = [];
-            // for (var i = 0; i < 100; i++)
-            //     test.push([Math.random(), Math.random()]);
-
             this.scatter.setData(data['aggregation'], [data['keysX'][0],
                 data['keysY'][0]
             ]);
         }
+    }
+
+    handleHighlight(indices) {
+        if (this.scatter)
+            this.scatter.highlight(indices);
+        if (this.barChart)
+            this.barChart.highlight(indices);
     }
 
     /*

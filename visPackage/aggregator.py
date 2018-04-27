@@ -66,6 +66,33 @@ class aggregator(object):
         print "==============\n", newItems, "\n=============="
         return newItems
 
+
+
+    def groupByKeys(self, selection, keys):
+        group = []
+        items = [(paper, i) for i, paper in enumerate(self.paperList)]
+        #### if the list is not empty
+        if selection:
+            items = [items[i] for i in selection]
+
+        def hasKey(item, keys, keyIndex, index, group):
+            # print keys, keyIndex
+            if isinstance(item, list):
+                for it in item:
+                    hasKey(it, keys, keyIndex, index, group)
+            else:
+                if keys[-1] == keys[keyIndex]:
+                    # print item, keys[keyIndex]
+                    if keys[keyIndex] == item:
+                        group.append(index)
+                else:
+                    it = item[keys[keyIndex]]
+                    hasKey(it, keys, keyIndex+1, index, group)
+
+        for item in items:
+            hasKey(item[0], keys, 0, item[1], group)
+        return group
+
     def distByIndex(indexPairs, keys):
         dist = []
         for pair in indexPairs:
