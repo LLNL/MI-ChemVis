@@ -89,14 +89,15 @@ class chemVisModule(visModule):
 
     def aggregateLabelsByKeys(self, selection, keys):
         return {
-            "aggregation":self.aggregator.aggregateByKeys(selection, keys),
+            "aggregation":self.aggregator.aggregateLabelsByKeys(selection, keys),
             "keys": keys
             };
 
-    def aggregateValuesByKeys(self, selection, keys):
+    def aggregateValuesByKeys(self, selection, keysX, keysY):
         return {
-            "aggregation":self.aggregator.aggregateValuesByKeys(selection, keys),
-            "keys": keys
+            "aggregation":self.aggregator.aggregateValuesByKeys(selection, keysX, keysY),
+            "keysX": keysX,
+            "keysY": keysY
             };
 
     def addTagToSelection(self, type, tag):

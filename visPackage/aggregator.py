@@ -7,13 +7,13 @@ class aggregator(object):
         }
 
     #### category ####
-    def aggregateByKeys(self, selection, keys):
+    def aggregateLabelsByKeys(self, selection, keys):
 
         items = [(paper, i) for i, paper in enumerate(self.paperList)]
         #### if the list is not empty
         if selection:
             items = [items[i] for i in selection]
-        print selection, keys
+        # print selection, keys
 
         for key in keys:
             newItems = []
@@ -26,7 +26,7 @@ class aggregator(object):
                     else:
                         newItems.append( (item[0][key], item[1]) )
             items = newItems
-        
+
         keyCount = {}
         for it in items:
             if it[0] not in keyCount:
@@ -38,6 +38,33 @@ class aggregator(object):
         keyCount.pop(None, None)
         print "keyCount:", keyCount.keys()
         return keyCount
+
+    def aggregateValuesByKeys(self, selection, keysX, keysY):
+        items = [(paper, i) for i, paper in enumerate(self.paperList)]
+        #### if the list is not empty
+        if selection:
+            items = [items[i] for i in selection]
+        # print selection, keys
+
+        ###### assume there is two keys #######
+        key0x = keysX[0]
+        key1x = keysX[1]
+        key0y = keysY[0]
+        key1y = keysY[1]
+
+        newItems = []
+        print "items length", len(items)
+        for item in items:
+            if key0x in item[0] and key0y in item[0]:
+                ### check if
+                xval = [it[0][key1x] for it in item[0][key0x]]
+                yval = [it[0][key1y] for it in item[0][key0y]]
+                if xval and yval:
+                    # print keyXval, keyYval
+                    newItems.append( [max(xval), max(yval), item[1]] )
+
+        print "==============\n", newItems, "\n=============="
+        return newItems
 
     def distByIndex(indexPairs, keys):
         dist = []

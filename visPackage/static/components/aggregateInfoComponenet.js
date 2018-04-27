@@ -15,14 +15,17 @@ class aggregateInfoComponenet extends baseComponent {
         ];
 
         this.valueAggregators = [
-            ["temp"],
-            ["volume"]
+            ["temp", "value"],
+            ["size", "orig_val"],
+            ["time", "value"]
         ];
 
         this.setupUI();
 
         this.aggregateLabelsByKeys(this.selection, this.aggregators[0]);
-        // this.aggregateValuesByKeys(this.selection, this.aggregators[0]);
+        this.aggregateValuesByKeys(this.selection,
+            this.valueAggregators[0],
+            this.valueAggregators[1]);
     }
 
     setupUI() {
@@ -67,7 +70,8 @@ class aggregateInfoComponenet extends baseComponent {
             menu.append("a")
                 .attr("class", "dropdown-item")
                 .on("click", d => {
-                    this.aggregateValuesByKeys(this.selection, keys);
+                    this.aggregateValuesByKeys(this.selection, keys,
+                        this.keysY);
                 })
                 .html(keys[0]);
         }
@@ -89,22 +93,11 @@ class aggregateInfoComponenet extends baseComponent {
             menu.append("a")
                 .attr("class", "dropdown-item")
                 .on("click", d => {
-                    this.aggregateValuesByKeys(this.selection, keys);
+                    this.aggregateValuesByKeys(this.selection, this.keysX,
+                        keys);
                 })
                 .html(keys[0]);
         }
-        // menu.append("a")
-        //     .attr("class", "dropdown-item")
-        //     .on("click", d => {
-        //         this.aggregateByKeys(this.selection, ["solvents"]);
-        //     })
-        //     .html("solvents");
-        // menu.append("a")
-        //     .attr("class", "dropdown-item")
-        //     .on("click", d => {
-        //         this.aggregateByKeys(this.selection, ["surfactants"]);
-        //     })
-        //     .html("surfactants");
     }
 
     aggregateLabelsByKeys(selection, keys) {
@@ -114,6 +107,17 @@ class aggregateInfoComponenet extends baseComponent {
         });
     }
 
+    aggregateValuesByKeys(selection, keysX, keysY) {
+        ///store previous keys
+        this.keysX = keysX;
+        this.keysY = keysY;
+
+        this.callFunc("aggregateValuesByKeys", {
+            "selection": selection,
+            "keysX": keysX,
+            "keysY": keysY
+        });
+    }
 
     parseDataUpdate(msg) {
         super.parseDataUpdate(msg);
@@ -137,10 +141,10 @@ class aggregateInfoComponenet extends baseComponent {
         // console.log(msg);
         switch (msg['func']) {
             case "aggregateLabelsByKeys":
-                this.handleAggregateLabelInfo(msg['data']);
+                this.handleAggregateLabelInfo(msg['data']['data']);
                 break;
             case "aggregateValuesByKeys":
-                this.handleAggregateValueInfo(msg['data']);
+                this.handleAggregateValueInfo(msg['data']['data']);
                 break;
         }
     }
@@ -162,12 +166,15 @@ class aggregateInfoComponenet extends baseComponent {
                 this.height * 0.45
             ]);
 
-            this.barChart.setSelectionCallback(this.setHighlight.bind(
+            this.barChart.bindSelectionCallback(this.setHighlight.bind(
                 this));
 
             this.scatter = new simpleScatterPlot(this.svg, [0, this.height *
                 0.50 + controlHeight
             ], [this.width, this.height * 0.45 - controlHeight]);
+            this.scatter.bindSelectionCallback(d => {
+                this.selectPaperByIndex(d[2]);
+            });
 
         } else {
             this.svgContainer
@@ -187,6 +194,10 @@ class aggregateInfoComponenet extends baseComponent {
         }
     }
 
+    selectPaperByIndex(index) {
+        this.setData("paper", this.data["paperList"][index]);
+    }
+
     setHighlight(list) {
         // console.log(list);
         this.setData("highlight", list);
@@ -196,19 +207,22 @@ class aggregateInfoComponenet extends baseComponent {
         // console.log(data);
         if (this.barChart) {
             this.barChart.setData(
-                data['data']['aggregation'],
-                data['data']['keys'][0]);
+                data['aggregation'],
+                data['keys'][0]);
         }
 
     }
 
     handleAggregateValueInfo(data) {
+        console.log(data);
         if (this.scatter) {
-            var test = [];
-            for (var i = 0; i < 100; i++)
-                test.push([Math.random(), Math.random()]);
+            // var test = [];
+            // for (var i = 0; i < 100; i++)
+            //     test.push([Math.random(), Math.random()]);
 
-            this.scatter.setData(test, ["axisX", "axisY"]);
+            this.scatter.setData(data['aggregation'], [data['keysX'][0],
+                data['keysY'][0]
+            ]);
         }
     }
 

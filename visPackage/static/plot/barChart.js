@@ -131,7 +131,7 @@ class barChart {
         this.draw();
     }
 
-    setSelectionCallback(func) {
+    bindSelectionCallback(func) {
         this.callback = func;
     }
 }
