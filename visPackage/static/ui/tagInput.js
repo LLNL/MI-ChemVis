@@ -8,7 +8,7 @@ class tagInput {
 
         $(div).tagsInput({
             width: 'auto',
-            height: '50px',
+            height: '75px',
             autocomplete_url: '/autocomplete',
             // autocomplete: {
             //     selectFirst: true,
@@ -18,8 +18,9 @@ class tagInput {
             // onAddTag: ;
             // onRemoveTag: this.onRemoveTag,
             // onChange: function(elem, elem_tags) {
-
             onChange: this.onChangeTag,
+            maxChars: 0
+
             // backgroundColor: color,
             // placeholderColor: color
 

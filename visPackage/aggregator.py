@@ -83,7 +83,6 @@ class aggregator(object):
 
     #### category ####
     def aggregateLabelsByKeys(self, selection, keys):
-
         items = [(paper, i) for i, paper in enumerate(self.paperList)]
         #### if the list is not empty
         if selection:
@@ -111,7 +110,7 @@ class aggregator(object):
         for key in keyCount:
             keyCount[key] = list(keyCount[key])
         keyCount.pop(None, None)
-        print "keyCount:", keyCount.keys()
+        # print "keyCount:", keyCount.keys()
         return keyCount
 
     def aggregateValuesByKeys(self, selection, keysX, keysY):

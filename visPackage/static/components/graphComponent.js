@@ -249,8 +249,8 @@ class graphComponent extends baseComponent {
                 this.links = [];
                 while (this.links.length < this.nodes.length * 10) {
                     this.generateGraph(papers, threshold);
-                    console.log("link size:", this.links.length,
-                        " threshold:", threshold);
+                    // console.log("link size:", this.links.length,
+                    // " threshold:", threshold);
                     threshold = threshold - 1.0;
                 }
                 this.runSimulation(this.nodes, this.links, -20);

@@ -72,6 +72,7 @@
 			testSubject.attr('id', testerId);
 			testSubject.appendTo('body');
 		}
+		// alert(JSON.stringify([minWidth, maxWidth]));
 
 		input.data('minwidth', minWidth);
 		input.data('maxwidth', maxWidth);
@@ -84,7 +85,7 @@
 			focus: false,
 			callback: true
 		}, options);
-		console.log(options)
+		// console.log(options)
 		this.each(function() {
 			var id = $(this).attr('id');
 
@@ -116,7 +117,7 @@
 					}).click(function() {
 						return $('#' + id).removeTag(escape(value));
 					})
-				).insertBefore('#' + id + '_addTag')
+				).insertBefore('#' + id + '_addTag');
 				span.css("background-color", options.backgroundColor);
 
 				tagslist.push(value);
@@ -192,20 +193,21 @@
 			interactive: true,
 			defaultText: 'add a tag',
 			minChars: 0,
+			maxChars: 0,
 			width: '300px',
 			height: '50px',
 			autocomplete: {
-				selectFirst: false
+				selectFirst: true
 			},
 			'hide': true,
 			'delimiter': ',',
 			'unique': true,
-			removeWithBackspace: true,
-			placeholderColor: '#666666',
-			backgroundColor: '#777',
+			removeWithBackspace: false,
+			placeholderColor: '#666',
+			backgroundColor: '#868e96',
 			autosize: true,
 			comfortZone: 20,
-			inputPadding: 6 * 2
+			inputPadding: 20
 		}, options);
 
 		this.each(function() {

@@ -83,7 +83,7 @@ class chemVisModule(visModule):
         print term
         # return app.send_static_file('autocomplete.html')
         autocompleteList = aggregate.tagAutocomplete(term)
-        return Response(json.dumps(autocompleteList), mimetype='application/json')
+        return Response(json.dumps(autocompleteList[0:20]), mimetype='application/json')
 
     ########### all function should have a return value ############
     def loadData(self, filename):
