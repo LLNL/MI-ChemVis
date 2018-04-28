@@ -9,9 +9,11 @@ class tagInput {
         $(div).tagsInput({
             width: 'auto',
             height: '50px',
+            autocomplete_url: '/autocomplete',
             autocomplete: {
-                morphology: "morphology",
-                material: "material"
+                selectFirst: true,
+                width: '150px',
+                autoFill: true
             },
             // onAddTag: function(elem, elem_tags) {
             //     $(this).css('background-color',

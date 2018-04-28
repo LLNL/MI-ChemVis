@@ -9,7 +9,7 @@
  - data object is linked by object id, json format
 '''
 
-from flask import Flask
+from flask import Flask, Response, request
 import socketio
 import eventlet
 from socketioManager import *
@@ -76,6 +76,13 @@ class chemVisModule(visModule):
     def views(name):
         return app.send_static_file('viewTemplates/'+name)
 
+    @app.route('/autocomplete', methods=['GET'])
+    def autocomplete():
+        requestJson = request.get_json()
+        print requestJson
+        # return app.send_static_file('autocomplete.html')
+        autocompleteList = ["material", "morphology"]
+        return Response(json.dumps(autocompleteList), mimetype='application/json')
     ########### all function should have a return value ############
     def loadData(self, filename):
         with open(filename) as json_data:
