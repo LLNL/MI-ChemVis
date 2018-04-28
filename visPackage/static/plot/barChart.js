@@ -147,6 +147,7 @@ class barChart {
         });
 
         this.barData = this.data.slice(0, 20);
+        this.updatePartialBarData();
         this.labelSize = d3.max(this.barData.map(d => d.name.length)) * 3;
         // console.log(this.labelSize);
         this.draw();
@@ -158,20 +159,26 @@ class barChart {
 
     highlight(indices) {
         //compute highlight indice
-        let indexSet = new Set(indices);
-        this.partialBarData = []
-        for (let i = 0; i < this.barData.length; i++) {
-            let count = 0;
-            for (let j = 0; j < this.barData[i].array.length; j++) {
-                if (indexSet.has(this.barData[i].array[j]))
-                    count++;
-            }
-            this.partialBarData.push({
-                name: this.barData[i].name,
-                count: count
-            });
-        }
+        this.indexSet = new Set(indices);
+        this.updatePartialBarData();
         // console.log(this.partialBarData);
         this.draw();
+    }
+
+    updatePartialBarData() {
+        if (this.indexSet) {
+            this.partialBarData = [];
+            for (let i = 0; i < this.barData.length; i++) {
+                let count = 0;
+                for (let j = 0; j < this.barData[i].array.length; j++) {
+                    if (this.indexSet.has(this.barData[i].array[j]))
+                        count++;
+                }
+                this.partialBarData.push({
+                    name: this.barData[i].name,
+                    count: count
+                });
+            }
+        }
     }
 }

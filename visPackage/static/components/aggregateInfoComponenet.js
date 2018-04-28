@@ -219,7 +219,7 @@ class aggregateInfoComponenet extends baseComponent {
     }
 
     handleAggregateValueInfo(data) {
-        console.log(data);
+        // console.log(data);
         if (this.scatter) {
             this.scatter.setData(data['aggregation'], [data['keysX'][0],
                 data['keysY'][0]

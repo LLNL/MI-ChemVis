@@ -10,19 +10,12 @@ class tagInput {
             width: 'auto',
             height: '50px',
             autocomplete_url: '/autocomplete',
-            autocomplete: {
-                selectFirst: true,
-                width: '150px',
-                autoFill: true
-            },
-            // onAddTag: function(elem, elem_tags) {
-            //     $(this).css('background-color',
-            //         color);
-            //     // $('.tag', elem_tags).each(function() {
-            //     //     $(this).css('background-color',
-            //     //         color);
-            //     // });
+            // autocomplete: {
+            //     selectFirst: true,
+            //     // width: '300px',
+            //     autoFill: true
             // },
+            // onAddTag: ;
             // onRemoveTag: this.onRemoveTag,
             // onChange: function(elem, elem_tags) {
 

@@ -78,10 +78,10 @@ class chemVisModule(visModule):
 
     @app.route('/autocomplete', methods=['GET'])
     def autocomplete():
-        requestJson = request.get_json()
-        print requestJson
+        term = request.args['term']
+        print term
         # return app.send_static_file('autocomplete.html')
-        autocompleteList = ["material", "morphology"]
+        autocompleteList = ["material", "morphology", "material:material:material"]
         return Response(json.dumps(autocompleteList), mimetype='application/json')
     ########### all function should have a return value ############
     def loadData(self, filename):
