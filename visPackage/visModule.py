@@ -23,6 +23,7 @@ sio = socketio.Server()
 fApp = socketio.Middleware(sio, app)
 dataManager = socketioManager(sio)
 
+###### FIXME rewrite the base class to separate route code with class code #######
 #################### server control ######################
 class visModule:
     def __init__(self):
@@ -56,6 +57,7 @@ data organization structure
 '''
 
 layoutConfig = None
+aggregate = None
 
 class chemVisModule(visModule):
     def __init__(self, componentLayout):
@@ -64,7 +66,6 @@ class chemVisModule(visModule):
         global layoutConfig
         layoutConfig = componentLayout
         dataManager.setObject(self)
-        self.aggregator = None
 
     @app.route('/')
     def index():
@@ -81,16 +82,19 @@ class chemVisModule(visModule):
         term = request.args['term']
         print term
         # return app.send_static_file('autocomplete.html')
-        autocompleteList = ["material", "morphology", "material:material:material"]
+        autocompleteList = aggregate.tagAutocomplete(term)
         return Response(json.dumps(autocompleteList), mimetype='application/json')
+
     ########### all function should have a return value ############
     def loadData(self, filename):
         with open(filename) as json_data:
+            global aggregate
             papers = json.load(json_data)
             print "load json: ", filename, len(papers)
             dataManager.setData("paperList", papers)
 
             self.aggregator = aggregator(papers)
+            aggregate = self.aggregator
             return True
 
 

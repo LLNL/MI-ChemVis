@@ -101,8 +101,6 @@ class aggregateInfoComponenet extends baseComponent {
     }
 
     aggregateLabelsByKeys(selection, keys) {
-        //reset highlight
-        this.setHighlight([]);
         this.callFunc("aggregateLabelsByKeys", {
             "selection": selection,
             "keys": keys

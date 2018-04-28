@@ -5,6 +5,81 @@ class aggregator(object):
         self.comparisionFunc = {
             # "value":
         }
+        self.generateAllTags()
+
+    def generateAllTags(self):
+        tagDict = {}
+
+        def isNumber(val):
+            # number = True
+            if isinstance(val, basestring):
+                try:
+                    float(val)
+                except ValueError:
+                    return False
+                try:
+                    int(val)
+                except ValueError:
+                    return False
+            else:
+                if not isinstance(val, (float,int,long)):
+                    return False
+            return True
+
+        def findTag(item, keys):
+            if isinstance(item, list):
+                for it in item:
+                    findTag(it, keys)
+            elif isinstance(item, dict):
+                for key in item:
+                    ### remove
+                    if isNumber(item[key]):
+                        return
+
+                    tag = keys+[key]
+                    tag = ":".join(tag)
+                    if tag in tagDict:
+                        tagDict[tag] = tagDict[tag]+1
+                    else:
+                        tagDict[tag] = 1
+                    findTag(item[key], keys+[key])
+            else:
+                # print item
+                if isinstance(item, basestring):
+                    if isNumber(item):
+                        return
+
+                    if len(item)<20:
+                        tag = keys+[item]
+                        tag = ":".join(tag)
+                        if tag in tagDict:
+                            tagDict[tag] = tagDict[tag]+1
+                        else:
+                            tagDict[tag] = 1
+                # else:
+                    # print item
+
+        # print self.paperList[0]
+        for item in self.paperList:
+            findTag(item,[])
+
+        # print tagDict
+        self.tagDict = tagDict
+
+        ##dump json##
+        # import json
+        # with open('autocomplete.json', 'w') as f:
+        #     json.dump(tagDict, f)
+
+    def tagAutocomplete(self, term):
+        autoList = []
+        for key in self.tagDict:
+            if term in key:
+                autoList.append( (key, self.tagDict[key]) )
+
+        autoList.sort(key=lambda d:d[1],reverse=True)
+        # print autoList
+        return [it[0] for it in autoList]
 
     #### category ####
     def aggregateLabelsByKeys(self, selection, keys):
