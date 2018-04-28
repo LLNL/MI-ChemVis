@@ -9,20 +9,29 @@ class filterComponent extends baseComponent {
 
         $(this.div + "container").parent().css("overflow-y", "scroll");
         // this.setupUI();
+        this.highTagList = [
+            "morphology",
+            "material",
+            "metal_salts",
+            "solvents",
+            "surfactants",
+            "reducing_agents",
+            "chemicals",
+            "method",
+            "pixie_dust"
+        ];
         this.setupUI();
     }
 
     setupUI() {
         // console.log(this.div);
-        this.union = new tagInput(this.div + 'union', "rgb(44, 160, 44)");
+        this.union = new tagInput(this.div + 'union', this.highTagList);
         this.union.setChangeTagCallback(this.onUpdateUnion.bind(this));
 
-        this.interset = new tagInput(this.div + 'interset',
-            "rgb(31, 119, 180)");
+        this.interset = new tagInput(this.div + 'interset', this.highTagList);
         this.interset.setChangeTagCallback(this.onUpdateInterset.bind(this));
 
-        this.exclude = new tagInput(this.div + 'exclude',
-            "rgb(214, 39, 40)");
+        this.exclude = new tagInput(this.div + 'exclude', this.highTagList);
         this.exclude.setChangeTagCallback(this.onUpdateExclude.bind(this));
     }
 

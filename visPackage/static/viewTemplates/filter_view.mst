@@ -4,17 +4,17 @@
 
     <p>
     <label>Union</label>
-    <input id='{{id}}union' type='text' class='tags' value ="morphology:nanosphere,solvents:PVP">
+    <input id='{{id}}union' type='text' class='tags' value ="">
     </p>
 
     <p>
     <label>Intersection</label>
-    <input id='{{id}}interset' type='text' class='tags' value ="material:AgNO3">
+    <input id='{{id}}interset' type='text' class='tags' value ="">
     </p>
 
     <p>
     <label>Exclusion</label>
-    <input id='{{id}}exclude' type='text' class='tags' value ="morphology:nanowire">
+    <input id='{{id}}exclude' type='text' class='tags' value ="">
     </p>
 
     </div>

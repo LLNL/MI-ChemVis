@@ -22,6 +22,7 @@ class aggregateInfoComponenet extends baseComponent {
 
         this.setupUI();
 
+        //init the views
         this.aggregateLabelsByKeys(this.selection, this.aggregators[0]);
         this.aggregateValuesByKeys(this.selection,
             this.valueAggregators[0],
@@ -60,7 +61,7 @@ class aggregateInfoComponenet extends baseComponent {
             .attr("type", "button")
             .attr("data-toggle", "dropdown")
             .attr("aria-haspopup", "true")
-            .style("margin-left", '30px')
+            .style("margin-left", '20px')
             .html("x-group-by");
         menu = dropdown.append("div")
             .attr("class", "dropdown-menu");

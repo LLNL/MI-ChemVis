@@ -4,30 +4,32 @@ http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
 */
 
 class tagInput {
-    constructor(div, color) {
+    constructor(div, highTagList) {
+        this.highTagList = highTagList;
+        if (this.highTagList) {
+            this.colorScale = d3.scaleOrdinal(d3["schemeCategory10"]);
+            this.colorScale.domain(highTagList);
+        }
 
         $(div).tagsInput({
             width: 'auto',
             height: '75px',
             autocomplete_url: '/autocomplete',
-            // autocomplete: {
-            //     selectFirst: true,
-            //     // width: '300px',
-            //     autoFill: true
-            // },
-            // onAddTag: ;
-            // onRemoveTag: this.onRemoveTag,
-            // onChange: function(elem, elem_tags) {
-            onChange: this.onChangeTag,
+            autocomplete: {
+                selectFirst: true,
+                // width: '300px',
+                autoFill: true
+            },
+            onAddTag: this.updateColor.bind(this),
+            onRemoveTag: this.updateColor.bind(this),
+            onChange: this.onChangeTag.bind(this),
             maxChars: 0
 
             // backgroundColor: color,
             // placeholderColor: color
-
-            //autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
-            // autocomplete_url: 'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint
         });
     }
+
 
     // setAddTagCallback(func) {
     //     this.onAddTag = func;
@@ -37,8 +39,31 @@ class tagInput {
     //     this.onRemoveTag = func;
     // }
 
+    updateColor(elem, elem_tags) {
+        console.log(this.highTagList);
+
+        if (this.highTagList) {
+            let highTagList = this.highTagList;
+            let colorScale = this.colorScale;
+            $('.tag', elem_tags).each(function() {
+                for (var i = 0; i < highTagList.length; i++) {
+                    let label = $(this).text();
+                    if (label.startsWith(highTagList[i])) {
+                        console.log(label, highTagList[i], i);
+                        $(this).css('background-color', colorScale(
+                            highTagList[i]));
+                    }
+                }
+            });
+        }
+    }
+
+    onChangeTag() {
+        this.changeCallback();
+    }
+
     setChangeTagCallback(func) {
-        this.onChangeTag = func;
+        this.changeCallback = func;
     }
 
 }
@@ -49,7 +74,7 @@ class tagLabel {
         this.container = d3.select(div).html("");
         this.colorScale = d3.scaleOrdinal(d3["schemeCategory10"]);
 
-        console.log("tag length:", tags.length);
+        // console.log("tag length:", tags.length);
 
         for (let i = 0; i < tags.length; i++) {
             let color = this.colorScale(i);
@@ -147,5 +172,4 @@ class tagLabel {
     bindSelectionCallback(func) {
         this.selectionCallback = func;
     }
-
 }
