@@ -3,18 +3,15 @@
     <div id='{{id}}' class="content">
 
     <p>
-    <label>Union</label>
-    <input id='{{id}}union' type='text' class='tags' value ="">
+    <label>Selection</label>
+    <button type="button" class="btn btn-light btn-sm" id="{{id}}clearSelection">Clear</button>
+    <input id='{{id}}selection' type='text' class='tags' value ="">
     </p>
 
     <p>
-    <label>Intersection</label>
-    <input id='{{id}}interset' type='text' class='tags' value ="">
-    </p>
-
-    <p>
-    <label>Exclusion</label>
-    <input id='{{id}}exclude' type='text' class='tags' value ="">
+    <label>Highlight</label>
+    <button type="button" class="btn btn-light btn-sm" id="{{id}}clearHighlight">Clear</button>
+    <input id='{{id}}highlight' type='text' class='tags' value ="">
     </p>
 
     </div>

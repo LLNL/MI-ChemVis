@@ -1,14 +1,15 @@
 class filterComponent extends baseComponent {
     constructor(uuid) {
         super(uuid);
-        this.subscribeDatabyNames(["paperList"]);
+        this.subscribeDatabyNames(["paperList", "highlightFilter"]);
 
         this.callFunc("loadData", {
             "filename": "papers.json"
         });
 
+        //allow scrow in the panel
         $(this.div + "container").parent().css("overflow-y", "scroll");
-        // this.setupUI();
+
         this.highTagList = [
             "morphology",
             "material",
@@ -20,59 +21,76 @@ class filterComponent extends baseComponent {
             "method",
             "pixie_dust"
         ];
+
         this.setupUI();
     }
 
     setupUI() {
         // console.log(this.div);
-        this.union = new tagInput(this.div + 'union', this.highTagList);
-        this.union.setChangeTagCallback(this.onUpdateUnion.bind(this));
+        this.selection = new tagInput(this.div + 'selection', this.highTagList);
+        this.selection.setChangeTagCallback(this.onUpdateSelection.bind(
+            this));
 
-        this.interset = new tagInput(this.div + 'interset', this.highTagList);
-        this.interset.setChangeTagCallback(this.onUpdateInterset.bind(this));
+        this.highlight = new tagInput(this.div + 'highlight', this.highTagList);
+        this.highlight.setChangeTagCallback(this.onUpdateHighlight.bind(
+            this));
 
-        this.exclude = new tagInput(this.div + 'exclude', this.highTagList);
-        this.exclude.setChangeTagCallback(this.onUpdateExclude.bind(this));
+        d3.select(this.div + "clearSelection").on("click", this.highlight.clearTags
+            .bind(this));
+
+        d3.select(this.div + "clearHighlight").on("click",
+            d => {
+                this.highlight.clearTags();
+            });
     }
 
-    onUpdateUnion() {
-
+    onUpdateSelection(listOfTag) {
+        console.log(listOfTag);
     }
 
-    onUpdateInterset() {
-
+    onUpdateHighlight(listOfTag) {
+        console.log("onUpdateHighlight:", listOfTag);
+        this.setData("highlightFilter", listOfTag);
+        listOfTag = listOfTag.map(d => d.split(":"));
+        this.callFunc("highlightByTags", {
+            "tags": listOfTag
+        });
     }
-
-    onUpdateExclude() {
-
-    }
-
-    // onAddTag(tag) {
-    //     console.log("Added a tag: " + tag);
-    // }
-    //
-    // onRemoveTag(tag) {
-    //     console.log("Removed a tag: " + tag);
-    // }
-    //
-    // onChangeTag(input, tag) {
-    //     console.log("Changed a tag: " + tag);
-    // }
 
     parseDataUpdate(msg) {
         super.parseDataUpdate(msg);
-        // console.log(msg);
+        console.log(msg);
         switch (msg['name']) {
             case "paperList":
                 let papers = this.data["paperList"];
                 this.setData("paper", papers[0]);
                 break;
+
             case "fullPaperList":
                 // let papers = this.filterPaper(this.data["fullPaperList"]);
                 // this.setData("paperList", papers);
                 // this.setData("paper", papers[0]);
                 break;
+
+            case "highlightFilter":
+                // let highlightFilter = Array.from(this.data[
+                // "highlightFilter"]);
+                let highlightFilter = this.data[
+                    "highlightFilter"];
+                // highlightFilter = highlightFilter.map(d => d.split(":"));
+                this.highlight.setTags(highlightFilter);
+                break;
+
+            case "selectionFilter":
+                // let selectFilter = Array.from(this.data["selectionFilter"]);
+                let selectionFilter = this.data[
+                    "selectionFilter"];
+                // selectFilter = selectFilter.map(d => d.split(":"));
+                this.selection.setTags(selectionFilter);
+                break;
+
             default:
+                break;
         }
     }
 

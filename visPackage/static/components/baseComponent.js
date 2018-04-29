@@ -90,7 +90,7 @@ class baseComponent {
                         // [this.width * 0.5, this.height * 0.5 ],
                         "Running:" + key + "...");
                     allReturned = false;
-                    console.log(key, this.calledFunc[key]);
+                    // console.log(key, this.calledFunc[key]);
                 }
 
             }

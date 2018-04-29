@@ -1,7 +1,9 @@
 class documentComponent extends baseComponent {
     constructor(uuid) {
         super(uuid);
-        this.subscribeDatabyNames(["paper"]);
+        this.subscribeDatabyNames(["paper", "highlightFilter",
+            "selectionFilter"
+        ]);
 
         $(this.div + "container").parent().css("overflow-y", "scroll");
     }
@@ -86,17 +88,51 @@ class documentComponent extends baseComponent {
             // console.log(tags);
 
             let labels = new tagLabel(this.div + "tags", tags, true);
-            labels.bindHighlightCallback(tag => {
-                this.callFunc("highlightByTag", {
-                    "tag": tag
-                });
-            })
+
+            labels.bindHighlightCallback((type, tag) => {
+                tag = tag.join(":");
+                console.log("bindHighlightCallback", type, tag);
+                if (type === "replace") {
+                    this.setData("highlightFilter", [tag]);
+                } else if (type === "add") {
+                    let filter = [];
+                    if (this.data["highlightFilter"]) {
+                        filter = this.data[
+                            "highlightFilter"];
+                        console.log(filter);
+                    }
+
+                    if (filter.length === 0)
+                        this.setData("highlightFilter", [tag]);
+                    else {
+                        let tagSet = new Set(filter);
+                        if (!tagSet.has(tag)) {
+                            this.setData("highlightFilter", filter.concat(
+                                [tag]));
+                        }
+                    }
+                }
+            });
 
             labels.bindSelectionCallback((type, tag) => {
-                this.callFunc("addTagToSelection", {
-                    "selectionType": type,
-                    "tag": tag
-                });
+                tag = tag.join(":");
+                if (type === "replace") {
+                    this.setData("selectionFilter", [tag]);
+                } else if (type === "add") {
+                    let filter = [];
+                    if (this.data["selectionFilter"])
+                        filter = this.data[
+                            "selectionFilter"];
+                    if (filter.length === 0)
+                        this.setData("selectionFilter", [tag]);
+                    else {
+                        let tagSet = new Set(filter);
+                        if (!tagSet.has(tag)) {
+                            this.setData("selectionFilter", filter.concat(
+                                [tag]));
+                        }
+                    }
+                }
             })
 
             d3.select(this.div + "link")

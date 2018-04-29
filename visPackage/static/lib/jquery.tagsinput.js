@@ -181,6 +181,12 @@
 		return (jQuery.inArray(val, tagslist) >= 0); //true when tag exists, false when not
 	};
 
+	//add new accessor function
+	$.fn.getTags = function(val) {
+		var tagslist = $(this).val().split(delimiter[id]);
+		return tagslist; //true when tag exists, false when not
+	};
+
 	// clear all existing tags and import new ones from a string
 	$.fn.importTags = function(str) {
 		id = $(this).attr('id');

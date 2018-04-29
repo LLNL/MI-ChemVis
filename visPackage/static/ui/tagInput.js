@@ -5,6 +5,7 @@ http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
 
 class tagInput {
     constructor(div, highTagList) {
+        this.div = div;
         this.highTagList = highTagList;
         if (this.highTagList) {
             this.colorScale = d3.scaleOrdinal(d3["schemeCategory10"]);
@@ -13,43 +14,60 @@ class tagInput {
 
         $(div).tagsInput({
             width: 'auto',
-            height: '75px',
+            height: '120px',
             autocomplete_url: '/autocomplete',
             autocomplete: {
                 selectFirst: true,
                 // width: '300px',
                 autoFill: true
             },
-            onAddTag: this.updateColor.bind(this),
-            onRemoveTag: this.updateColor.bind(this),
+            // onAddTag: this.updateColor.bind(this),
+            // onRemoveTag: this.updateColor.bind(this),
+            // onRemoveTag: this.onRemoveTag.bind(this),
             onChange: this.onChangeTag.bind(this),
             maxChars: 0
 
             // backgroundColor: color,
             // placeholderColor: color
         });
+
+        //test
+        // this.addTag("surfactants:PVP");
     }
 
+    addTag(tag) {
+        $(this.div).addTag(tag);
+    }
+
+    setTags(tags) {
+        $(this.div).importTags(tags.join(","));
+    }
+
+    clearTags() {
+        $(this.div).importTags("");
+    }
 
     // setAddTagCallback(func) {
     //     this.onAddTag = func;
     // }
     //
-    // setRemoveTagCallback(func) {
-    //     this.onRemoveTag = func;
+
+    // onRemoveTag() {
+    //     this.changeCallback
+    //
     // }
 
     updateColor(elem, elem_tags) {
-        console.log(this.highTagList);
+        // console.log(this.highTagList);
 
         if (this.highTagList) {
             let highTagList = this.highTagList;
             let colorScale = this.colorScale;
-            $('.tag', elem_tags).each(function() {
+            $('.tag').each(function() {
                 for (var i = 0; i < highTagList.length; i++) {
                     let label = $(this).text();
                     if (label.startsWith(highTagList[i])) {
-                        console.log(label, highTagList[i], i);
+                        // console.log(label, highTagList[i], i);
                         $(this).css('background-color', colorScale(
                             highTagList[i]));
                     }
@@ -59,7 +77,13 @@ class tagInput {
     }
 
     onChangeTag() {
-        this.changeCallback();
+        this.updateColor();
+        if (this.changeCallback) {
+            let tags = $(this.div).getTags();
+            if (tags.length === 1 && tags[0] === "")
+                tags = [];
+            this.changeCallback(tags);
+        }
     }
 
     setChangeTagCallback(func) {
@@ -133,9 +157,16 @@ class tagLabel {
             menu.append("a")
                 .attr("class", "dropdown-item")
                 .on("click", d => {
-                    this.highlightCallback(keys);
+                    this.highlightCallback("replace", keys);
                 })
                 .html("Highlight");
+
+            menu.append("a")
+                .attr("class", "dropdown-item")
+                .on("click", d => {
+                    this.highlightCallback("add", keys);
+                })
+                .html("Add to Highlight");
 
             // <div class="dropdown-divider"></div>
             menu.append("div")
@@ -144,24 +175,16 @@ class tagLabel {
             menu.append("a")
                 .attr("class", "dropdown-item")
                 .on("click", d => {
-                    this.selectionCallback("union", keys);
+                    this.selectionCallback("replace", keys);
                 })
-                .html("Add to union");
+                .html("Select");
 
             menu.append("a")
                 .attr("class", "dropdown-item")
                 .on("click", d => {
-                    this.selectionCallback("interset", keys);
+                    this.selectionCallback("add", keys);
                 })
-                .html("Add to intersetion");
-
-            menu.append("a")
-                .attr("class", "dropdown-item")
-                .on("click", d => {
-                    this.selectionCallback("exclude", keys);
-                })
-                .html("Add to exclusion");
-
+                .html("Add to Selection");
         }
     }
 

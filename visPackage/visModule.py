@@ -118,12 +118,21 @@ class chemVisModule(visModule):
 
         return True
 
-    def highlightByTag(self, tag):
-        print tag
-        group = self.aggregator.groupByKeys([],tag)
-        print group
-        dataManager.setData("highlight", group)
+    def highlightByTags(self, tags):
+        print "highlightByTags", tags
+        group = None
+        for tag in tags:
+            if group == None:
+                group = set(self.aggregator.groupByKeys([],tag))
+            else:
+                group.intersection_update(self.aggregator.groupByKeys([],tag))
 
+        # print group
+        if group:
+            dataManager.setData("highlight", list(group))
+        else:
+            ## un-highlight
+            dataManager.setData("highlight", [])
         return True
     ############# list of other API #############
 
