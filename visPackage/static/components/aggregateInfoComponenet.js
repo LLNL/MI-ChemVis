@@ -3,7 +3,6 @@ class aggregateInfoComponenet extends baseComponent {
         super(uuid);
         this.subscribeDatabyNames(["selection", "paperList", "highlight"]);
 
-        this.selection = [];
         this.aggregators = [
             ["chemicals", "mf"],
             ["material"],
@@ -23,8 +22,8 @@ class aggregateInfoComponenet extends baseComponent {
         this.setupUI();
 
         //init the views
-        this.aggregateLabelsByKeys(this.selection, this.aggregators[0]);
-        this.aggregateValuesByKeys(this.selection,
+        this.aggregateLabelsByKeys([], this.aggregators[0]);
+        this.aggregateValuesByKeys([],
             this.valueAggregators[0],
             this.valueAggregators[1]);
     }
@@ -71,8 +70,10 @@ class aggregateInfoComponenet extends baseComponent {
             menu.append("a")
                 .attr("class", "dropdown-item")
                 .on("click", d => {
-                    this.aggregateValuesByKeys(this.selection, keys,
-                        this.keysY);
+                    this.aggregateValuesByKeys(
+                        this.selection, keys,
+                        this.keysY
+                    );
                 })
                 .html(keys[0]);
         }
@@ -102,6 +103,7 @@ class aggregateInfoComponenet extends baseComponent {
     }
 
     aggregateLabelsByKeys(selection, keys) {
+        this.keysBar = keys;
         this.callFunc("aggregateLabelsByKeys", {
             "selection": selection,
             "keys": keys
@@ -167,7 +169,7 @@ class aggregateInfoComponenet extends baseComponent {
                 this.height * 0.45
             ]);
 
-            this.barChart.bindSelectionCallback(this.setHighlight.bind(
+            this.barChart.bindHighlightCallback(this.setHighlight.bind(
                 this));
 
             this.scatter = new simpleScatterPlot(this.svg, [0, this.height *
@@ -200,19 +202,19 @@ class aggregateInfoComponenet extends baseComponent {
         this.setData("paper", this.data["paperList"][index]);
     }
 
-    setHighlight(list) {
-        // console.log(list);
-        if (this.scatter)
-            this.scatter.highlight(list);
-        this.setData("highlight", list);
+    setHighlight(tagList) {
+        // console.log("\nsetHighlight", tagList);
+        this.setData("highlightFilter", tagList);
     }
 
     handleAggregateLabelInfo(data) {
-        // console.log(data);
+        console.log(data);
         if (this.barChart) {
             this.barChart.setData(
                 data['aggregation'],
-                data['keys'][0]);
+                data['keys'][0],
+                data['keys'].join(":")
+            );
         }
 
     }
@@ -241,6 +243,14 @@ class aggregateInfoComponenet extends baseComponent {
 
         this.initSvg();
         // bar char
+        if (this.keysBar) {
+            this.aggregateLabelsByKeys(this.selection, this.keysBar);
+        }
+
+        if (this.keysX && this.keysY) {
+            this.aggregateValuesByKeys(this.selection, this.keysX, this.keysY);
+        }
+
         this.barChart.draw();
         // scatterplot
         this.scatter.draw();

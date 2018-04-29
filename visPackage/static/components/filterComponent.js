@@ -1,7 +1,11 @@
 class filterComponent extends baseComponent {
     constructor(uuid) {
         super(uuid);
-        this.subscribeDatabyNames(["paperList", "highlightFilter"]);
+        this.subscribeDatabyNames([
+            "paperList",
+            "highlightFilter",
+            "selectionFilter"
+        ]);
 
         this.callFunc("loadData", {
             "filename": "papers.json"
@@ -35,8 +39,10 @@ class filterComponent extends baseComponent {
         this.highlight.setChangeTagCallback(this.onUpdateHighlight.bind(
             this));
 
-        d3.select(this.div + "clearSelection").on("click", this.highlight.clearTags
-            .bind(this));
+        d3.select(this.div + "clearSelection").on("click",
+            d => {
+                this.selection.clearTags();
+            });
 
         d3.select(this.div + "clearHighlight").on("click",
             d => {
@@ -45,11 +51,16 @@ class filterComponent extends baseComponent {
     }
 
     onUpdateSelection(listOfTag) {
-        console.log(listOfTag);
+        // console.log("onUpdateSelection:", listOfTag);
+        this.setData("selectionFilter", listOfTag);
+        listOfTag = listOfTag.map(d => d.split(":"));
+        this.callFunc("selectionByTags", {
+            "tags": listOfTag
+        });
     }
 
     onUpdateHighlight(listOfTag) {
-        console.log("onUpdateHighlight:", listOfTag);
+        // console.log("onUpdateHighlight:", listOfTag);
         this.setData("highlightFilter", listOfTag);
         listOfTag = listOfTag.map(d => d.split(":"));
         this.callFunc("highlightByTags", {

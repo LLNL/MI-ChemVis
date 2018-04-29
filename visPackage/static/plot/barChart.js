@@ -46,8 +46,8 @@ class barChart {
                 .attr("text-anchor", "middle")
                 .text(this.title);
 
-            let callback = this.callback;
-            let partialBarData = this.partialBarData;
+            // let callback = this.callback;
+            // let partialBarData = this.partialBarData;
 
             var bars = this.svg.selectAll(".bar")
                 .data(barData);
@@ -72,26 +72,18 @@ class barChart {
                     if (d3.select(this).style("fill") !== "lightblue")
                         d3.select(this).style("fill", "grey");
                 })
-                .on("click", function(d) {
-
-                    // d3.selectAll(".partialBar").style("fill", "grey");
-                    if (partialBarData) {
-                        for (let i = 0; i < partialBarData.length; i++) {
-                            partialBarData[i].count = 0;
-                        }
-                    }
-                    d3.selectAll(".partialBar").remove();
-
-                    if (d3.select(this).style("fill") === "lightblue") {
-                        //cancel highlight
-                        d3.select(this).style("fill", "lightgrey");
-                        callback([]);
+                .on("click", (d, i) => {
+                    console.log(d);
+                    if (d.select) {
+                        this.data[i].select = false;
+                        this.callback([]);
 
                     } else {
-                        // highlight
-                        d3.selectAll(".bar").style("fill", "grey");
-                        d3.select(this).style("fill", "lightblue");
-                        callback(d.array);
+                        //set all flag to false
+                        for (let j = 0; j < this.data.length; j++)
+                            this.data[j].select = false;
+                        this.data[i].select = true;
+                        this.callback([d.tag]);
                     }
                 })
                 .style("fill", "grey");
@@ -130,7 +122,7 @@ class barChart {
         this.size = size;
     }
 
-    setData(data, title) {
+    setData(data, title, tag) {
         this.data = [];
         this.title = title;
         for (let key in data) {
@@ -138,7 +130,9 @@ class barChart {
                 this.data.push({
                     "name": key,
                     "array": data[key],
-                    "count": data[key].length
+                    "count": data[key].length,
+                    "tag": tag + ":" + key,
+                    "select": false
                 });
             }
         }
@@ -153,7 +147,7 @@ class barChart {
         this.draw();
     }
 
-    bindSelectionCallback(func) {
+    bindHighlightCallback(func) {
         this.callback = func;
     }
 
@@ -166,7 +160,7 @@ class barChart {
     }
 
     updatePartialBarData() {
-        if (this.indexSet) {
+        if (this.indexSet && this.barData) {
             this.partialBarData = [];
             for (let i = 0; i < this.barData.length; i++) {
                 let count = 0;

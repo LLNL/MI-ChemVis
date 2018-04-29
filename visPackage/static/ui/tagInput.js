@@ -159,7 +159,7 @@ class tagLabel {
                 .on("click", d => {
                     this.highlightCallback("replace", keys);
                 })
-                .html("Highlight");
+                .html("Set Highlight");
 
             menu.append("a")
                 .attr("class", "dropdown-item")
@@ -177,7 +177,7 @@ class tagLabel {
                 .on("click", d => {
                     this.selectionCallback("replace", keys);
                 })
-                .html("Select");
+                .html("Set Selection");
 
             menu.append("a")
                 .attr("class", "dropdown-item")

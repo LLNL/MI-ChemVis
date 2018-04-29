@@ -195,7 +195,7 @@ class graphComponent extends baseComponent {
 
     updateHighlight(indices) {
         let indexSet = new Set(indices);
-        console.log("graph.highlight: ", indexSet.size);
+        // console.log("graph.highlight: ", indexSet.size);
         this.svg
             .selectAll('.graphNode')
             .each(function(d, i) {

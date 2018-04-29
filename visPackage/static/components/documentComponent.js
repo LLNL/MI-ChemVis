@@ -1,7 +1,8 @@
 class documentComponent extends baseComponent {
     constructor(uuid) {
         super(uuid);
-        this.subscribeDatabyNames(["paper", "highlightFilter",
+        this.subscribeDatabyNames([
+            "paper", "highlightFilter",
             "selectionFilter"
         ]);
 
@@ -91,7 +92,7 @@ class documentComponent extends baseComponent {
 
             labels.bindHighlightCallback((type, tag) => {
                 tag = tag.join(":");
-                console.log("bindHighlightCallback", type, tag);
+                // console.log("bindHighlightCallback", type, tag);
                 if (type === "replace") {
                     this.setData("highlightFilter", [tag]);
                 } else if (type === "add") {
@@ -99,7 +100,7 @@ class documentComponent extends baseComponent {
                     if (this.data["highlightFilter"]) {
                         filter = this.data[
                             "highlightFilter"];
-                        console.log(filter);
+                        // console.log(filter);
                     }
 
                     if (filter.length === 0)
@@ -116,6 +117,7 @@ class documentComponent extends baseComponent {
 
             labels.bindSelectionCallback((type, tag) => {
                 tag = tag.join(":");
+                console.log("bindSelectionCallback", type, tag);
                 if (type === "replace") {
                     this.setData("selectionFilter", [tag]);
                 } else if (type === "add") {

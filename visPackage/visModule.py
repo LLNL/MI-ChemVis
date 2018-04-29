@@ -71,6 +71,8 @@ class chemVisModule(visModule):
     def index():
         dataManager.clear()
         dataManager.setData("componentLayout", layoutConfig)
+        dataManager.setData("selection", [])
+        dataManager.setData("highlight", [])
         return app.send_static_file('index.html')
 
     @app.route('/<name>')
@@ -121,9 +123,10 @@ class chemVisModule(visModule):
     def highlightByTags(self, tags):
         print "highlightByTags", tags
         group = None
+        selection = dataManager.getData("selection")
         for tag in tags:
             if group == None:
-                group = set(self.aggregator.groupByKeys([],tag))
+                group = set(self.aggregator.groupByKeys(selection,tag))
             else:
                 group.intersection_update(self.aggregator.groupByKeys([],tag))
 
@@ -134,6 +137,24 @@ class chemVisModule(visModule):
             ## un-highlight
             dataManager.setData("highlight", [])
         return True
+
+    def selectionByTags(self, tags):
+        print "selectionByTags", tags
+        group = None
+        for tag in tags:
+            if group == None:
+                group = set(self.aggregator.groupByKeys([],tag))
+            else:
+                group.intersection_update(self.aggregator.groupByKeys([],tag))
+
+        # print group
+        if group:
+            dataManager.setData("selection", list(group))
+        else:
+            ## un-highlight
+            dataManager.setData("selection", [])
+        return True
+
     ############# list of other API #############
 
 
