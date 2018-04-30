@@ -2,7 +2,9 @@ class documentComponent extends baseComponent {
     constructor(uuid) {
         super(uuid);
         this.subscribeDatabyNames([
-            "paper"
+            "paper",
+            "selectionFilter", //this necessary to maintain filter consistency
+            "highlightFilter", //this necessary to maintain filter consistency
         ]);
 
         $(this.div + "container").parent().css("overflow-y", "scroll");
@@ -91,7 +93,7 @@ class documentComponent extends baseComponent {
 
             labels.bindHighlightCallback((type, tag) => {
                 tag = tag.join(":");
-                // console.log("bindHighlightCallback", type, tag);
+                console.log("bindHighlightCallback", type, tag);
                 if (type === "replace") {
                     this.setData("highlightFilter", [tag]);
                 } else if (type === "add") {
@@ -124,6 +126,7 @@ class documentComponent extends baseComponent {
                     if (this.data["selectionFilter"])
                         filter = this.data[
                             "selectionFilter"];
+                    // console.log(filter);
                     if (filter.length === 0)
                         this.setData("selectionFilter", [tag]);
                     else {

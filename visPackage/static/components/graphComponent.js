@@ -200,7 +200,7 @@ class graphComponent extends baseComponent {
             //store the highlight information at nodeHighlight, because the circle may not be
             //create when this function is called, the circle is added during the simulation's tick circle
             let indexSet = new Set(this.data['highlight']);
-            console.log("graph.highlight: ", indexSet);
+            // console.log("graph.highlight: ", indexSet);
             this.nodeHighlight = this.papers.map(d => {
                 if (indexSet.size > 0) {
                     if (indexSet.has(d.index))

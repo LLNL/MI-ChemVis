@@ -59,7 +59,7 @@ class filterComponent extends baseComponent {
     }
 
     onUpdateHighlight(listOfTag) {
-        // console.log("onUpdateHighlight:", listOfTag);
+        console.log("onUpdateHighlight:", listOfTag);
         this.setData("highlightFilter", listOfTag);
         listOfTag = listOfTag.map(d => d.split(":"));
         this.callFunc("highlightByTags", {
