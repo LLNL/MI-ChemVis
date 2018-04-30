@@ -4,7 +4,6 @@ class simpleScatterPlot {
         this.update(pos, size);
         this.axisXflag = axisX;
         this.axisYflag = axisY;
-
         /// small button
     }
 
@@ -41,14 +40,9 @@ class simpleScatterPlot {
                     this.callback(this.data[i]);
                 })
                 .on("mouseover", function(d) {
-                    // console.log("mouseOver");
-                    d3.select(this).style("fill", "grey");
                     d3.select(this).attr("r", 8);
-                    // d3.select(this).attr("r", 2*r);
-                    //draw tooltip
                 })
                 .on("mouseout", function(d) {
-                    d3.select(this).style("fill", "lightgrey");
                     d3.select(this).attr("r", 6);
                 });
 
@@ -91,6 +85,7 @@ class simpleScatterPlot {
         this.val = value;
         this.names = names;
         this.draw();
+        this.highlight();
     }
 
     bindSelectionCallback(callback) {
@@ -98,26 +93,32 @@ class simpleScatterPlot {
     }
 
     highlight(list) {
-        let indexSet = new Set(list);
-        if (list.length > 0) {
-            this.svg.selectAll(".point").each(function(d, i) {
-                let highlight = false;
-                if (d[2]) {
-                    if (indexSet.has(d[2]))
-                        highlight = true;
-                } else {
-                    if (indexSet.has(i))
-                        highlight = true;
-                }
+        if (list)
+            this.indexSet = new Set(list);
 
-                if (highlight)
-                    d3.select(this).style("fill", "lightblue");
-                else
-                    d3.select(this).style("fill", "lightgrey");
-            })
+        if (this.indexSet) {
+            // console.log(this.indexSet);
+            let indexSet = this.indexSet;
+            if (indexSet.size > 0) {
+                this.svg.selectAll(".point").each(function(d, i) {
+                    let highlight = false;
+                    if (d[2]) {
+                        if (indexSet.has(d[2]))
+                            highlight = true;
+                    } else {
+                        if (indexSet.has(i))
+                            highlight = true;
+                    }
 
-        } else {
-            this.svg.selectAll(".point").style("fill", "lightgrey");
+                    if (highlight)
+                        d3.select(this).style("fill", "lightblue");
+                    else
+                        d3.select(this).style("fill", "lightgrey");
+                })
+
+            } else {
+                this.svg.selectAll(".point").style("fill", "lightgrey");
+            }
         }
     }
 }

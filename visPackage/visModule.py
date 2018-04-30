@@ -88,6 +88,8 @@ class chemVisModule(visModule):
         return Response(json.dumps(autocompleteList[0:20]), mimetype='application/json')
 
     ########### all function should have a return value ############
+    ############# list of other API #############
+
     def loadData(self, filename):
         with open(filename) as json_data:
             global aggregate
@@ -155,7 +157,9 @@ class chemVisModule(visModule):
             dataManager.setData("selection", [])
         return True
 
-    ############# list of other API #############
+    def selectPaperByIndex(self, index):
+        dataManager.setData("paper", dataManager.getData("paperList")[index])
+        return True
 
 
 

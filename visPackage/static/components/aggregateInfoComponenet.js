@@ -198,7 +198,9 @@ class aggregateInfoComponenet extends baseComponent {
     }
 
     selectPaperByIndex(index) {
-        this.setData("paper", this.data["paperList"][index]);
+        this.callFunc("selectPaperByIndex", {
+            "index": index
+        });
     }
 
     setHighlight(tagList) {

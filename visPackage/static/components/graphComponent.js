@@ -36,15 +36,9 @@ class graphComponent extends baseComponent {
                 // if (this.data["selection"].length > 0) {
                 this.selection = this.data["selection"];
                 this.draw();
-
-                //restore other visual elements
-                if (this.colorKey)
-                    this.updateColor(this.colorKey);
-
                 break;
             case "highlight":
-                this.highlight = this.data["highlight"];
-                this.updateHighlight(this.highlight)
+                this.updateHighlight();
                 break;
         }
     }
@@ -196,29 +190,24 @@ class graphComponent extends baseComponent {
                 d3.select(this).style("fill", nodeColor[i]);
             });
 
-        if (this.data["highlight"])
-            this.updateHighlight(this.data["highlight"]);
+        this.updateHighlight();
     }
 
     updateHighlight() {
-        let indexSet = new Set(this.data['highlight']);
-        console.log("graph.highlight: ", indexSet.size);
-        let papers = this.papers;
-        this.svg
-            .selectAll('.node')
-            .each(function(d, i) {
-                // console.log(d, i);
-                let gIndex = papers[i].index;
+        if (this.data["highlight"] && this.papers) {
+            let indexSet = new Set(this.data['highlight']);
+            // console.log("graph.highlight: ", indexSet);
+            this.nodeHighlight = this.papers.map(d => {
                 if (indexSet.size > 0) {
-                    if (!indexSet.has(gIndex)) {
-                        d3.select(this).attr("opacity", 0.2);
-                    } else {
-                        d3.select(this).attr("opacity", 1.0);
-                    }
+                    if (indexSet.has(d.index))
+                        return true;
+                    else
+                        return false;
                 } else {
-                    d3.select(this).attr("opacity", 1.0);
+                    return true;
                 }
-            })
+            });
+        }
     }
 
     updateFilter() {
@@ -240,6 +229,9 @@ class graphComponent extends baseComponent {
             this.generateGraph(this.papers, threshold);
             // console.log("link size:", this.links.length);
             this.runSimulation(this.nodes, this.links, -20);
+            //restore other visual elements
+            // if (this.colorKey)
+            //     this.updateColor(this.colorKey);
         }
     }
 
@@ -281,6 +273,9 @@ class graphComponent extends baseComponent {
                 }
                 this.runSimulation(this.nodes, this.links, -20);
             }
+            if (this.colorKey)
+                this.updateColor(this.colorKey);
+
         }
     }
 
@@ -454,12 +449,15 @@ class graphComponent extends baseComponent {
                 })
                 .style("stroke", "white")
                 .style("stroke-width", 2)
-                // .on("mouseover", function(d) {
-                //     d3.select(this).style("fill", "lightgrey")
-                // })
-                // .on("mouseout", function(d) {
-                //     d3.select(this).style("fill", "grey")
-                // })
+                .style("opacity", (d, i) => {
+                    if (this.nodeHighlight) {
+                        if (this.nodeHighlight[i])
+                            return 1.0;
+                        else
+                            return 0.3;
+                    }
+                    return 1.0;
+                })
                 .on("click", (d) => {
                     this.setData("paper", this.data["paperList"]
                         [this.papers[d.index].index]);
