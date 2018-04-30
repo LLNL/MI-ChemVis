@@ -2,8 +2,7 @@ class documentComponent extends baseComponent {
     constructor(uuid) {
         super(uuid);
         this.subscribeDatabyNames([
-            "paper", "highlightFilter",
-            "selectionFilter"
+            "paper"
         ]);
 
         $(this.div + "container").parent().css("overflow-y", "scroll");

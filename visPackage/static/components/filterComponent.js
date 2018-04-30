@@ -2,7 +2,6 @@ class filterComponent extends baseComponent {
     constructor(uuid) {
         super(uuid);
         this.subscribeDatabyNames([
-            "paperList",
             "highlightFilter",
             "selectionFilter"
         ]);
@@ -72,16 +71,10 @@ class filterComponent extends baseComponent {
         super.parseDataUpdate(msg);
         // console.log(msg);
         switch (msg['name']) {
-            case "paperList":
-                let papers = this.data["paperList"];
-                this.setData("paper", papers[0]);
-                break;
-
-            case "fullPaperList":
-                // let papers = this.filterPaper(this.data["fullPaperList"]);
-                // this.setData("paperList", papers);
-                // this.setData("paper", papers[0]);
-                break;
+            // case "paperList":
+            //     let papers = this.data["paperList"];
+            //     this.setData("paper", papers[0]);
+            //     break;
 
             case "highlightFilter":
                 // let highlightFilter = Array.from(this.data[

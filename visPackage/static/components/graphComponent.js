@@ -13,7 +13,6 @@ class graphComponent extends baseComponent {
             "surfactants": true,
             "method": true,
             "reducing_agents": true,
-
             // "chemicals": false
             // "composition": true
         };
@@ -29,10 +28,11 @@ class graphComponent extends baseComponent {
         switch (msg['name']) {
             case "paperList":
                 console.log("paperList updated");
+                this.setData("paper", this.data['paperList'][0]);
                 this.draw();
                 break;
             case "selection":
-                console.log(this.data["selection"]);
+                // console.log(this.data["selection"]);
                 // if (this.data["selection"].length > 0) {
                 this.selection = this.data["selection"];
                 this.draw();
@@ -40,8 +40,6 @@ class graphComponent extends baseComponent {
                 //restore other visual elements
                 if (this.colorKey)
                     this.updateColor(this.colorKey);
-                if (this.data["highlight"])
-                    this.updateHighlight(this.data["highlight"]);
 
                 break;
             case "highlight":
@@ -197,6 +195,9 @@ class graphComponent extends baseComponent {
             .each(function(d, i) {
                 d3.select(this).style("fill", nodeColor[i]);
             });
+
+        if (this.data["highlight"])
+            this.updateHighlight(this.data["highlight"]);
     }
 
     updateHighlight() {

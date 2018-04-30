@@ -1,7 +1,10 @@
 class aggregateInfoComponenet extends baseComponent {
     constructor(uuid) {
         super(uuid);
-        this.subscribeDatabyNames(["selection", "paperList", "highlight"]);
+        this.subscribeDatabyNames([
+            "selection",
+            "highlight"
+        ]);
 
         this.aggregators = [
             ["chemicals", "mf"],
@@ -125,10 +128,6 @@ class aggregateInfoComponenet extends baseComponent {
     parseDataUpdate(msg) {
         super.parseDataUpdate(msg);
         switch (msg['name']) {
-            case "paperList":
-                console.log("paperList updated");
-                this.draw();
-                break;
             case "selection":
                 this.selection = this.data["selection"];
                 this.draw();
