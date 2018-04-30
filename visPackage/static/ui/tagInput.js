@@ -40,6 +40,7 @@ class tagInput {
     }
 
     setTags(tags) {
+        console.log("setTags", tags);
         $(this.div).importTags(tags.join(","));
     }
 
@@ -57,9 +58,7 @@ class tagInput {
     //
     // }
 
-    updateColor(elem, elem_tags) {
-        // console.log(this.highTagList);
-
+    updateColor() {
         if (this.highTagList) {
             let highTagList = this.highTagList;
             let colorScale = this.colorScale;
@@ -159,7 +158,7 @@ class tagLabel {
                 .on("click", d => {
                     this.highlightCallback("replace", keys);
                 })
-                .html("Set Highlight");
+                .html("Highlight");
 
             menu.append("a")
                 .attr("class", "dropdown-item")
@@ -177,7 +176,7 @@ class tagLabel {
                 .on("click", d => {
                     this.selectionCallback("replace", keys);
                 })
-                .html("Set Selection");
+                .html("Select");
 
             menu.append("a")
                 .attr("class", "dropdown-item")

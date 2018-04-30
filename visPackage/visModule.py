@@ -130,7 +130,7 @@ class chemVisModule(visModule):
             else:
                 group.intersection_update(self.aggregator.groupByKeys([],tag))
 
-        # print group
+        print group
         if group:
             dataManager.setData("highlight", list(group))
         else:
@@ -147,7 +147,7 @@ class chemVisModule(visModule):
             else:
                 group.intersection_update(self.aggregator.groupByKeys([],tag))
 
-        # print group
+        print group
         if group:
             dataManager.setData("selection", list(group))
         else:

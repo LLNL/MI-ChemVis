@@ -183,6 +183,7 @@
 
 	//add new accessor function
 	$.fn.getTags = function(val) {
+		var id = $(this).attr('id');
 		var tagslist = $(this).val().split(delimiter[id]);
 		return tagslist; //true when tag exists, false when not
 	};

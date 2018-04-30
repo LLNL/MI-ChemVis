@@ -208,7 +208,7 @@ class aggregateInfoComponenet extends baseComponent {
     }
 
     handleAggregateLabelInfo(data) {
-        console.log(data);
+        // console.log(data);
         if (this.barChart) {
             this.barChart.setData(
                 data['aggregation'],

@@ -4,7 +4,14 @@ div.tagsinput span.tag { border: 0px solid #888; -moz-border-radius:4px; -webkit
 
 div.tagsinput span.tag a { font-weight: bold; color: #FFF; text-decoration:none; font-size: 11px;  }
 
-div.tagsinput div { display:block; float: left; }
+div.tagsinput div {
+    display:inline-block;
+    float: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .tags_clear { clear: both; width: 100%; height: 0px; }
 .not_valid { background: #FBD8DB !important; color: #90111A !important;}
 
@@ -29,8 +36,7 @@ div.tagsinput div { display:block; float: left; }
 
 div.tagsinput input
 {
-    /*width:200px;*/
-    display:inline-block;
+    /*display:inline-block;*/
     margin:0px;
     font-family: helvetica;
     font-size: 13px;
@@ -41,12 +47,13 @@ div.tagsinput input
     margin-right:5px;
     margin-bottom:5px;
 }
+
 /*.ui-autocomplete-input{
     width:200px
 }*/
 
 .ui-autocomplete > li {
-  padding: 3px 3px;
+  padding: 1px 1px;
 }
 .ui-state-active {
   background-color: #ccc;

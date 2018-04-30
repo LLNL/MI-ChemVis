@@ -51,7 +51,7 @@ class filterComponent extends baseComponent {
     }
 
     onUpdateSelection(listOfTag) {
-        // console.log("onUpdateSelection:", listOfTag);
+        console.log("onUpdateSelection:", listOfTag);
         this.setData("selectionFilter", listOfTag);
         listOfTag = listOfTag.map(d => d.split(":"));
         this.callFunc("selectionByTags", {
@@ -70,7 +70,7 @@ class filterComponent extends baseComponent {
 
     parseDataUpdate(msg) {
         super.parseDataUpdate(msg);
-        console.log(msg);
+        // console.log(msg);
         switch (msg['name']) {
             case "paperList":
                 let papers = this.data["paperList"];
