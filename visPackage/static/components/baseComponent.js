@@ -11,6 +11,7 @@ class baseComponent {
         // console.log(this.uuid);
         this.div = "#" + this.uuid;
         this.data = {};
+        this.showServerStatus = false;
 
         socket.on(this.uuid, this.parseMessage.bind(this));
 
@@ -38,7 +39,6 @@ class baseComponent {
     }
 
     showTooltip(pos, message) {
-
         this.tooltip.html(message)
             .style("display", "inline-block")
             .style("position", "relative")
@@ -83,7 +83,7 @@ class baseComponent {
         var allReturned = true;
         for (var key in this.calledFunc) {
             if (this.calledFunc.hasOwnProperty(key)) {
-                if (this.calledFunc[key] !== 0) {
+                if (this.calledFunc[key] !== 0 && this.showServerStatus) {
                     this.showTooltip(
                         [5.0, 0.0],
                         // [this.width * 0.5, 0.0],
@@ -95,7 +95,7 @@ class baseComponent {
 
             }
         }
-        if (allReturned)
+        if (allReturned && this.showServerStatus)
             this.tooltip.html("").style("display", "none");
 
     }
