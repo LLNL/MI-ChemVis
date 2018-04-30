@@ -184,6 +184,7 @@ class graphComponent extends baseComponent {
         });
         this.nodeColor = nodeColor;
 
+        //this is call in case, the tick of the simualtion is not activated when highlightupdate is require
         this.svg
             .selectAll('.node')
             .each(function(d, i) {
@@ -195,8 +196,11 @@ class graphComponent extends baseComponent {
 
     updateHighlight() {
         if (this.data["highlight"] && this.papers) {
+
+            //store the highlight information at nodeHighlight, because the circle may not be
+            //create when this function is called, the circle is added during the simulation's tick circle
             let indexSet = new Set(this.data['highlight']);
-            // console.log("graph.highlight: ", indexSet);
+            console.log("graph.highlight: ", indexSet);
             this.nodeHighlight = this.papers.map(d => {
                 if (indexSet.size > 0) {
                     if (indexSet.has(d.index))
@@ -207,6 +211,17 @@ class graphComponent extends baseComponent {
                     return true;
                 }
             });
+            let nodeHighlight = this.nodeHighlight;
+
+            //this is call in case, the tick of the simualtion is not activated when highlight update is require
+            this.svg
+                .selectAll('.node')
+                .each(function(d, i) {
+                    if (nodeHighlight[i])
+                        d3.select(this).style("opacity", 1.0);
+                    else
+                        d3.select(this).style("opacity", 0.2);
+                })
         }
     }
 
