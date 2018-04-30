@@ -80,11 +80,11 @@ class documentComponent extends baseComponent {
                 tooltip: "pixie_dust",
                 keys: ["pixie_dust"]
             });
-            tags.push({
-                tag: paper.pressure,
-                tooltip: "pressure",
-                keys: ["pressure"]
-            });
+            // tags.push({
+            //     tag: paper.pressure,
+            //     tooltip: "pressure",
+            //     keys: ["pressure"]
+            // });
             // console.log(tags);
 
             let labels = new tagLabel(this.div + "tags", tags, true);
