@@ -7,15 +7,17 @@ class graphComponent extends baseComponent {
 
         /////// edge filter options ///////
         this.filterState = {
-            "morphology": true,
+            "morphology": false,
             "material": true,
             "solvents": false,
-            "surfactants": true,
-            "method": true,
-            "reducing_agents": true,
+            "surfactants": false,
+            "method": false,
+            "reducing_agents": false
+
             // "chemicals": false
             // "composition": true
         };
+        this.colorKey = "material";
 
         this.marginWidth = 10;
         this.setupUI();
@@ -44,71 +46,112 @@ class graphComponent extends baseComponent {
     }
 
     setupUI() {
-        this.filterList = d3.select(this.div + "filter");
-        for (let key in this.filterState) {
-            if (this.filterState.hasOwnProperty(key)) {
-                let li = this.filterList.append("div")
-                    .attr("class", "custom-control custom-checkbox")
-                    .style("display", "inline-block")
-                    .style("padding-left", "1.3rem")
-                    .style("padding-right", "1.0rem");
-                li.append("input")
-                    .attr("type", "checkbox")
-                    .attr("id", this.uuid + key)
-                    .attr("class", "custom-control-input")
-                    .property('checked', this.filterState[key])
-                    .on("click", this.updateFilter.bind(this));
-                li.append("label")
-                    .attr("class", "custom-control-label")
-                    .attr("for", this.uuid + key)
-                    .text(key + "\t");
-            }
-        }
 
-        let dropdown = this.filterList.append("div")
+        // for (let key in this.filterState) {
+        //     if (this.filterState.hasOwnProperty(key)) {
+        //         let li = this.filterList.append("div")
+        //             .attr("class", "custom-control custom-radiobox")
+        //             .style("display", "inline-block")
+        //             .style("padding-left", "1.3rem")
+        //             .style("padding-right", "1.0rem");
+        //         li.append("input")
+        //             .attr("type", "checkbox")
+        //             .attr("id", this.uuid + key)
+        //             .attr("class", "custom-control-input")
+        //             .property('checked', this.filterState[key])
+        //             .on("click", this.updateFilter.bind(this));
+        //         li.append("label")
+        //             .attr("class", "custom-control-label")
+        //             .attr("for", this.uuid + key)
+        //             .text(key + "\t");
+        //     }
+        // }
+        this.filterList = d3.select(this.div + "filter");
+        let edgeDropdown = this.filterList.append("div")
             .attr("class", "btn-group");
-        dropdown.append("button")
+        edgeDropdown.append("button")
             .attr("class", "btn btn-secondary btn-sm dropdown-toggle")
             .attr("type", "button")
             .attr("data-toggle", "dropdown")
             .attr("aria-haspopup", "true")
-            .html("color-by");
-        let menu = dropdown.append("div")
+            .html("group-by");
+        let edgeMenu = edgeDropdown.append("div")
             .attr("class", "dropdown-menu");
+
+        let colorDropdown = this.filterList.append("div")
+            .attr("class", "btn-group");
+        colorDropdown.append("button")
+            .attr("class", "btn btn-info btn-sm dropdown-toggle")
+            .attr("type", "button")
+            .attr("data-toggle", "dropdown")
+            .attr("aria-haspopup", "true")
+            .style("margin-left", '10px')
+            .html("color-by");
+        let colorMenu = colorDropdown.append("div")
+            .attr("class", "dropdown-menu");
+
+        this.edgeLabel = this.filterList.append("span")
+            .attr("class", "badge")
+            .style("margin-left", '10px')
+            .style("background-color", "#868e96")
+            .style("color", "white");
+
+        this.colorLabel = this.filterList.append("span")
+            .attr("class", "badge badge-info")
+            .style("margin-left", '10px');
+
+        /// setup menu entries ////
         for (let key in this.filterState) {
             if (this.filterState.hasOwnProperty(key)) {
-                menu.append("a")
+                edgeMenu.append("a")
                     .attr("class", "dropdown-item")
                     .on("click", d => {
-                        this.updateColor(key);
+                        this.updateEdge(key);
+                        this.edgeLabel.html(key);
                     })
                     .html(key);
             }
         }
+
+        for (let key in this.filterState) {
+            if (this.filterState.hasOwnProperty(key)) {
+                colorMenu.append("a")
+                    .attr("class", "dropdown-item")
+                    .on("click", d => {
+                        this.updateColor(key);
+                        this.colorLabel.html(key);
+                    })
+                    .html(key);
+            }
+        }
+
+        //FIXME init the badge
+        this.edgeLabel.html(this.colorKey);
+        this.colorLabel.html(this.colorKey);
         // <button type="button" class="btn btn-secondary">Secondary</button>
         ///// add edge control buttons //////
-        this.filterList.append("button")
-            .attr("type", "button")
-            .attr("class", "btn btn-sm btn-secondary")
-            .style("margin-left", "5px")
-            .html("+")
-            .attr("data-toggle", "tooltip")
-            .attr("data-placement", "top")
-            .attr("title", "increase edges")
-            .on("click", d => {
-                this.redraw(this.currentEdgeThreshold - 1.0)
-            });
-        this.filterList.append("button")
-            .attr("type", "button")
-            .attr("class", "btn btn-sm btn-secondary")
-            .style("margin-left", "5px")
-            .html("-")
-            .attr("data-toggle", "tooltip")
-            .attr("data-placement", "top")
-            .attr("title", "decrease edges")
-            .on("click", d => {
-                this.redraw(this.currentEdgeThreshold + 1.0)
-            });
+        // this.filterList.append("button")
+        //     .attr("type", "button")
+        //     .attr("class", "btn btn-sm btn-secondary")
+        //     .style("margin-left", "5px")
+        //     .html("+")
+        //     .attr("data-toggle", "tooltip")
+        //     .attr("data-placement", "top")
+        //     .attr("title", "increase edges")
+        //     .on("click", d => {
+        //         this.redraw(this.currentEdgeThreshold - 1.0)
+        //     });
+        // this.filterList.append("button")
+        //     .attr("type", "button")
+        //     .attr("class", "btn btn-sm btn-secondary")
+        //     .style("margin-left", "5px")
+        //     .html("-")
+        //     .attr("data-toggle", "tooltip")
+        //     .attr("data-placement", "top")
+        //     .attr("title", "decrease edges")
+        //     .on("click", d => {
+        //         this.redraw(this.currentEdgeThreshold + 1.0)
+        //     });
 
         $(function() {
             $('[data-toggle="tooltip"]').tooltip()
@@ -139,6 +182,17 @@ class graphComponent extends baseComponent {
             // this.svgSave.updatePos([this.width - 10, 10])
             // this.svgSave.draw();
         }
+    }
+
+    updateEdge(key) {
+        for (var d in this.filterState) {
+            if (this.filterState.hasOwnProperty(d)) {
+                this.filterState[d] = false;
+            }
+        }
+
+        this.filterState[key] = true;
+        this.redraw();
     }
 
     updateColor(key) {
@@ -238,12 +292,12 @@ class graphComponent extends baseComponent {
         // this.setData("filter", this.filterState);
     }
 
-    redraw(threshold) {
+    redraw(threshold = 0.5) {
         if (this.data["paperList"] && this.svg) {
             this.papers = this.subselect();
             this.generateGraph(this.papers, threshold);
             // console.log("link size:", this.links.length);
-            this.runSimulation(this.nodes, this.links, -20);
+            this.runSimulation(this.nodes, this.links, -10);
             //restore other visual elements
             // if (this.colorKey)
             //     this.updateColor(this.colorKey);
@@ -276,17 +330,17 @@ class graphComponent extends baseComponent {
             if (this.papers) {
                 let threshold = this.threshold();
                 this.generateGraph(this.papers, threshold);
-                this.links = [];
-                let count = 0
-                while (this.links.length < this.nodes.length * 10 && count <
-                    4) {
-                    this.generateGraph(this.papers, threshold);
-                    // console.log("link size:", this.links.length,
-                    // " threshold:", threshold);
-                    threshold = threshold - 1.0;
-                    count = count + 1.0;
-                }
-                this.runSimulation(this.nodes, this.links, -20);
+                // this.links = [];
+                // let count = 0
+                // while (this.links.length < this.nodes.length * 10 && count <
+                //     4) {
+                //     this.generateGraph(this.papers, threshold);
+                //     // console.log("link size:", this.links.length,
+                //     // " threshold:", threshold);
+                //     threshold = threshold - 1.0;
+                //     count = count + 1.0;
+                // }
+                this.runSimulation(this.nodes, this.links, -10);
             }
             if (this.colorKey)
                 this.updateColor(this.colorKey);
@@ -328,14 +382,15 @@ class graphComponent extends baseComponent {
     }
 
     threshold() {
-        let count = 0;
-        for (let key in this.filterState) {
-            if (this.filterState.hasOwnProperty(key)) {
-                if (this.filterState[key])
-                    count += 1.0;
-            }
-        }
-        return count - 1.0 + 0.5;
+        return 0.5;
+        // let count = 0;
+        // for (let key in this.filterState) {
+        //     if (this.filterState.hasOwnProperty(key)) {
+        //         if (this.filterState[key])
+        //             count += 1.0;
+        //     }
+        // }
+        // return count - 1.0 + 0.5;
 
     }
 
@@ -393,7 +448,7 @@ class graphComponent extends baseComponent {
                 .force('center', d3.forceCenter(width / 2, height / 2))
                 .on('tick', tick.bind(this));
             // console.log("simulation restart!");
-            this.simulation.alpha(0.3).restart();
+            this.simulation.alpha(0.8).restart();
         }
 
         if (this.svg.select("#graphlink").empty()) {

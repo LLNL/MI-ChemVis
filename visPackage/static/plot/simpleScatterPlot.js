@@ -5,6 +5,16 @@ class simpleScatterPlot {
         this.axisXflag = axisX;
         this.axisYflag = axisY;
         /// small button
+        // Pan and zoom
+        this.zoom = d3.zoom()
+            .scaleExtent([.5, 10])
+            .extent([
+                [pos[0], pos[1]],
+                [pos[0] + size[0], pos[1] + size[1]]
+                // [0, 0],
+                // [pos[0], pos[1]]
+            ])
+            .on("zoom", this.zoomed.bind(this));
     }
 
     draw() {
@@ -13,26 +23,33 @@ class simpleScatterPlot {
             if (this.accessor)
                 data = this.data.map(this.accessor);
             this.svg.selectAll("*").remove();
-            var xScale = d3.scaleLinear()
+            this.mappedData = data;
+            this.svg.append("rect")
+                .attr("width", this.size[0])
+                .attr("height", this.size[1])
+                .style("fill", "none")
+                .style("pointer-events", "all")
+                .attr('transform', 'translate(' + this.pos[0] + ',' + this.pos[
+                        1] +
+                    ')')
+                .call(this.zoom);
+
+            this.xScale = d3.scaleLinear()
                 .range([this.pos[0], this.pos[0] + this.size[0]]);
 
-            var yScale = d3.scaleLinear()
+            this.yScale = d3.scaleLinear()
                 .range([this.pos[1] + this.size[1], this.pos[1]]);
 
-            xScale.domain(d3.extent(data, d => d[0])).nice();
-            yScale.domain(d3.extent(data, d => d[1])).nice();
+            this.xScale.domain(d3.extent(data, d => d[0])).nice();
+            this.yScale.domain(d3.extent(data, d => d[1])).nice();
 
             var r = 6;
-            var points = this.svg.selectAll('.point')
+            this.points = this.svg.selectAll('.point')
                 .data(data)
                 .enter().append('circle')
                 .attr('class', 'point')
-                .attr('cx', function(d) {
-                    return xScale(d[0]);
-                })
-                .attr('cy', function(d) {
-                    return yScale(d[1]);
-                })
+                .attr('cx', d => this.xScale(d[0]))
+                .attr('cy', d => this.yScale(d[1]))
                 .attr('r', r)
                 .style("opacity", 0.8)
                 .style('fill', "lightgrey")
@@ -47,9 +64,11 @@ class simpleScatterPlot {
                 });
 
             if (this.axisXflag) {
-                this.svg.append("g")
-                    .attr("transform", "translate(" + this.pos[0] + ",0)")
-                    .call(d3.axisLeft(yScale).ticks(5));
+                this.axisX = d3.axisBottom(this.xScale).ticks(5, "s");
+                this.gX = this.svg.append("g")
+                    .attr("transform", "translate(0," + (this.pos[1] + this
+                        .size[1]) + ")")
+                    .call(this.axisX);
                 this.svg.append('text')
                     .attr('x', this.pos[0] + 7)
                     .attr('y', this.pos[1] + 10)
@@ -58,10 +77,10 @@ class simpleScatterPlot {
             }
 
             if (this.axisYflag) {
-                this.svg.append("g")
-                    .attr("transform", "translate(0," + (this.pos[1] + this
-                        .size[1]) + ")")
-                    .call(d3.axisBottom(xScale).ticks(5))
+                this.axisY = d3.axisLeft(this.yScale).ticks(5, "s");
+                this.gY = this.svg.append("g")
+                    .attr("transform", "translate(" + this.pos[0] + ",0)")
+                    .call(this.axisY);
                 this.svg.append('text')
                     .attr('x', this.pos[0] + this.size[0])
                     .attr('y', this.pos[1] + this.size[1] - 5)
@@ -120,5 +139,19 @@ class simpleScatterPlot {
                 this.svg.selectAll(".point").style("fill", "lightgrey");
             }
         }
+    }
+
+    zoomed() {
+        // create new scale ojects based on event
+        var new_xScale = d3.event.transform.rescaleX(this.xScale);
+        var new_yScale = d3.event.transform.rescaleY(this.yScale);
+        // console.log(new_xScale, new_yScale);
+        // update axes
+        this.gX.call(this.axisX.scale(new_xScale));
+        this.gY.call(this.axisY.scale(new_yScale));
+
+        this.points.data(this.mappedData)
+            .attr('cx', d => new_xScale(d[0]))
+            .attr('cy', d => new_yScale(d[1]));
     }
 }
