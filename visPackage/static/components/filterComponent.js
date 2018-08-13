@@ -7,7 +7,8 @@ class filterComponent extends baseComponent {
         ]);
 
         this.callFunc("loadData", {
-            "filename": "papers.json"
+            "filename": "pipline_papers.json"
+                // "filename": "papers.json"
         });
 
         //allow scrow in the panel

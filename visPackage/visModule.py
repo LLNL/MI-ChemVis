@@ -91,18 +91,24 @@ class chemVisModule(visModule):
     ############# list of other API #############
 
     def loadData(self, filename):
-        with open(filename) as json_data:
-            global aggregate
-            papers = json.load(json_data)
-            print "load json: ", filename, len(papers)
-            dataManager.setData("paperList", papers)
+        print "\n\nbefore load file:", filename
+        try:
+            with open(filename) as json_data:
+                global aggregate
+                papers = json.load(json_data)
+                print "load json: ", filename, len(papers)
+                dataManager.setData("paperList", papers)
 
-            self.aggregator = aggregator(papers)
-            aggregate = self.aggregator
-            return True
+                # self.aggregator = aggregator(papers)
+                # aggregate = self.aggregator
+                return True
+        except IOError:
+            print 'File loading error!!\n'
+            return False
 
 
     def aggregateLabelsByKeys(self, selection, keys):
+        print "keys:", keys
         return {
             "aggregation":self.aggregator.aggregateLabelsByKeys(selection, keys),
             "keys": keys

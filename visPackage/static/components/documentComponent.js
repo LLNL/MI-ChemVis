@@ -23,7 +23,10 @@ class documentComponent extends baseComponent {
     draw() {
         //show paper information
         if (this.data["paper"]) {
+
             let paper = this.data["paper"];
+            console.log(paper);
+
             d3.select(this.div + "title")
                 .html(paper.name)
                 .style("font-size", 20);
