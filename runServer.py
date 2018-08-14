@@ -3,8 +3,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--input', default="pipeline_papers.json")
-parser.add_argument('--argument-two', default=False, action='store_true',
-                    dest='argument_two')
+parser.add_argument('--port', type=int, default=5010)
 
 
 args = parser.parse_args()
@@ -24,4 +23,4 @@ visLayout = {
 print("Input used: ", args.input)
 vis = chemVisModule(visLayout, args.input)
 
-vis.startServer()
+vis.startServer(port=args.port)
