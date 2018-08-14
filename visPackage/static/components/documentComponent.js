@@ -38,53 +38,78 @@ class documentComponent extends baseComponent {
                 .html("<b>Abstract:</b> " + paper.abstract);
 
             let tags = []
-            tags.push({
-                tag: paper.morphology,
-                tooltip: "morphology",
-                keys: ["morphology"]
-            });
+            if (paper.morphology) {
+                tags.push({
+                    tag: paper.morphology,
+                    tooltip: "morphology",
+                    keys: ["morphology"]
+                });
+            }
 
-            tags.push({
-                tag: paper.material,
-                tooltip: "material",
-                keys: ["material"]
-            });
-            tags.push({
-                tag: paper.metal_salts,
-                tooltip: "metal_salts",
-                keys: ["metal_salts"]
-            });
-            tags.push({
-                tag: paper.solvents,
-                tooltip: "solvents",
-                keys: ["solvents"]
-            });
-            tags.push({
-                tag: paper.surfactants,
-                tooltip: "surfactants",
-                keys: ["surfactants"]
-            });
-            tags.push({
-                tag: paper.reducing_agents,
-                tooltip: "reducing_agents",
-                keys: ["reducing_agents"]
-            });
-            tags.push({
-                tag: paper.chemicals.map(d => d.chemical),
-                // tag: paper.chemicals.map(d => d.mf),
-                tooltip: "chemical",
-                keys: ["chemicals", "chemical"]
-            });
-            tags.push({
-                tag: paper.method,
-                tooltip: "method",
-                keys: ["method"]
-            });
-            tags.push({
-                tag: paper.pixie_dust,
-                tooltip: "pixie_dust",
-                keys: ["pixie_dust"]
-            });
+            if (paper.material) {
+                tags.push({
+                    tag: paper.material,
+                    tooltip: "material",
+                    keys: ["material"]
+                });
+            }
+
+            if (paper.metal_salts) {
+                tags.push({
+                    tag: paper.metal_salts,
+                    tooltip: "metal_salts",
+                    keys: ["metal_salts"]
+                });
+            }
+
+            if (paper.solvents) {
+                tags.push({
+                    tag: paper.solvents,
+                    tooltip: "solvents",
+                    keys: ["solvents"]
+                });
+            }
+
+            if (paper.surfactants) {
+                tags.push({
+                    tag: paper.surfactants,
+                    tooltip: "surfactants",
+                    keys: ["surfactants"]
+                });
+            }
+
+            if (paper.reducing_agents) {
+                tags.push({
+                    tag: paper.reducing_agents,
+                    tooltip: "reducing_agents",
+                    keys: ["reducing_agents"]
+                });
+            }
+
+            if (paper.chemicals) {
+                tags.push({
+                    tag: paper.chemicals.map(d => d.chemical),
+                    // tag: paper.chemicals.map(d => d.mf),
+                    tooltip: "chemical",
+                    keys: ["chemicals", "chemical"]
+                });
+            }
+
+            if (paper.method) {
+                tags.push({
+                    tag: paper.method,
+                    tooltip: "method",
+                    keys: ["method"]
+                });
+            }
+
+            if (paper.pixie_dust) {
+                tags.push({
+                    tag: paper.pixie_dust,
+                    tooltip: "pixie_dust",
+                    keys: ["pixie_dust"]
+                });
+            }
             // tags.push({
             //     tag: paper.pressure,
             //     tooltip: "pressure",

@@ -10,6 +10,7 @@ visLayout = {
     }
 
 #setup interface
-vis = chemVisModule(visLayout)
+# vis = chemVisModule(visLayout, "papers.json")
+vis = chemVisModule(visLayout, "pipeline_papers.json")
 
 vis.startServer()

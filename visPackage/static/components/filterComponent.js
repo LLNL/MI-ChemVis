@@ -6,10 +6,7 @@ class filterComponent extends baseComponent {
             "selectionFilter"
         ]);
 
-        this.callFunc("loadData", {
-            "filename": "pipline_papers.json"
-                // "filename": "papers.json"
-        });
+        this.callFunc("loadData");
 
         //allow scrow in the panel
         $(this.div + "container").parent().css("overflow-y", "scroll");

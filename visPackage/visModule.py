@@ -60,7 +60,8 @@ layoutConfig = None
 aggregate = None
 
 class chemVisModule(visModule):
-    def __init__(self, componentLayout):
+    def __init__(self, componentLayout, database):
+        self.database = database
         # super(visModule, self).__init__()
         self.index = 0
         global layoutConfig
@@ -90,20 +91,21 @@ class chemVisModule(visModule):
     ########### all function should have a return value ############
     ############# list of other API #############
 
-    def loadData(self, filename):
-        print "\n\nbefore load file:", filename
+    def loadData(self):
+        print "\n\nbefore load file:", self.database
         try:
-            with open(filename) as json_data:
+            with open(self.database) as json_data:
                 global aggregate
                 papers = json.load(json_data)
-                print "load json: ", filename, len(papers)
+                print "load json: ", self.database, len(papers)
                 dataManager.setData("paperList", papers)
 
-                # self.aggregator = aggregator(papers)
-                # aggregate = self.aggregator
+                print "aggregate paper"
+                self.aggregator = aggregator(papers)
+                aggregate = self.aggregator
                 return True
-        except IOError:
-            print 'File loading error!!\n'
+        except IOError as e:
+            print 'File loading error!!:', e
             return False
 
 

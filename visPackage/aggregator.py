@@ -160,8 +160,9 @@ class aggregator(object):
                     if keys[keyIndex] == item:
                         group.append(index)
                 else:
-                    it = item[keys[keyIndex]]
-                    hasKey(it, keys, keyIndex+1, index, group)
+                    if keys[keyIndex] in item:
+                        it = item[keys[keyIndex]]
+                        hasKey(it, keys, keyIndex+1, index, group)
 
         for item in items:
             hasKey(item[0], keys, 0, item[1], group)
