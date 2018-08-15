@@ -1,4 +1,13 @@
 from visPackage import *
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--input', default="pipeline_papers.json")
+parser.add_argument('--port', type=int, default=5010)
+
+
+args = parser.parse_args()
+
 # load the papers
 
 #visualization components
@@ -10,8 +19,6 @@ visLayout = {
     }
 
 #setup interface
-# vis = chemVisModule(visLayout, "papers.json")
-vis = chemVisModule(visLayout, "chem_vis.json")
-# vis = chemVisModule(visLayout, "pipeline_papers.json")
-
-vis.startServer()
+print("Input used: ", args.input)
+vis = chemVisModule(visLayout, args.input)
+vis.startServer(port=args.port)
