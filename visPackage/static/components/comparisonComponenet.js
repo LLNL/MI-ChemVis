@@ -130,7 +130,7 @@ class comparisonComponenet extends baseComponent {
                 .append('tr');
 
             // create a cell in each row for each column
-            let colormap = ["lightgreen", "lightgrey", "Gainsboro"];
+            let colormap = ["lightgreen", "Gainsboro", "GhostWhite"];
             var cells = rows.selectAll('td')
                 .data(function(row) {
                     return columns.map(function(column, i) {
