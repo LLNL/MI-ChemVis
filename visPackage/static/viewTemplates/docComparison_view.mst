@@ -2,19 +2,19 @@
     <div id='{{id}}' class="content">
 
         <div class="container" style="align-items: center; justify-content: space-around;">
-            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-              <label class="btn btn-secondary active">
-                <input type="radio" name="options" id="option1" autocomplete="off" checked> Reference
+            <div class="btn-group btn-group-toggle" data-toggle="buttons" id='{{id}}toggle'>
+              <label class="btn btn-secondary ">
+                <input type="radio" name="options" id="option1" autocomplete="off"> Reference
               </label>
-              <label class="btn btn-secondary">
-                <input type="radio" name="options" id="option2" autocomplete="off"> Compare
+              <label class="btn btn-secondary active">
+                <input type="radio" name="options" id="option2" autocomplete="off" checked> Compare
               </label>
             </div>
         </div>
 
         <br>
 
-        <table id='{{id}}table'>
+        <table id='{{id}}table' style="table-layout: fixed;width: 100%;">
         </table>
 
     </div>

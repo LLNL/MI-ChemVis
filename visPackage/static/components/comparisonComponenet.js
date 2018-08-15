@@ -2,7 +2,7 @@ class comparisonComponenet extends baseComponent {
     constructor(uuid) {
         super(uuid);
         this.subscribeDatabyNames(["paper"]);
-        this.isFocusedOnRef = true;
+        this.isFocusedOnRef = false;
 
         this.setupUI();
 
@@ -19,17 +19,30 @@ class comparisonComponenet extends baseComponent {
         switch (msg['name']) {
             case "paper":
                 // console.log(this.data["paper"]);
+                if (!this.reference) {
+                    this.reference = JSON.parse(JSON.stringify(this.data[
+                        "paper"]));
+                    console.log("init reference")
+                }
                 this.draw();
                 break;
         }
     }
 
     draw() {
-        if (this.reference || !this.isFocusedOnRef) {
-            this.compare = JSON.parse(JSON.stringify(this.data["paper"]));
-            console.log(this.compare);
-        } else {
+        if (this.isFocusedOnRef) {
             this.reference = JSON.parse(JSON.stringify(this.data["paper"]));
+        } else {
+            this.compare = JSON.parse(JSON.stringify(this.data["paper"]));
+        }
+
+        function extractChemical(item) {
+            if (item instanceof Object) {
+                if (Object.keys(item).includes(
+                        "chemical"))
+                    return item["chemical"]
+            }
+            return item;
         }
 
         //if both exist compare them
@@ -55,13 +68,15 @@ class comparisonComponenet extends baseComponent {
                 var compSet = new Set();
                 if (this.reference.hasOwnProperty(key)) {
                     if (Array.isArray(this.reference[key]))
-                        refSet = new Set(this.reference[key]);
+                        refSet = new Set(this.reference[key].map(
+                            extractChemical));
                     else
                         refSet = new Set([this.reference[key]]);
                 }
                 if (this.compare.hasOwnProperty(key)) {
                     if (Array.isArray(this.compare[key]))
-                        compSet = new Set(this.compare[key]);
+                        compSet = new Set(this.compare[key].map(
+                            extractChemical));
                     else
                         compSet = new Set([this.compare[key]]);
                 }
@@ -113,7 +128,7 @@ class comparisonComponenet extends baseComponent {
             d3.select(this.div + "table").selectAll("*").remove();
             var thead = d3.select(this.div + "table").append('thead');
             var tbody = d3.select(this.div + "table").append('tbody');
-            console.log(thead, tbody);
+            // console.log(thead, tbody);
             // append the header row
             let columns = ["label", "reference", "compare"];
             thead.append('tr')
@@ -166,6 +181,10 @@ class comparisonComponenet extends baseComponent {
     setupUI() {
         $(this.div + "container").parent().css("overflow-y",
             "scroll");
+        d3.select(this.div + "toggle").on("click", d => {
+            this.isFocusedOnRef = !this.isFocusedOnRef;
+            console.log(this.isFocusedOnRef);
+        })
 
     }
 
