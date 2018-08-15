@@ -14,11 +14,7 @@
 
         <br>
 
-        <table>
-            <tr style="">
-              <th>Firstname</th>
-              <th>Lastname</th>
-            </tr>
+        <table id='{{id}}table'>
         </table>
 
     </div>

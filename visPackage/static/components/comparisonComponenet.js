@@ -3,9 +3,14 @@ class comparisonComponenet extends baseComponent {
         super(uuid);
         this.subscribeDatabyNames(["paper"]);
         this.isFocusedOnRef = true;
+
         this.setupUI();
+
+        //set key that exclude from the comparison
         this.excludeSet = new Set(["abstract", "name", "doi", "authors",
-            "temp", "fileName", "experimentalSentences"
+            "temp", "fileName", "experimentalSentences", "url",
+            "mpid", "size", "notes", "time", "_id", "experimental",
+            "volume"
         ]);
     }
 
@@ -22,6 +27,7 @@ class comparisonComponenet extends baseComponent {
     draw() {
         if (this.reference || !this.isFocusedOnRef) {
             this.compare = JSON.parse(JSON.stringify(this.data["paper"]));
+            console.log(this.compare);
         } else {
             this.reference = JSON.parse(JSON.stringify(this.data["paper"]));
         }
@@ -43,7 +49,7 @@ class comparisonComponenet extends baseComponent {
             }
 
             //loop through all the keys
-            var tableEntry = [];
+            this.tableEntry = [];
             keys.forEach(key => {
                 var refSet = new Set();
                 var compSet = new Set();
@@ -62,23 +68,104 @@ class comparisonComponenet extends baseComponent {
                 //write the intersect first, then the ref, comp
                 var intersect = new Set([...refSet].filter(x =>
                     compSet.has(x)));
-                tableEntry.push([key, ...intersect]);
+                let i = 0;
+                intersect.forEach(k => {
+                    if (i === 0)
+                        this.tableEntry.push([key, k, k, 0]);
+                    else
+                        this.tableEntry.push(["", k, k, 0]);
+                    i++;
+                });
 
                 var refDiff = new Set([...refSet].filter(x => !
                     intersect.has(x)));
-                if (refDiff.size !== 0)
-                    tableEntry.push([key, ...refDiff]);
+                if (refDiff.size !== 0) {
+                    refDiff.forEach(k => {
+                        if (i === 0)
+                            this.tableEntry.push([key, k,
+                                "", 1
+                            ]);
+                        else
+                            this.tableEntry.push(["", k, "",
+                                1
+                            ]);
+                        i++;
+                    });
+
+                }
                 var compDiff = new Set([...compSet].filter(x => !
                     intersect.has(x)));
-                if (compDiff.size !== 0)
-                    tableEntry.push([key, ...compDiff]);
+                if (compDiff.size !== 0) {
+                    compDiff.forEach(k => {
+                        if (i === 0)
+                            this.tableEntry.push([key, "",
+                                k, 2
+                            ]);
+                        else
+                            this.tableEntry.push(["", "", k,
+                                2
+                            ]);
+                        i++;
+                    });
+                }
             });
-            console.log(tableEntry);
+            // console.log(this.tableEntry);
+            d3.select(this.div + "table").selectAll("*").remove();
+            var thead = d3.select(this.div + "table").append('thead');
+            var tbody = d3.select(this.div + "table").append('tbody');
+            console.log(thead, tbody);
+            // append the header row
+            let columns = ["label", "reference", "compare"];
+            thead.append('tr')
+                .selectAll('th')
+                .data(columns).enter()
+                .append('th')
+                .text(t => t);
+
+            let data = this.tableEntry;
+            // create a row for each object in the data
+            var rows = tbody.selectAll('tr')
+                .data(data)
+                .enter()
+                .append('tr');
+
+            // create a cell in each row for each column
+            let colormap = ["lightgreen", "lightgrey", "Gainsboro"];
+            var cells = rows.selectAll('td')
+                .data(function(row) {
+                    return columns.map(function(column, i) {
+                        let entry = row[i];
+                        // if (entry instanceof Array)
+                        //     entry = entry[0];
+                        if (entry instanceof Object) {
+                            // console.log(entry);
+                            if (Object.keys(entry).includes(
+                                    "chemical"))
+                                entry = entry["chemical"];
+                            else
+                                entry = entry[
+                                    Object.keys(entry)[0]
+                                ];
+                        }
+
+                        return {
+                            column: column,
+                            value: entry,
+                            color: row[3]
+                        };
+                    });
+                })
+                .enter()
+                .append('td')
+                .style("background-color", d => colormap[d.color])
+                .text(d => d.value);
         }
     }
 
     //init the UI
     setupUI() {
+        $(this.div + "container").parent().css("overflow-y",
+            "scroll");
 
     }
 
