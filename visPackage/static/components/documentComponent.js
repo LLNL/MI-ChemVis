@@ -14,7 +14,7 @@ class documentComponent extends baseComponent {
         super.parseDataUpdate(msg);
         switch (msg['name']) {
             case "paper":
-                console.log(this.data["paper"]);
+                // console.log(this.data["paper"]);
                 this.draw();
                 break;
         }
@@ -25,7 +25,7 @@ class documentComponent extends baseComponent {
         if (this.data["paper"]) {
 
             let paper = this.data["paper"];
-            console.log(paper);
+            // console.log(paper);
 
             d3.select(this.div + "title")
                 .html(paper.name)

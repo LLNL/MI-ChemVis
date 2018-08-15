@@ -7,7 +7,8 @@ var panelMetaInfo = {
     'Filter': ['filter_view.mst', 'filterComponent'],
     'Graph': ['graph_view.mst', 'graphComponent'],
     'Document': ['doc_view.mst', 'documentComponent'],
-    'AggregateInfo': ['aggregateInfo_view.mst', 'aggregateInfoComponenet']
+    'AggregateInfo': ['aggregateInfo_view.mst', 'aggregateInfoComponenet'],
+    'DocComparison': ['docComparison_view.mst', "comparisonComponenet"]
 };
 
 //for lookup component class on-the-fly
@@ -15,7 +16,8 @@ var objectMap = {
     filterComponent: filterComponent,
     graphComponent: graphComponent,
     documentComponent: documentComponent,
-    aggregateInfoComponenet: aggregateInfoComponenet
+    aggregateInfoComponenet: aggregateInfoComponenet,
+    comparisonComponenet: comparisonComponenet
 };
 
 //////////////////////create layout ///////////////////////

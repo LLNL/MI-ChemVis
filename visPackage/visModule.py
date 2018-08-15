@@ -98,6 +98,7 @@ class chemVisModule(visModule):
                 global aggregate
                 papers = json.load(json_data)
                 print "load json: ", self.database, len(papers)
+                papers = papers[0:100]
                 dataManager.setData("paperList", papers)
 
                 print "aggregate paper"
