@@ -454,7 +454,7 @@ class graphComponent extends baseComponent {
             // .constraints(graph.constraints)
             // .avoidOverlaps(true)
             .handleDisconnected(true)
-            .start(10, 5, 5);
+            .start(5, 5, 5);
 
         this.drawGraph(nodes, links, width, height, radius);
         // console.log("drawGraph", nodes);
