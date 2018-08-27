@@ -1,0 +1,3 @@
+class fastGraphComponent extends graphComponent {
+
+}

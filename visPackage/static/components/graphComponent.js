@@ -31,7 +31,7 @@ class graphComponent extends baseComponent {
             case "paperList":
                 console.log("paperList updated");
                 this.setData("paper", this.data['paperList'][0]);
-                this.draw();
+                // this.draw();
                 break;
             case "selection":
                 // console.log(this.data["selection"]);
@@ -293,11 +293,13 @@ class graphComponent extends baseComponent {
     }
 
     redraw(threshold = 0.5) {
+        console.log("redraw ...\n");
         if (this.data["paperList"] && this.svg) {
             this.papers = this.subselect();
             this.generateGraph(this.papers, threshold);
             // console.log("link size:", this.links.length);
-            this.runSimulation(this.nodes, this.links, -10);
+            // this.runSimulation(this.nodes, this.links, -10);
+            this.runColaSimulation(this.nodes, this.links);
             //restore other visual elements
             // if (this.colorKey)
             //     this.updateColor(this.colorKey);
@@ -340,7 +342,8 @@ class graphComponent extends baseComponent {
                 //     threshold = threshold - 1.0;
                 //     count = count + 1.0;
                 // }
-                this.runSimulation(this.nodes, this.links, -10);
+                // this.runSimulation(this.nodes, this.links, -10);
+                this.runColaSimulation(this.nodes, this.links);
             }
             if (this.colorKey)
                 this.updateColor(this.colorKey);
@@ -422,6 +425,121 @@ class graphComponent extends baseComponent {
                 distance: edge[2]
             }
         });
+
+        //add graph constrain for webcola
+        // this.constrain = {
+        //     "axis": "y",
+        //     ""
+        // }
+    }
+
+    runColaSimulation(nodes, links) {
+        console.log("start force layout .... \n");
+        let controlHeight = d3.select(this.div + "filter").node().getBoundingClientRect()
+            .height;
+
+        let svg = this.svg;
+        let width = this.width - this.marginWidth;
+        let height = this.height - controlHeight - 8;
+        let radius = 6;
+
+        var d3cola = cola.d3adaptor(d3)
+            .linkDistance(60)
+            .handleDisconnected(true)
+            .size([width, height]);
+
+        d3cola
+            .nodes(nodes)
+            .links(links)
+            // .constraints(graph.constraints)
+            // .avoidOverlaps(true)
+            .handleDisconnected(true)
+            .start(10, 5, 5);
+
+        this.drawGraph(nodes, links, width, height, radius);
+        // console.log("drawGraph", nodes);
+    }
+
+    drawGraph(nodes, links, width, height, radius) {
+        if (this.svg.select("#graphlink").empty()) {
+            this.svg.append("g")
+                .attr("id", "graphlink");
+        }
+        if (this.svg.select("#graphNode").empty()) {
+            this.svg.append("g")
+                .attr("id", "graphNode");
+        }
+
+        var u = this.svg
+            .select('#graphlink')
+            .selectAll('line')
+            .data(links)
+
+        u.enter()
+            .append('line')
+            .merge(u)
+            .attr("class", 'link')
+            .attr('x1', function(d) {
+                return d.source.x
+            })
+            .attr('y1', function(d) {
+                return d.source.y
+            })
+            .attr('x2', function(d) {
+                return d.target.x
+            })
+            .attr('y2', function(d) {
+                return d.target.y
+            })
+            .style("stroke-width", 2)
+            .style("stroke", "lightgrey")
+
+        u.exit().remove();
+
+        let v = this.svg
+            .select('#graphNode')
+            .selectAll('circle')
+            .data(nodes);
+
+        v.enter()
+            .append('circle')
+            .merge(v)
+            .attr("cx", function(d) {
+                return d.x = Math.max(radius, Math.min(
+                    width -
+                    radius, d.x));
+            })
+            .attr("cy", function(d) {
+                return d.y = Math.max(radius, Math.min(
+                    height -
+                    radius, d.y));
+            })
+            .attr("r", radius)
+            .attr("class", "node")
+            .style("fill", (d, i) => {
+                if (this.nodeColor) {
+                    return this.nodeColor[i];
+                } else {
+                    return "grey";
+                }
+            })
+            .style("stroke", "white")
+            .style("stroke-width", 2)
+            .style("opacity", (d, i) => {
+                if (this.nodeHighlight) {
+                    if (this.nodeHighlight[i])
+                        return 1.0;
+                    else
+                        return 0.3;
+                }
+                return 1.0;
+            })
+            .on("click", (d) => {
+                this.setData("paper", this.data["paperList"]
+                    [this.papers[d.index].index]);
+            });
+
+        v.exit().remove();
     }
 
     runSimulation(nodes, links, charge) {
@@ -461,8 +579,12 @@ class graphComponent extends baseComponent {
         }
 
         ////////// draw graph //////////
+        var index = 0;
 
         function tick() {
+            // index = index + 1;
+            // if (index % 10 !== 0)
+            //     return;
             // console.log("update");
             var u = this.svg
                 .select('#graphlink')
