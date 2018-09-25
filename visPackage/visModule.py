@@ -9,7 +9,7 @@
  - data object is linked by object id, json format
 '''
 
-from flask import Flask, Response, request
+from flask import Flask, Response, request, send_from_directory
 import socketio
 import eventlet
 from socketioManager import *
@@ -17,8 +17,8 @@ from aggregator import *
 import webbrowser, threading
 import time
 import json
-import networkx as nx
-from fa2 import ForceAtlas2
+# import networkx as nx
+# from fa2 import ForceAtlas2
 
 app = Flask(__name__)
 sio = socketio.Server()
@@ -77,6 +77,13 @@ class chemVisModule(visModule):
         dataManager.setData("selection", [])
         dataManager.setData("highlight", [])
         return app.send_static_file('index.html')
+
+    @app.route('/images/<path>/<filename>')
+    def sendImage(path, filename):
+        print path, filename
+        # return send_from_directory('images', path)
+        return app.send_static_file('images/'+path+"/"+filename)
+
 
     @app.route('/<name>')
     def views(name):
@@ -172,7 +179,8 @@ class chemVisModule(visModule):
         dataManager.setData("paper", dataManager.getData("paperList")[index])
         return True
 
-
+##### experimental code for server graph layout #####
+'''
     def layoutGraph(self, links, pos = None):
         ## graph is a list of edges ##
         # print "links:", links
@@ -209,7 +217,7 @@ class chemVisModule(visModule):
             # pos.append(item[1])
         # return pos
         return positions
-
+'''
 
 
     # an sentence pair index (self.index) is used as handle for the correspondence

@@ -23,6 +23,8 @@
 
     <br>
 
+    <div id="{{id}}image"></div> 
+
     <p><a id="{{id}}link" href="">Paper Link</a></p>
 </div>
 </div>

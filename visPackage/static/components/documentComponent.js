@@ -34,10 +34,7 @@ class documentComponent extends baseComponent {
             d3.select(this.div + "authors")
                 .html(paper.authors);
 
-            d3.select(this.div + "abstract")
-                .html("<b>Abstract:</b> " + paper.abstract);
-
-            let tags = []
+            let tags = [];
             if (paper.morphology) {
                 tags.push({
                     tag: paper.morphology,
@@ -166,6 +163,18 @@ class documentComponent extends baseComponent {
                     }
                 }
             })
+
+            if (paper.images) {
+                d3.select(this.div + "image").selectAll("*").remove();
+                for (let i = 0; i < paper.images.length; i++) {
+                    let imagePath = paper.images[i];
+                    d3.select(this.div + "image")
+                        .append("img")
+                        .attr("src", imagePath);
+                }
+            } else {
+                d3.select(this.div + "image").selectAll("*").remove();
+            }
 
             d3.select(this.div + "link")
                 .attr("href", paper.url);

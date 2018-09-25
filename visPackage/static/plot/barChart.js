@@ -64,14 +64,14 @@ class barChart {
                 .attr("height", function(d) {
                     return height - y(d.count);
                 })
-                .on("mouseover", function(d) {
-                    if (d3.select(this).style("fill") !== "lightblue")
-                        d3.select(this).style("fill", "lightgrey");
-                })
-                .on("mouseout", function(d) {
-                    if (d3.select(this).style("fill") !== "lightblue")
-                        d3.select(this).style("fill", "grey");
-                })
+                // .on("mouseover", function(d) {
+                //     if (d3.select(this).style("fill") !== "lightblue")
+                //         d3.select(this).style("fill", "lightgrey");
+                // })
+                // .on("mouseout", function(d) {
+                //     if (d3.select(this).style("fill") !== "lightblue")
+                //         d3.select(this).style("fill", "grey");
+                // })
                 .on("click", (d, i) => {
                     console.log(d);
                     if (d.select) {
