@@ -17,6 +17,8 @@ from aggregator import *
 import webbrowser, threading
 import time
 import json
+import networkx as nx
+from fa2 import ForceAtlas2
 
 app = Flask(__name__)
 sio = socketio.Server()
@@ -169,6 +171,44 @@ class chemVisModule(visModule):
     def selectPaperByIndex(self, index):
         dataManager.setData("paper", dataManager.getData("paperList")[index])
         return True
+
+
+    def layoutGraph(self, links, pos = None):
+        ## graph is a list of edges ##
+        # print "links:", links
+
+        G = nx.Graph()
+        G.add_edges_from(links)
+        # print G
+
+        #### layout the graph ####
+        forceatlas2 = ForceAtlas2(
+                      # Behavior alternatives
+                      outboundAttractionDistribution=True,  # Dissuade hubs
+                      linLogMode=False,  # NOT IMPLEMENTED
+                      adjustSizes=False,  # Prevent overlap (NOT IMPLEMENTED)
+                      edgeWeightInfluence=0.5,
+                      # Performance
+                      jitterTolerance=1.0,  # Tolerance
+                      barnesHutOptimize=True,
+                      barnesHutTheta=1.2,
+                      multiThreaded=False,  # NOT IMPLEMENTED
+
+                      # Tuning
+                      scalingRatio=2.0,
+                      strongGravityMode=False,
+                      gravity=0.2,
+
+                      # Log
+                      verbose=True)
+
+        positions = forceatlas2.forceatlas2_networkx_layout(G, pos=pos, iterations=1500)
+        # pos = []
+        # print positions
+        # for item in positions.items():
+            # pos.append(item[1])
+        # return pos
+        return positions
 
 
 

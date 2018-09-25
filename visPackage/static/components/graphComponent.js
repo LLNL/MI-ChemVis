@@ -7,8 +7,8 @@ class graphComponent extends baseComponent {
 
         /////// edge filter options ///////
         this.filterState = {
-            "morphology": false,
-            "material": true,
+            "morphology": true,
+            "material": false,
             "solvents": false,
             "surfactants": false,
             "method": false,
@@ -17,6 +17,7 @@ class graphComponent extends baseComponent {
             // "chemicals": false
             // "composition": true
         };
+
         this.colorKey = "material";
 
         this.marginWidth = 10;
@@ -426,11 +427,6 @@ class graphComponent extends baseComponent {
             }
         });
 
-        //add graph constrain for webcola
-        // this.constrain = {
-        //     "axis": "y",
-        //     ""
-        // }
     }
 
     runColaSimulation(nodes, links) {

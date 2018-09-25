@@ -5,7 +5,8 @@ var socket = io('http://' + document.domain + ':' + location.port + namespace);
 
 var panelMetaInfo = {
     'Filter': ['filter_view.mst', 'filterComponent'],
-    'Graph': ['graph_view.mst', 'graphComponent'],
+    'Graph': ['graph_view.mst', 'fastGraphComponent'],
+    // 'Graph': ['graph_view.mst', 'graphComponent'],
     'Document': ['doc_view.mst', 'documentComponent'],
     'AggregateInfo': ['aggregateInfo_view.mst', 'aggregateInfoComponenet'],
     'DocComparison': ['docComparison_view.mst', "comparisonComponenet"]
@@ -15,6 +16,7 @@ var panelMetaInfo = {
 var objectMap = {
     filterComponent: filterComponent,
     graphComponent: graphComponent,
+    fastGraphComponent: fastGraphComponent,
     documentComponent: documentComponent,
     aggregateInfoComponenet: aggregateInfoComponenet,
     comparisonComponenet: comparisonComponenet
