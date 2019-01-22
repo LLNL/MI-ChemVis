@@ -18,6 +18,12 @@ visLayout = {
             ]
     }
 
+# visLayout = {
+#     "row":[{"column":["Filter", "Graph"]},
+#             {"column":["AggregateInfo"]},
+#             {"column":["Document", "DocComparison"]}
+#             ]
+#     }
 #setup interface
 print("Input used: ", args.input)
 vis = chemVisModule(visLayout, args.input)
