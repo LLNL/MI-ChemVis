@@ -60,6 +60,7 @@ data organization structure
 
 layoutConfig = None
 aggregate = None
+tagArray = None
 
 class chemVisModule(visModule):
     def __init__(self, componentLayout, database):
@@ -70,10 +71,18 @@ class chemVisModule(visModule):
         layoutConfig = componentLayout
         dataManager.setObject(self)
 
+
     @app.route('/')
     def index():
+        global tagArray
         dataManager.clear()
+        selectionTag = request.args.get('select', '')
+        # print "selectionTag:", selectionTag
         dataManager.setData("componentLayout", layoutConfig)
+        tagArray = []
+        if selectionTag:
+            tagArray.append(selectionTag.split(":"))
+        print "tagArray:", tagArray
         dataManager.setData("selection", [])
         dataManager.setData("highlight", [])
         return app.send_static_file('index.html')
@@ -101,18 +110,23 @@ class chemVisModule(visModule):
     ############# list of other API #############
 
     def loadData(self):
+        global tagArray
         print "\n\nbefore load file:", self.database
         try:
             with open(self.database) as json_data:
                 global aggregate
                 papers = json.load(json_data)
                 print "load json: ", self.database, len(papers)
-                papers = papers[0:2040]
+                # papers = papers[0:500]
                 dataManager.setData("paperList", papers)
 
                 print "aggregate paper"
                 self.aggregator = aggregator(papers)
                 aggregate = self.aggregator
+
+                print "pre-selection:", tagArray
+                if tagArray:
+                    self.selectionByTags(tagArray)
                 return True
         except IOError as e:
             print 'File loading error!!:', e
@@ -159,6 +173,7 @@ class chemVisModule(visModule):
         return True
 
     def selectionByTags(self, tags):
+        tagArray = tags
         print "selectionByTags", tags
         group = None
         for tag in tags:
