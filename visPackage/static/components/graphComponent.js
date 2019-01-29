@@ -316,7 +316,8 @@ class graphComponent extends baseComponent {
         // this.runSimulation(this.nodes, this.links, -10);
 
         // using static cola layout
-        this.runColaSimulation(this.nodes, this.links);
+        if (this.nodes.length < 700)
+          this.runColaSimulation(this.nodes, this.links);
       }
       if (this.colorKey)
         this.updateColor(this.colorKey);
@@ -341,8 +342,8 @@ class graphComponent extends baseComponent {
     let radius = 6;
 
     var d3cola = cola.d3adaptor(d3)
-      .linkDistance(60)
-      .handleDisconnected(true)
+      .linkDistance(100)
+      // .handleDisconnected(true)
       .size([width, height]);
 
     d3cola
@@ -350,10 +351,10 @@ class graphComponent extends baseComponent {
       .links(links)
       // .constraints(graph.constraints)
       // .avoidOverlaps(true)
-      .handleDisconnected(true)
-      .start(5, 5, 2);
+      // .handleDisconnected(true)
+      .start(3, 3, 2);
 
-    d3cola = null;
+    // d3cola = null;
 
     if (this.isCanvas)
       this.drawGraphCanvas(nodes, links, width, height, radius, this.nodeColor,
