@@ -316,8 +316,7 @@ class graphComponent extends baseComponent {
         // this.runSimulation(this.nodes, this.links, -10);
 
         // using static cola layout
-        if (this.nodes.length < 700)
-          this.runColaSimulation(this.nodes, this.links);
+        this.runColaSimulation(this.nodes, this.links);
       }
       if (this.colorKey)
         this.updateColor(this.colorKey);
@@ -330,6 +329,8 @@ class graphComponent extends baseComponent {
   }
 
   runColaSimulation(nodes, links) {
+    if (this.nodes.length > 700)
+      return;
     console.log("start force layout ....", nodes.length, "\n");
     let controlHeight = d3.select(this.div + "filter").node().getBoundingClientRect()
       .height;
@@ -352,7 +353,7 @@ class graphComponent extends baseComponent {
       // .constraints(graph.constraints)
       // .avoidOverlaps(true)
       // .handleDisconnected(true)
-      .start(3, 3, 2);
+      .start(4, 4, 3);
 
     // d3cola = null;
 

@@ -5,6 +5,16 @@
     <p>
     <label>Selection</label>
     <button type="button" class="btn btn-light btn-sm" id="{{id}}clearSelection">Clear</button>
+
+    <div class="btn-group btn-group-sm">
+      <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" id="{{id}}material">Material</button>
+    </div>
+
+    <div class="btn-group btn-group-sm">
+      <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" id="{{id}}morphology">Morphology</button>
+    </div>
+
+
     <input id='{{id}}selection' type='text' class='tags' value ="">
     </p>
 

@@ -109,6 +109,13 @@ class chemVisModule(visModule):
     ########### all function should have a return value ############
     ############# list of other API #############
 
+    def directAutoCompleteQuery(self, tag):
+        autocompleteList = aggregate.tagAutocomplete(tag)
+        return {
+                    "tag" : tag,
+                    "list": autocompleteList
+                }
+
     def loadData(self):
         global tagArray
         print "\n\nbefore load file:", self.database
