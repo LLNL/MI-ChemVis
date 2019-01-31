@@ -59,14 +59,15 @@ class filterComponent extends baseComponent {
       .attr("aria-haspopup", "true");
     var dropdown = menu.append("div")
       .attr("class", "dropdown-menu");
-    for (var i = 0; i < tagList.length; i++) {
-      var tag = tagList[i];
+
+    for (let i = 0; i < tagList.length; i++) {
+      let tag = tagList[i];
       dropdown.append("a")
         .attr("class", "dropdown-item")
         .on("click", d => {
           this.selection.addTag(tag);
         })
-        .html(tagList[i]);
+        .html(tag);
     }
   }
 

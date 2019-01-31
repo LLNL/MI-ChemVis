@@ -26,6 +26,8 @@ class graphComponent extends baseComponent {
     // this.isCanvas = true;
     this.isCanvas = false;
 
+    this.maxNodeSize = 300;
+
     this.setupUI();
   }
 
@@ -329,8 +331,6 @@ class graphComponent extends baseComponent {
   }
 
   runColaSimulation(nodes, links) {
-    if (this.nodes.length > 700)
-      return;
     console.log("start force layout ....", nodes.length, "\n");
     let controlHeight = d3.select(this.div + "filter").node().getBoundingClientRect()
       .height;
@@ -664,17 +664,22 @@ class graphComponent extends baseComponent {
   }
 
   subselect() {
+
     let papers = this.data["paperList"].map((d, i) => {
       return {
         "data": d,
         "index": i
       }
     });
+    console.log("selection size: ", this.selection.length);
     if (this.selection && this.selection.length > 0) {
-      return this.selection.map(index => papers[index]);
-    } else {
-      return papers;
+      papers = this.selection.map(index => papers[index]);
     }
+
+    if (papers.length > this.maxNodeSize) {
+      papers = this.getRandom(papers, this.maxNodeSize);
+    }
+    return papers;
   }
 
   paperDist(p1, p2) {
@@ -710,7 +715,22 @@ class graphComponent extends baseComponent {
     return 0.5;
   }
 
+  getRandom(arr, n) {
+    var result = new Array(n),
+      len = arr.length,
+      taken = new Array(len);
+    if (n > len)
+      throw new RangeError("getRandom: more elements taken than available");
+    while (n--) {
+      var x = Math.floor(Math.random() * len);
+      result[n] = arr[x in taken ? taken[x] : x];
+      taken[x] = --len in taken ? taken[len] : len;
+    }
+    return result;
+  }
+
   generateGraph(papers, threshold) {
+
     // let threshold = 0.0;
     // console.log("threshold:", threshold);
     this.currentEdgeThreshold = threshold;
