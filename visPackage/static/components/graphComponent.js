@@ -288,8 +288,9 @@ class graphComponent extends baseComponent {
       // this.runSimulation(this.nodes, this.links, -10);
       this.runColaSimulation(this.nodes, this.links);
       //restore other visual elements
-      // if (this.colorKey)
-      //     this.updateColor(this.colorKey);
+      if (this.colorKey)
+        this.updateColor(this.colorKey);
+
     }
   }
 
@@ -344,15 +345,15 @@ class graphComponent extends baseComponent {
 
     var d3cola = cola.d3adaptor(d3)
       .linkDistance(100)
-      // .handleDisconnected(true)
+      .handleDisconnected(true)
       .size([width, height]);
 
     d3cola
       .nodes(nodes)
       .links(links)
       // .constraints(graph.constraints)
-      // .avoidOverlaps(true)
-      // .handleDisconnected(true)
+      .avoidOverlaps(true)
+      .handleDisconnected(true)
       .start(4, 4, 3);
 
     // d3cola = null;
