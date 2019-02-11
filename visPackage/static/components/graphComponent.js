@@ -108,6 +108,9 @@ class graphComponent extends baseComponent {
       .attr("class", "badge badge-info")
       .style("margin-left", '10px');
 
+    this.countLabel = this.filterList.append("label")
+      .style("margin-left", '20px');
+
     /// setup menu entries ////
     for (let key in this.filterState) {
       if (this.filterState.hasOwnProperty(key)) {
@@ -673,13 +676,16 @@ class graphComponent extends baseComponent {
       }
     });
     console.log("selection size: ", this.selection.length);
+    let drawCount = papers.length;
     if (this.selection && this.selection.length > 0) {
       papers = this.selection.map(index => papers[index]);
+      drawCount = papers.length;
     }
 
     if (papers.length > this.maxNodeSize) {
       papers = this.getRandom(papers, this.maxNodeSize);
     }
+    this.countLabel.html("Display: " + papers.length + "/" + drawCount);
     return papers;
   }
 
