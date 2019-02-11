@@ -174,10 +174,12 @@ class chemVisModule(visModule):
         # print group
         if group:
             dataManager.setData("highlight", list(group))
+            return {"highlightCount": len(group), "selectCount": len(dataManager.getData("selection"))}
         else:
             ## un-highlight
             dataManager.setData("highlight", [])
-        return True
+            return {"highlightCount": len(dataManager.getData("selection")), "selectCount": len(dataManager.getData("selection"))}
+
 
     def selectionByTags(self, tags):
         tagArray = tags
@@ -192,10 +194,12 @@ class chemVisModule(visModule):
         # print group
         if group:
             dataManager.setData("selection", list(group))
+            return {"selectCount": len(group), "fullCount": len(dataManager.getData("paperList"))}
         else:
             ## un-highlight
             dataManager.setData("selection", [])
-        return True
+            return {"selectCount": len(dataManager.getData("paperList")), "fullCount": len(dataManager.getData("paperList"))}
+
 
     def selectPaperByIndex(self, index):
         dataManager.setData("paper", dataManager.getData("paperList")[index])

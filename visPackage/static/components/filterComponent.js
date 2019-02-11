@@ -39,11 +39,13 @@ class filterComponent extends baseComponent {
     d3.select(this.div + "clearSelection").on("click",
       d => {
         this.selection.clearTags();
+        d3.select(this.div + 'selectionCount').html("");
       });
 
     d3.select(this.div + "clearHighlight").on("click",
       d => {
         this.highlight.clearTags();
+        d3.select(this.div + 'highlightCount').html("");
       });
 
 
@@ -107,6 +109,21 @@ class filterComponent extends baseComponent {
         // autoList = autoList.map(d => d.split(":")[1]);
         this.addFilterDropdown(tag, autoList);
         break;
+      case 'highlightByTags':
+        let highlightCount = msg['data']['data']['highlightCount'];
+        let fullSelectCount = msg['data']['data']['selectCount'];
+        if (highlightCount !== fullSelectCount)
+          d3.select(this.div + 'highlightCount').html("(" + highlightCount +
+            "/" + fullSelectCount + ")");
+        break;
+      case 'selectionByTags':
+        let selectCount = msg['data']['data']['selectCount'];
+        let fullCount = msg['data']['data']['fullCount'];
+        if (selectCount != fullCount)
+          d3.select(this.div + 'selectionCount').html("(" + selectCount +
+            "/" + fullCount + ")");
+        break;
+
     }
   }
 
