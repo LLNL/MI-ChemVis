@@ -112,16 +112,22 @@ class filterComponent extends baseComponent {
       case 'highlightByTags':
         let highlightCount = msg['data']['data']['highlightCount'];
         let fullSelectCount = msg['data']['data']['selectCount'];
-        if (highlightCount !== fullSelectCount)
+        if (highlightCount !== fullSelectCount) {
           d3.select(this.div + 'highlightCount').html("(" + highlightCount +
             "/" + fullSelectCount + ")");
+        } else {
+          d3.select(this.div + 'highlightCount').html("");
+        }
         break;
       case 'selectionByTags':
         let selectCount = msg['data']['data']['selectCount'];
         let fullCount = msg['data']['data']['fullCount'];
-        if (selectCount != fullCount)
+        if (selectCount != fullCount) {
           d3.select(this.div + 'selectionCount').html("(" + selectCount +
             "/" + fullCount + ")");
+        } else {
+          d3.select(this.div + 'selectionCount').html("");
+        }
         break;
 
     }
