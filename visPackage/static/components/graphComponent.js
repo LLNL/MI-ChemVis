@@ -347,7 +347,7 @@ class graphComponent extends baseComponent {
     let radius = 6;
 
     var d3cola = cola.d3adaptor(d3)
-      .linkDistance(100)
+      .linkDistance(80)
       .handleDisconnected(true)
       .size([width, height]);
 
@@ -357,7 +357,7 @@ class graphComponent extends baseComponent {
       // .constraints(graph.constraints)
       .avoidOverlaps(true)
       .handleDisconnected(true)
-      .start(4, 4, 3);
+      .start(4, 4, 2);
 
     // d3cola = null;
 

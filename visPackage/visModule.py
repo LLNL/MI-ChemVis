@@ -111,6 +111,7 @@ class chemVisModule(visModule):
 
     def directAutoCompleteQuery(self, tag):
         autocompleteList = aggregate.tagAutocomplete(tag)
+        autocompleteList = [x for x in autocompleteList if x.startswith(tag)]
         return {
                     "tag" : tag,
                     "list": autocompleteList
@@ -135,7 +136,7 @@ class chemVisModule(visModule):
                 if tagArray:
                     self.selectionByTags(tagArray)
                 return True
-        except IOError as e:
+        except Exception as e:
             print 'File loading error!!:', e
             return False
 
