@@ -54,7 +54,7 @@ class filterComponent extends baseComponent {
   }
 
   addFilterDropdown(tag, tagList) {
-    console.log(tag, tagList);
+    // console.log(tag, tagList);
     var menu = d3.select(this.div + tag)
       .attr("type", "button")
       .attr("data-toggle", "dropdown")
@@ -80,7 +80,7 @@ class filterComponent extends baseComponent {
   }
 
   onUpdateSelection(listOfTag) {
-    console.log("onUpdateSelection:", listOfTag);
+    // console.log("onUpdateSelection:", listOfTag);
     this.setData("selectionFilter", listOfTag);
     listOfTag = listOfTag.map(d => d.split(":"));
     this.callFunc("selectionByTags", {
@@ -89,7 +89,7 @@ class filterComponent extends baseComponent {
   }
 
   onUpdateHighlight(listOfTag) {
-    console.log("onUpdateHighlight:", listOfTag);
+    // console.log("onUpdateHighlight:", listOfTag);
     this.setData("highlightFilter", listOfTag);
     listOfTag = listOfTag.map(d => d.split(":"));
     this.callFunc("highlightByTags", {

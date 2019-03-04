@@ -3,6 +3,21 @@ class graphComponent extends baseComponent {
     super(uuid);
     this.subscribeDatabyNames(["paperList", "selection", "highlight"]);
 
+    // https://github.com/wbkd/d3-extended
+    d3.selection.prototype.moveToFront = function() {
+      return this.each(function() {
+        this.parentNode.appendChild(this);
+      });
+    };
+    d3.selection.prototype.moveToBack = function() {
+      return this.each(function() {
+        var firstChild = this.parentNode.firstChild;
+        if (firstChild) {
+          this.parentNode.insertBefore(this, firstChild);
+        }
+      });
+    };
+
     this.selection = [];
 
     /////// edge filter options ///////
@@ -275,6 +290,7 @@ class graphComponent extends baseComponent {
             if (nodeHighlight[i]) {
               // d3.select(this).moveToFront();
               d3.select(this).style("opacity", 1.0);
+              d3.select(this).moveToFront();
             } else
               d3.select(this).style("opacity", 0.2);
           });
@@ -347,17 +363,16 @@ class graphComponent extends baseComponent {
     let radius = 6;
 
     var d3cola = cola.d3adaptor(d3)
-      .linkDistance(80)
+      .linkDistance(65)
       .handleDisconnected(true)
       .size([width, height]);
 
     d3cola
       .nodes(nodes)
       .links(links)
-      // .constraints(graph.constraints)
       .avoidOverlaps(true)
       .handleDisconnected(true)
-      .start(4, 4, 2);
+      .start(8, 10, 20);
 
     // d3cola = null;
 
