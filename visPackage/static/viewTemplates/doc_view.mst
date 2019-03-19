@@ -17,14 +17,14 @@
 
     <br>
 
-    <div id="{{id}}abstract" style="background-color: lightgrey; font-size=12px; padding:10px; border-radius: 10px;">
+    <!--div id="{{id}}abstract" style="background-color: lightgrey; font-size=12px; padding:10px; border-radius: 10px;">
     Abstract
-    </div>
+    </div-->
 
-    <br>
+    <!-- br -->
 
-    <div id="{{id}}image"></div> 
+    <div id="{{id}}image"></div>
 
-    <p><a id="{{id}}link" href="">Paper Link</a></p>
+    <p><a id="{{id}}link" href="">DOI Link</a></p>
 </div>
 </div>
