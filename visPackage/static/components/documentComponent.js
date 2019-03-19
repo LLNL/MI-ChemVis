@@ -51,6 +51,16 @@ class documentComponent extends baseComponent {
         });
       }
 
+      if (paper.chemicals) {
+        tags.push({
+          //tag: paper.chemicals.map(d => d.chemical),
+          tag: paper.chemicals.map(d => d.mf),
+          tooltip: "chemical",
+          // keys: ["chemicals", "chemical"]
+          keys: ["chemicals", "mf"]
+        });
+      }
+
       if (paper.metal_salts) {
         tags.push({
           tag: paper.metal_salts,
@@ -80,15 +90,6 @@ class documentComponent extends baseComponent {
           tag: paper.reducing_agents,
           tooltip: "reducing_agents",
           keys: ["reducing_agents"]
-        });
-      }
-
-      if (paper.chemicals) {
-        tags.push({
-          tag: paper.chemicals.map(d => d.chemical),
-          // tag: paper.chemicals.map(d => d.mf),
-          tooltip: "chemical",
-          keys: ["chemicals", "chemical"]
         });
       }
 

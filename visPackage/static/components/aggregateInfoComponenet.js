@@ -7,6 +7,7 @@ class aggregateInfoComponenet extends baseComponent {
     ]);
 
     this.aggregators = [
+      // ["chemicals", "chemical"],
       ["chemicals", "mf"],
       ["material"],
       ["morphology"],
