@@ -53,11 +53,11 @@ class documentComponent extends baseComponent {
 
       if (paper.chemicals) {
         tags.push({
-          //tag: paper.chemicals.map(d => d.chemical),
-          tag: paper.chemicals.map(d => d.mf),
+          tag: paper.chemicals.map(d => d.chemical),
+          // tag: paper.chemicals.map(d => d.mf),
           tooltip: "chemical",
-          // keys: ["chemicals", "chemical"]
-          keys: ["chemicals", "mf"]
+          keys: ["chemicals", "chemical"]
+            // keys: ["chemicals", "mf"]
         });
       }
 

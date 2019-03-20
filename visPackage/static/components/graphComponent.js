@@ -288,14 +288,16 @@ class graphComponent extends baseComponent {
           .selectAll('.node')
           .each(function(d, i) {
             if (nodeHighlight[i]) {
+              //move to front will induce point ordering error
               // d3.select(this).moveToFront();
               d3.select(this).style("opacity", 1.0);
-              d3.select(this).moveToFront();
+              // d3.select(this).moveToFront();
             } else
               d3.select(this).style("opacity", 0.2);
           });
       }
     }
+    // this.draw();
   }
 
   redraw(threshold = 0.5) {
