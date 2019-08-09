@@ -1,4 +1,4 @@
-# ChemVis 
+# Materials Informatics ChemVis (MICV) 
 
 ## Intro
  - A visual analytics system for the material informatics project
@@ -26,3 +26,7 @@
 
 ## Note
 It may take a minute to load with the included dataset. 
+
+## Release
+Release number LLNL-CODE-780105
+ChemVis is distrubted under the MIT license.
