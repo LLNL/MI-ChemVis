@@ -27,7 +27,8 @@ class graphComponent extends baseComponent {
       "solvents": false,
       "surfactants": false,
       "method": false,
-      "reducing_agents": false
+      "reducing_agents": false,
+      "metal_salts": false
 
       // "chemicals": false
       // "composition": true
