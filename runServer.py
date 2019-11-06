@@ -2,7 +2,7 @@ from visPackage import *
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--input', default="chem_vis.json")
+parser.add_argument('--input', default="35k.json")
 parser.add_argument('--port', type=int, default=5010)
 
 

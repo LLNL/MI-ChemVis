@@ -1,0 +1,4 @@
+This dataset is comprised of a json file, and a folder of other text files, containing annotations by SME's. 
+The folder of text files contains 2 files per paper (total 198 files). IE, 1 file of chemicals annotated (average 10 per paper), and 1 file of the experimental sentences (also short) for each paper.
+The JSON file repeats this data, but with additional annotations: the morphology and composition of the papers.
+

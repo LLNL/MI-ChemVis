@@ -6,4 +6,4 @@ RUN pip install -r /requirements.txt
 COPY ./ /code/
 
 WORKDIR /code
-CMD python runServer.py
+ENTRYPOINT ["python", "runServer.py"]
