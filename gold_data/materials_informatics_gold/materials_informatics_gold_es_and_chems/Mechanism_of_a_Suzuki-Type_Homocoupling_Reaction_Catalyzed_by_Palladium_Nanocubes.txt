@@ -1,1 +1,2 @@
+10.1021/acscatal.6b03490
 The synthesis of Pd-NCs was performed by adapting procedures described in the literature. In a two-neck round-bottom flask, 105 mg of PVP, 60 mg of AA, and 0.30–0.90 g of KBr were dissolved in 8 mL of water and stirred for 10 min at 80 °C. In the next step, 63 mg of K2PdCl4 in 3 mL of water was added and the mixture was aged for 4 h at 80 °C. The resulting black solutions were mixed with acetone and centrifuged to collect the Pd-NCs as a fine powder.

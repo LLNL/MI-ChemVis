@@ -1,1 +1,2 @@
+10.1021/acsnano.6b05776
 In a standard protocol, aqueous solutions of CTAC (5 mL, 20 mM) and AA (0.5 mL, 100 mM) were added into a 20 mL glass vial and heated at 60 °C for 10 min. Aqueous solutions of CF3COOAg (50 μL, 10 mM) and FeCl3 (80 μL, 4.29 μM) were then added in one shot. The reaction solution had a pH value of about 3.1 during the entire synthesis. After 6 h, the products were collected by centrifugation at 8000 rpm and redispersed in DI water.

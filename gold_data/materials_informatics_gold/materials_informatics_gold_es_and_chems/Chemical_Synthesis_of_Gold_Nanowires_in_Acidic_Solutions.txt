@@ -1,1 +1,2 @@
+10.1021/ja806759v
 First, 3−4 nm seed particles are prepared by rapid reduction of a gold precursor (i.e., HAuCl4) with a strong reducing agent (e.g., NaBH4). Then the seed particles are added to a growth solution containing HAuCl4, ascorbic acid, and hexadecyl-trimethylammonium bromide (CTAB). Ascorbic acid rapidly reduces the gold salt from its Au(III) to Au(I) state, leading to a colorless, meta-stable solution at room temperature.

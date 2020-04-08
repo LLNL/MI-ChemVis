@@ -1,1 +1,2 @@
+10.1016/j.jcis.2010.12.077
 Typically, 0.68 g AgNO3 was dissolved in 60 mL of ethylene glycol (EG, 99%). Then, 1.766 g polyvinylpyrrolidone (PVP, MW = 1.3 Mg/mol) and 4.6 mg NaCl was dissolved in 40 mL EG at 120 °C while stirring at 600 rpm. The PVP/NaCl/EG solution was then added to the AgNO3/EG solution drop-by-drop under vigorous stirring. The combined solution was allowed to mix for 5 min and was then transferred into a 125 mL autoclave. The autoclave was heated at 160 °C for 7 h, and then allowed to cool to room temperature.

@@ -1,1 +1,2 @@
+10.1016/j.jcat.2006.12.011
 As an example, for the preparation of nanoparticle-containing MEs with a water-to-surfactant ratio of 7, 15.45 g AOT, total isooctane volume of 0.1 L, 2.2 mL of aqueous Pd precursor, and 2.2 mL of reductant were used. After 1 h of reduction at room temperature, isooctane was evaporated in a rotary evaporator at 323 K, and the nanoparticles were purified from an excess of surfactant by addition of methanol followed by centrifugation (3 x 30mL). 

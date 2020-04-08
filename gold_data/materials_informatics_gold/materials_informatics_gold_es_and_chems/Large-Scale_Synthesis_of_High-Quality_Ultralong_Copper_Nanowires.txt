@@ -1,1 +1,2 @@
+10.1021/la050220w
 In each synthesis, 20−30 mL of NaOH (3.5−15 M) and 0.5−1.0 mL of Cu(NO3)2 (0.10 M) aqueous solution were added to a glass reactor (capacity 50 mL). Varying amounts of ethylenediamine (EDA; 0.050−2.0 mL; 99 wt %) and hydrazine (0.020−1.0 mL; 35 wt %) were also added sequentially, followed by a thorough mixing of all reagents. The reactor was then placed in a water bath with temperature control over 25−100 °C (optimized at 60 °C) for 15 min to 15 h;

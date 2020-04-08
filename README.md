@@ -47,6 +47,9 @@ The materials\_informatics\_gold\_es\_and\_chems folder contains txt files conta
 The gold\_standard.json file contains the information of the materials\_informatics\_gold\_es\_and\_chems files, as well as the morphology and composition annotation of the papers. 
 These annotations are from subject matter experts. 
 
+## Data Copyright Info
+Experimental sentences in 99.json, gold\_standard.json and .txt files in the gold\_data folder, and abstracts in 35k.json, that are publicly available, are used and provided for scholarly purposes only to enable others to reproduce our work and compare performance of various natural language processing tools being developed on a common dataset. DOIs for every article are included in the data files and the copyright is owned by the respective publishers.
+
 ## Release
 Release number LLNL-CODE-780105
 ChemVis is distrubted under the MIT license.
