@@ -1,4 +1,4 @@
 eventlet==0.22.1
-numpy==1.14.2
+numpy==1.22.0
 Flask==1.0.0
 python-socketio
